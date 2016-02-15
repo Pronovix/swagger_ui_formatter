@@ -6,7 +6,8 @@ Introduction
 
 This module provides a field formatter for file fields with allowed file types
 as json or yml, which renders the uploaded json or yml file using the Swagger UI
-if the uploaded json or yml file is a valid swagger file.
+if the uploaded json or yml file is a valid swagger file. This module uses the
+Swagger UI Library available at https://github.com/swagger-api/swagger-ui
 
 Requirements
 ============
