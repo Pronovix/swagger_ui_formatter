@@ -14,8 +14,78 @@ function swagger_ui_formatter_field_formatter_info() {
       'label' => t('Swagger UI Formatter'),
       'description' => t('Formats file fields with Swagger YAML or JSON files with a rendered swagger ui'),
       'field types' => array('file'),
+      'settings' => array(
+        'validator' => 'default',
+        'validator_url' => '',
+        'doc_expansion' => 'none',
+        'show_request_headers' => FALSE,
+      ),
     ),
   );
+}
+
+/**
+ * Implements hook_field_formatter_settings_form().
+ */
+function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $view_mode, $form, &$form_state) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+
+  $form = array();
+  $form['validator'] = array(
+    '#type' => 'select',
+    '#title' => t("Validator"),
+    '#description' => t("Default=Swagger.io's online validator, None= No validation, Custom=Provide a custom validator url"),
+    '#default_value' => $settings['validator'],
+    '#options' => array(
+      'default' => t('Default'),
+      'none' => t('None'),
+      'custom' => t('Custom'),
+    ),
+  );
+  $form['validator_url'] = array(
+    '#type' => 'textfield',
+    '#title' => t("Validator URL"),
+    '#description' => t("The custom validator url to be used to validated the swagger files."),
+    '#default_value' => $settings['validator_url'],
+    '#states' => array(
+      'visible' => array(
+        ':input[name="fields[' . $field['field_name'] . '][settings_edit_form][settings][validator]"]' => array('value' => 'custom'),
+      ),
+    ),
+  );
+  $form['doc_expansion'] = array(
+    '#type' => 'select',
+    '#title' => t("Doc Expansion"),
+    '#description' => t("Controls how the API listing is displayed"),
+    '#default_value' => $settings['doc_expansion'],
+    '#options' => array(
+      'none' => t('Default'),
+      'list' => t('List - shows operations for each resource'),
+      'full' => t('Fully Expanded - shows operations and their details'),
+    ),
+  );
+  $form['show_request_headers'] = array(
+    '#type' => 'checkbox',
+    '#title' => t("Show Request Headers"),
+    '#default_value' => $settings['show_request_headers'],
+    '#description' => t("Whether or not to show the headers that were sent when making a request via the 'Try it out!' option"),
+  );
+  return $form;
+}
+
+/**
+ * Implements hook_field_formatter_settings_summary().
+ */
+function swagger_ui_formatter_field_formatter_settings_summary($field, $instance, $view_mode) {
+  $display = $instance['display'][$view_mode];
+  $settings = $display['settings'];
+  $summary = t('Uses @validator validator, Doc Expansion of "@doc_expansion" and @request_headers', array(
+    '@validator' => $settings['validator'],
+    '@doc_expansion' => $settings['doc_expansion'],
+    '@request_headers' => ($settings['show_request_headers']) ? 'Shows Requests Headers' : 'Request headers are hidden',
+  ));
+  return $summary;
 }
 
 /**
@@ -70,6 +140,8 @@ function swagger_ui_formatter_field_formatter_view($entity_type, $entity, $field
     'group' => CSS_THEME,
   ));
   $element = array();
+  $settings = $display['settings'];
+
   $swagger_files = array();
   foreach ($items as $delta => $item) {
     $swagger_files[] = array(
@@ -79,8 +151,27 @@ function swagger_ui_formatter_field_formatter_view($entity_type, $entity, $field
       'delta' => $delta,
     ));
   }
+
+  $validator_url = FALSE;
+  if ($settings['validator'] == 'none') {
+    $validator_url = NULL;
+  }
+  elseif ($settings['validator'] == 'default') {
+    $validator_url = FALSE;
+  }
+  else {
+    $validator_url = $settings['validator_url'];
+  }
+
   drupal_add_js($module_path . '/swagger_ui_formatter.js', 'file');
-  drupal_add_js(array('swagger_ui_formatter' => array('swagger_files' => $swagger_files)), 'setting');
+  drupal_add_js(array(
+    'swagger_ui_formatter' => array(
+      'swagger_files' => $swagger_files,
+      'validator_url' => $validator_url,
+      'doc_expansion' => $settings['doc_expansion'],
+      'show_request_headers' => $settings['show_request_headers'],
+    ),
+  ), 'setting');
   return $element;
 }
 
