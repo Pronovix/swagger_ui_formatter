@@ -1,0 +1,12 @@
+swagger_ui_formatter.swagger_ui:
+  version: v3.13.1
+  css:
+    theme:
+      assets/vendor/swagger-ui/swagger-ui.css: { minified: true }
+  js:
+    assets/vendor/swagger-ui/swagger-ui-bundle.js: { minified: true }
+    assets/vendor/swagger-ui/swagger-ui-standalone-preset.js: { minified: true }
+    js/swagger_ui_formatter.js: {}
+  dependencies:
+    - core/jquery
+    - core/drupalSettings
