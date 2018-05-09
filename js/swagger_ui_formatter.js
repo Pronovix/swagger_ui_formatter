@@ -43,7 +43,8 @@
               validatorUrl: validatorUrl,
               docExpansion: field.docExpansion,
               layout: "StandaloneLayout",
-              tagsSorter: field.sortTagsByName ? 'alpha' : ''
+              tagsSorter: field.sortTagsByName ? 'alpha' : '',
+              supportedSubmitMethods: field.supportedSubmitMethods
             });
           }
         }

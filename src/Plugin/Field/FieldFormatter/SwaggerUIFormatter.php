@@ -30,6 +30,7 @@ class SwaggerUIFormatter extends FileFormatterBase {
       'doc_expansion' => 'list',
       'show_top_bar' => FALSE,
       'sort_tags_by_name' => FALSE,
+      'supported_submit_methods' => [],
     ] + parent::defaultSettings();
   }
 
@@ -84,6 +85,21 @@ class SwaggerUIFormatter extends FileFormatterBase {
       '#description' => $this->t("Controls whether the tag groups should be ordered alphabetically or not."),
       '#default_value' => $this->getSetting('sort_tags_by_name'),
     ];
+    $form['supported_submit_methods'] = [
+      '#type' => 'checkboxes',
+      '#title' => $this->t("Try it out support for HTTP Methods"),
+      '#description' => $this->t("List of HTTP methods that have the Try it out feature enabled. Selecting none disables Try it out for all operations. This does not filter the operations from the display."),
+      '#default_value' => $this->getSetting('supported_submit_methods'),
+      '#options' => [
+        'get' => $this->t('GET'),
+        'put' => $this->t('PUT'),
+        'post' => $this->t('POST'),
+        'delete' => $this->t('DELETE'),
+        'options' => $this->t('OPTIONS'),
+        'head' => $this->t('HEAD'),
+        'patch' => $this->t('PATCH'),
+      ],
+    ];
 
     return $form;
   }
@@ -93,11 +109,13 @@ class SwaggerUIFormatter extends FileFormatterBase {
    */
   public function settingsSummary() {
     $summary = parent::settingsSummary();
-    $summary[] = $this->t('Uses %validator validator, Doc Expansion of %doc_expansion, Shows top bar: %show_top_bar, Tags sorted by name: %sort_tags_by_name.', [
+    $supported_submit_methods = array_filter($this->getSetting('supported_submit_methods'));
+    $summary[] = $this->t('Uses %validator validator, Doc Expansion of %doc_expansion, Shows top bar: %show_top_bar, Tags sorted by name: %sort_tags_by_name, Try it out support for HTTP Methods: %supported_submit_methods.', [
       '%validator' => $this->getSetting('validator'),
       '%doc_expansion' => $this->getSetting('doc_expansion'),
       '%show_top_bar' => $this->getSetting('show_top_bar') ? $this->t('Yes') : $this->t('No'),
       '%sort_tags_by_name' => $this->getSetting('sort_tags_by_name') ? $this->t('Yes') : $this->t('No'),
+      '%supported_submit_methods' => !empty($supported_submit_methods) ? implode(', ', array_map('strtoupper', $supported_submit_methods)) : $this->t('None'),
     ]);
     return $summary;
   }
@@ -121,6 +139,7 @@ class SwaggerUIFormatter extends FileFormatterBase {
       'docExpansion' => $this->getSetting('doc_expansion'),
       'showTopBar' => $this->getSetting('show_top_bar'),
       'sortTagsByName' => $this->getSetting('sort_tags_by_name'),
+      'supportedSubmitMethods' => array_keys(array_filter($this->getSetting('supported_submit_methods'))),
     ];
 
     return $elements;
