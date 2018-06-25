@@ -1,0 +1,33 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Swagger UI Formatter module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function swagger_ui_formatter_requirements($phase) {
+  $requirements = array();
+  // Ensure translations don't break during installation.
+  $t = get_t();
+
+  if ($phase == 'runtime') {
+    $library = libraries_load('swagger_ui');
+    if (!$library['loaded']) {
+      $requirements_value = $t('Error loading Swagger UI library! @error', array('@error' => $library['error message']));
+      $requirements_severity = REQUIREMENT_ERROR;
+    }
+    else {
+      $requirements_value = $t('Correct Swagger UI Formatter configuration.');
+      $requirements_severity = REQUIREMENT_OK;
+    }
+    $requirements['swagger_ui_configuration_check'] = array(
+      'title' => $t('Swagger UI Formatter configuration'),
+      'value' => $requirements_value,
+      'severity' => $requirements_severity,
+    );
+  }
+  return $requirements;
+}

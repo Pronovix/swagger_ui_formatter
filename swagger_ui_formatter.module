@@ -18,7 +18,8 @@ function swagger_ui_formatter_field_formatter_info() {
         'validator' => 'default',
         'validator_url' => '',
         'doc_expansion' => 'none',
-        'show_request_headers' => FALSE,
+        'show_top_bar' => FALSE,
+        'sort_tags_by_name' => FALSE,
       ),
     ),
   );
@@ -34,7 +35,7 @@ function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $
   $form = array();
   $form['validator'] = array(
     '#type' => 'select',
-    '#title' => t("Validator"),
+    '#title' => t('Validator'),
     '#description' => t("Default=Swagger.io's online validator, None= No validation, Custom=Provide a custom validator url"),
     '#default_value' => $settings['validator'],
     '#options' => array(
@@ -45,8 +46,8 @@ function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $
   );
   $form['validator_url'] = array(
     '#type' => 'textfield',
-    '#title' => t("Validator URL"),
-    '#description' => t("The custom validator url to be used to validated the swagger files."),
+    '#title' => t('Validator URL'),
+    '#description' => t('The custom validator url to be used to validated the swagger files.'),
     '#default_value' => $settings['validator_url'],
     '#states' => array(
       'visible' => array(
@@ -56,8 +57,8 @@ function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $
   );
   $form['doc_expansion'] = array(
     '#type' => 'select',
-    '#title' => t("Doc Expansion"),
-    '#description' => t("Controls how the API listing is displayed"),
+    '#title' => t('Doc Expansion'),
+    '#description' => t('Controls how the API listing is displayed'),
     '#default_value' => $settings['doc_expansion'],
     '#options' => array(
       'none' => t('Default'),
@@ -65,11 +66,17 @@ function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $
       'full' => t('Fully Expanded - shows operations and their details'),
     ),
   );
-  $form['show_request_headers'] = array(
+  $form['show_top_bar'] = array(
     '#type' => 'checkbox',
-    '#title' => t("Show Request Headers"),
-    '#default_value' => $settings['show_request_headers'],
-    '#description' => t("Whether or not to show the headers that were sent when making a request via the 'Try it out!' option"),
+    '#title' => t('Show Top Bar'),
+    '#default_value' => $settings['show_top_bar'],
+    '#description' => t('Controls whether the Swagger UI top bar should be displayed or not.'),
+  );
+  $form['sort_tags_by_name'] = array(
+    '#type' => 'checkbox',
+    '#title' => t('Sort tags by name'),
+    '#default_value' => $settings['sort_tags_by_name'],
+    '#description' => t('Controls whether the tag groups should be ordered alphabetically or not.'),
   );
   return $form;
 }
@@ -80,12 +87,58 @@ function swagger_ui_formatter_field_formatter_settings_form($field, $instance, $
 function swagger_ui_formatter_field_formatter_settings_summary($field, $instance, $view_mode) {
   $display = $instance['display'][$view_mode];
   $settings = $display['settings'];
-  $summary = t('Uses @validator validator, Doc Expansion of "@doc_expansion" and @request_headers', array(
+  $summary = t('Uses @validator validator, Doc Expansion of "@doc_expansion", shows top bar: @show_top_bar, tags sorted by name: @sort_tags_by_name', array(
     '@validator' => $settings['validator'],
     '@doc_expansion' => $settings['doc_expansion'],
-    '@request_headers' => ($settings['show_request_headers']) ? 'Shows Requests Headers' : 'Request headers are hidden',
+    '@show_top_bar' => ($settings['show_top_bar']) ? t('Yes') : t('No'),
+    '@sort_tags_by_name' => ($settings['sort_tags_by_name']) ? t('Yes') : t('No'),
   ));
   return $summary;
+}
+
+/**
+ * Implements hook_libraries_info().
+ *
+ * For defining swagger ui 3.0 libraries.
+ */
+function swagger_ui_formatter_libraries_info() {
+  $libraries['swagger_ui'] = array(
+    'name' => 'Swagger UI',
+    'vendor url' => 'https://swagger.io/swagger-ui',
+    'download url' => 'https://github.com/swagger-api/swagger-ui/releases',
+    'version arguments' => array(
+      'file' => 'package.json',
+      'pattern' => '@"version":\s+"([0-9\.-]+)@',
+      'lines' => 3,
+    ),
+    'path' => 'dist',
+    'integration files' => array(
+      'swagger_ui_formatter' => array(
+        'js' => array('swagger_ui_formatter.js'),
+      ),
+    ),
+    'files' => array(
+      'js' => array(
+        'swagger-ui-bundle.js' => array(
+          'type' => 'file',
+          'group' => JS_LIBRARY,
+          'preprocess' => FALSE,
+          'weight' => 1,
+        ),
+        'swagger-ui-standalone-preset.js' => array(
+          'type' => 'file',
+          'group' => JS_LIBRARY,
+          'preprocess' => FALSE,
+          'weight' => 1,
+        ),
+      ),
+      'css' => array(
+        'swagger-ui.css',
+      ),
+    ),
+  );
+
+  return $libraries;
 }
 
 /**
@@ -93,66 +146,28 @@ function swagger_ui_formatter_field_formatter_settings_summary($field, $instance
  */
 function swagger_ui_formatter_field_formatter_view($entity_type, $entity, $field, $instance, $langcode, $items, $display) {
 
-  $module_path = drupal_get_path('module', 'swagger_ui_formatter');
-  $js_path = $module_path . '/swagger_ui/dist/lib/';
-  drupal_add_js($js_path . 'jquery-1.8.0.min.js', 'file');
-  drupal_add_js($js_path . 'jquery.slideto.min.js', 'file');
-  drupal_add_js($js_path . 'jquery.wiggle.min.js', 'file');
-  drupal_add_js($js_path . 'jquery.ba-bbq.min.js', 'file');
-  drupal_add_js($js_path . 'handlebars-2.0.0.js', 'file');
-  drupal_add_js($js_path . 'underscore-min.js', 'file');
-  drupal_add_js($js_path . 'backbone-min.js', 'file');
-  drupal_add_js($module_path . '/swagger_ui/dist/swagger-ui.js', 'file');
-  drupal_add_js($js_path . 'highlight.7.3.pack.js', 'file');
-  drupal_add_js($js_path . 'jsoneditor.min.js', 'file');
-  drupal_add_js($js_path . 'marked.js', 'file');
-  drupal_add_js($js_path . 'swagger-oauth.js', 'file');
-
-  $css_path = $module_path . '/swagger_ui/dist/css/';
-  drupal_add_css($css_path . 'typography.css', array(
-    'type' => 'file',
-    'media' => 'screen',
-    'weight' => 200,
-    'group' => CSS_THEME,
-  ));
-  drupal_add_css($css_path . 'reset.css', array(
-    'type' => 'file',
-    'media' => 'screen',
-    'weight' => 201,
-    'group' => CSS_THEME,
-  ));
-  drupal_add_css($css_path . 'screen.css', array(
-    'type' => 'file',
-    'media' => 'screen',
-    'weight' => 202,
-    'group' => CSS_THEME,
-  ));
-  drupal_add_css($css_path . 'reset.css', array(
-    'type' => 'file',
-    'media' => 'print',
-    'weight' => 203,
-    'group' => CSS_THEME,
-  ));
-  drupal_add_css($css_path . 'print.css', array(
-    'type' => 'file',
-    'media' => 'print',
-    'weight' => 204,
-    'group' => CSS_THEME,
-  ));
-  $element = array();
-  $settings = $display['settings'];
-
-  $swagger_files = array();
-  foreach ($items as $delta => $item) {
-    $swagger_files[] = array(
-      'url' => file_create_url($item['uri']),
-    );
-    $element[$delta]['#markup'] = theme('swagger_ui_formatter', array(
-      'delta' => $delta,
-    ));
+  $library = libraries_load('swagger_ui');
+  if (!$library['loaded']) {
+    return array();
   }
 
-  $validator_url = FALSE;
+  $element = array();
+  $settings = $display['settings'];
+  $swagger_fields = array();
+
+  foreach ($items as $delta => $item) {
+    $swagger_fields[] = array(
+      'field_name' => 'swagger-ui-' . $item['fid'] . '-' . $delta,
+      'file_name' => file_create_url($item['uri']),
+    );
+
+    $element[$delta] = array(
+      '#theme' => 'swagger_ui_formatter',
+      '#delta' => $delta,
+      '#field_name' => $item['fid'],
+    );
+  }
+
   if ($settings['validator'] == 'none') {
     $validator_url = NULL;
   }
@@ -163,15 +178,19 @@ function swagger_ui_formatter_field_formatter_view($entity_type, $entity, $field
     $validator_url = $settings['validator_url'];
   }
 
-  drupal_add_js($module_path . '/swagger_ui_formatter.js', 'file');
-  drupal_add_js(array(
-    'swagger_ui_formatter' => array(
-      'swagger_files' => $swagger_files,
-      'validator_url' => $validator_url,
-      'doc_expansion' => $settings['doc_expansion'],
-      'show_request_headers' => $settings['show_request_headers'],
+  $element['#attached']['js'][] = array(
+    'data' => array(
+      'swagger_ui_formatter' => array(
+        'swagger_fields' => $swagger_fields,
+        'validator_url' => $validator_url,
+        'doc_expansion' => $settings['doc_expansion'],
+        'show_top_bar' => $settings['show_top_bar'],
+        'sort_tags_by_name' => $settings['sort_tags_by_name'],
+      ),
     ),
-  ), 'setting');
+    'type' => 'setting',
+  );
+
   return $element;
 }
 
@@ -182,7 +201,7 @@ function swagger_ui_formatter_theme($existing, $type, $theme, $path) {
   $path = drupal_get_path('module', 'swagger_ui_formatter') . '/templates';
   return array(
     'swagger_ui_formatter' => array(
-      'variables' => array('delta' => NULL),
+      'variables' => array('field_name' => NULL, 'delta' => NULL),
       'path' => $path,
       'template' => 'swagger-ui-formatter',
     ),
