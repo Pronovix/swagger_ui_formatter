@@ -1,26 +1,31 @@
-Swagger UI Field Formatter
-==========================
-
-Introduction
-============
+INTRODUCTION
+------------
 
 This module provides a field formatter for file fields with allowed file types
 of JSON (.json) and/or YAML (.yml or .yaml), which renders the uploaded file
 using Swagger UI if the file is a valid Swagger file. This module uses the
 Swagger UI library available at https://github.com/swagger-api/swagger-ui
 
-Requirements
-============
-This module does not have any special requirements.
+REQUIREMENTS
+------------
 
-Installation
-============
-Download the module from https://drupal.org and extract it into your
-sites/all/modules/contrib directory. Login as administrator, go the the
-admin/modules page and install the Swagger UI Field Formatter module.
+The Swagger UI library available at
+https://github.com/swagger-api/swagger-ui/releases
 
-Configuration
-=============
+INSTALLATION
+------------
+
+1. Download the Swagger UI library, extract the file and rename the directory to
+   "swagger_ui". Now, place the renamed directory into the /libraries directory
+   so it's path will be /libraries/swagger_ui
+
+2. Download the module from https://drupal.org and extract it into your
+   /modules/contrib directory. Login as administrator, visit the
+   admin/modules page with your web browser and install the
+   Swagger UI Field Formatter module.
+
+CONFIGURATION
+-------------
 
 Go to the admin/structure/types/manage/<type>/fields page, add a new field
 of type File and add "json", "yml" or "yaml" to allowed file extensions.

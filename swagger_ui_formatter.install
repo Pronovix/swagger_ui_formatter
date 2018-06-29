@@ -1,0 +1,93 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for Swagger UI Field Formatter module.
+ */
+
+/**
+ * Implements hook_requirements().
+ */
+function swagger_ui_formatter_requirements($phase) {
+  if ($phase != 'runtime') {
+    return FALSE;
+  }
+
+  $return = [];
+  if (_swagger_ui_formatter_swagger_ui_files_exist()) {
+    $return['swagger_ui_library'] = [
+      'title' => t('Swagger UI'),
+      'severity' => REQUIREMENT_OK,
+      'value' => t('Swagger UI library version %version installed at %path.',
+        [
+          '%path' => DRUPAL_ROOT . '/libraries/swagger_ui',
+          '%version' => _swagger_ui_formatter_get_swagger_ui_version(),
+        ]),
+    ];
+  }
+  else {
+    $return['swagger_ui_library'] = [
+      'title' => t('Swagger UI'),
+      'severity' => REQUIREMENT_ERROR,
+      'value' => t('Swagger UI library was not found. Download <a href=":link" target="_blank">the latest version of library</a>
+        and place it in the libraries directory (/libraries/swagger_ui).',
+        [
+          ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
+        ]),
+    ];
+  }
+
+  return $return;
+}
+
+/**
+ * Helper function to check required Swagger UI library files.
+ *
+ * @return boolean
+ *   Returns TRUE if all required Swagger UI library files are in place. Returns
+ *   FALSE otherwise.
+ */
+function _swagger_ui_formatter_swagger_ui_files_exist() {
+  $files_to_check = [
+    'package.json',
+    'dist/swagger-ui.css',
+    'dist/swagger-ui-bundle.js',
+    'dist/swagger-ui-standalone-preset.js',
+  ];
+  foreach ($files_to_check as $file) {
+    if (!file_exists(DRUPAL_ROOT . '/libraries/swagger_ui/' . $file)) {
+      return FALSE;
+    }
+  }
+  return TRUE;
+}
+
+/**
+ * Gets Swagger UI library version information.
+ *
+ * @return string
+ *   A string containing the version of the library or empty if the version
+ *   cannot be found.
+ */
+function _swagger_ui_formatter_get_swagger_ui_version() {
+  $options = [
+    'file' => 'package.json',
+    'pattern' => '@"version":\s*"([0-9][0-9.]+)"@',
+    'lines' => 20,
+    'cols' => 200,
+  ];
+
+  $version = '';
+  $file = DRUPAL_ROOT . '/libraries/swagger_ui/' . $options['file'];
+  if (file_exists($file)) {
+    $file = fopen($file, 'r');
+    while ($options['lines'] && $line = fgets($file, $options['cols'])) {
+      if (preg_match($options['pattern'], $line, $version)) {
+        break;
+      }
+      $options['lines']--;
+    }
+    fclose($file);
+  }
+  return $version[1];
+}

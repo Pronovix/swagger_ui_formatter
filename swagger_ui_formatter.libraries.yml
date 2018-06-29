@@ -1,11 +1,11 @@
-swagger_ui_formatter.swagger_ui:
-  version: v3.13.1
+swagger_ui:
+  version: VERSION
   css:
     theme:
-      assets/vendor/swagger-ui/swagger-ui.css: { minified: true }
+      /libraries/swagger_ui/dist/swagger-ui.css: { minified: true }
   js:
-    assets/vendor/swagger-ui/swagger-ui-bundle.js: { minified: true }
-    assets/vendor/swagger-ui/swagger-ui-standalone-preset.js: { minified: true }
+    /libraries/swagger_ui/dist/swagger-ui-bundle.js: { minified: true }
+    /libraries/swagger_ui/dist/swagger-ui-standalone-preset.js: { minified: true }
     js/swagger_ui_formatter.js: {}
   dependencies:
     - core/jquery

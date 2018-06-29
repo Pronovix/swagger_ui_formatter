@@ -131,7 +131,7 @@ class SwaggerUIFormatter extends FileFormatterBase {
     }
 
     $elements = parent::view($items, $langcode);
-    $elements['#attached'] = ['library' => ['swagger_ui_formatter/swagger_ui_formatter.swagger_ui']];
+    $elements['#attached'] = ['library' => ['swagger_ui_formatter/swagger_ui']];
     $elements['#attached']['drupalSettings']['swaggerUIFormatter'][$this->fieldDefinition->getName()] = [
       'swaggerFiles' => $swagger_files,
       'validator' => $this->getSetting('validator'),
