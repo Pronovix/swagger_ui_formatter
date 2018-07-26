@@ -30,7 +30,15 @@ class SwaggerUIFormatter extends FileFormatterBase {
       'doc_expansion' => 'list',
       'show_top_bar' => FALSE,
       'sort_tags_by_name' => FALSE,
-      'supported_submit_methods' => [],
+      'supported_submit_methods' => [
+        'get' => 'get',
+        'put' => 'put',
+        'post' => 'post',
+        'delete' => 'delete',
+        'options' => 'options',
+        'head' => 'head',
+        'patch' => 'patch'
+      ],
     ] + parent::defaultSettings();
   }
 
