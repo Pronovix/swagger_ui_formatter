@@ -124,23 +124,29 @@ class SwaggerUIFormatter extends FileFormatterBase {
    * {@inheritdoc}
    */
   public function view(FieldItemListInterface $items, $langcode = NULL) {
-    $swagger_files = [];
-    /** @var \Drupal\file\Entity\File $file */
-    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-      $swagger_files[] = file_create_url($file->getFileUri());
-    }
-
     $elements = parent::view($items, $langcode);
-    $elements['#attached'] = ['library' => ['swagger_ui_formatter/swagger_ui']];
-    $elements['#attached']['drupalSettings']['swaggerUIFormatter'][$this->fieldDefinition->getName()] = [
-      'swaggerFiles' => $swagger_files,
-      'validator' => $this->getSetting('validator'),
-      'validatorUrl' => $this->getSetting('validator_url'),
-      'docExpansion' => $this->getSetting('doc_expansion'),
-      'showTopBar' => $this->getSetting('show_top_bar'),
-      'sortTagsByName' => $this->getSetting('sort_tags_by_name'),
-      'supportedSubmitMethods' => array_keys(array_filter($this->getSetting('supported_submit_methods'))),
-    ];
+
+    if (_swagger_ui_formatter_get_library_path()) {
+      $swagger_files = [];
+      /** @var \Drupal\file\Entity\File $file */
+      foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
+        $swagger_files[] = file_create_url($file->getFileUri());
+      }
+
+      $elements['#attached'] = ['library' => [
+        'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
+        'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
+      ]];
+      $elements['#attached']['drupalSettings']['swaggerUIFormatter'][$this->fieldDefinition->getName()] = [
+        'swaggerFiles' => $swagger_files,
+        'validator' => $this->getSetting('validator'),
+        'validatorUrl' => $this->getSetting('validator_url'),
+        'docExpansion' => $this->getSetting('doc_expansion'),
+        'showTopBar' => $this->getSetting('show_top_bar'),
+        'sortTagsByName' => $this->getSetting('sort_tags_by_name'),
+        'supportedSubmitMethods' => array_keys(array_filter($this->getSetting('supported_submit_methods'))),
+      ];
+    }
 
     return $elements;
   }
