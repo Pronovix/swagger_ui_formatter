@@ -5,6 +5,8 @@
  * Main module file for Swagger UI Field Formatter.
  */
 
+use Drupal\Component\Serialization\Json;
+
 /**
  * Implements hook_theme().
  */
@@ -57,7 +59,7 @@ function swagger_ui_formatter_library_info_build() {
 /**
  * Helper function to determine the Swagger UI library path.
  *
- * @returns mixed
+ * @return string|bool
  *   Returns the library path or FALSE if the library is not found.
  */
 function _swagger_ui_formatter_get_library_path() {
@@ -82,7 +84,7 @@ function _swagger_ui_formatter_get_library_path() {
  * @param string $library_dir
  *   The directory name which contains the Swagger UI library.
  *
- * @return boolean
+ * @return bool
  *   Returns TRUE if the Swagger UI library is installed under the given
  *   directory. Returns FALSE otherwise.
  */
@@ -108,32 +110,22 @@ function _swagger_ui_formatter_is_library_directory($library_dir) {
  *   The library version or an empty string if the version cannot be determined.
  */
 function _swagger_ui_formatter_get_library_version() {
-  $version = '';
   if ($library_path = _swagger_ui_formatter_get_library_path()) {
-    $options = [
-      'file' => 'package.json',
-      'pattern' => '@"version":\s*"([0-9][0-9.]+)"@',
-      'lines' => 20,
-      'cols' => 200,
-    ];
-
-    $version = [];
-    $file = DRUPAL_ROOT . $library_path . '/' . $options['file'];
-    if (file_exists($file)) {
-      $file = fopen($file, 'r');
-      while ($options['lines'] && $line = fgets($file, $options['cols'])) {
-        if (preg_match($options['pattern'], $line, $version)) {
-          break;
-        }
-        $options['lines']--;
-      }
-      fclose($file);
+    $file = DRUPAL_ROOT . $library_path . '/package.json';
+    if (!file_exists($file)) {
+      return '';
     }
 
-    if (!empty($version[1])) {
-      $version = $version[1];
+    $content = file_get_contents($file);
+    if (!$content) {
+      return '';
+    }
+
+    $data = Json::decode($content);
+    if (isset($data['version'])) {
+      return $data['version'];
     }
   }
 
-  return $version;
+  return '';
 }
