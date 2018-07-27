@@ -16,7 +16,7 @@ INSTALLATION
 ------------
 
 1. Download the Swagger UI library, extract the file and rename the directory to
-   "swagger-ui" or ""swagger_ui". Now, place the renamed directory into the
+   "swagger-ui" or "swagger_ui". Now, place the renamed directory into the
    /libraries directory so it's path will be /libraries/swagger_ui
 
 2. Download the module from https://drupal.org and extract it into your
