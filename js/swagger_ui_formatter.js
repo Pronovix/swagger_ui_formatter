@@ -27,7 +27,7 @@
                 break;
             }
 
-            window['swagger_ui_' + fieldName + '_' + fieldDelta] = SwaggerUIBundle({
+            var options = {
               url: field.swaggerFiles[fieldDelta],
               dom_id: '#swagger-ui-' + fieldName + '-' + fieldDelta,
               deepLinking: true,
@@ -45,7 +45,12 @@
               layout: "StandaloneLayout",
               tagsSorter: field.sortTagsByName ? 'alpha' : '',
               supportedSubmitMethods: field.supportedSubmitMethods
-            });
+            };
+
+            // Allow altering the options.
+            $(window).trigger('swaggerUIFormatterOptionsAlter', options);
+
+            window['swagger_ui_' + fieldName + '_' + fieldDelta] = SwaggerUIBundle(options);
           }
         }
       }
