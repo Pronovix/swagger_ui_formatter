@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Routing\RouteMatchInterface;
 
 /**
  * Implements hook_theme().
@@ -129,4 +130,35 @@ function _swagger_ui_formatter_get_library_version() {
   }
 
   return '';
+}
+
+/**
+ * Implements hook_help().
+ */
+function swagger_ui_formatter_help($route_name, RouteMatchInterface $route_match) {
+  switch ($route_name) {
+    case 'help.page.swagger_ui_formatter':
+      $readme = file_get_contents(__DIR__ . '/README.txt');
+      $output = '';
+
+      // If the Markdown module is installed, use it to render the README.
+      if ($readme && (\Drupal::moduleHandler()->moduleExists('markdown') === TRUE)) {
+        $filter_manager = \Drupal::service('plugin.manager.filter');
+        $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        $filter = $filter_manager->createInstance('markdown', ['settings' => $settings]);
+        $output = $filter->process($readme, 'en');
+      } // Else the Markdown module is not installed output the README as text.
+      else if ($readme) {
+        $output = '<pre>' . $readme . '</pre>';
+      }
+
+      // Add a link to the Drupal.org project.
+      $output .= '<p>';
+      $output .= t('Visit the <a href=":project_link">project page</a> on Drupal.org for more information.', [
+        ':project_link' => 'https://www.drupal.org/project/swagger_ui_formatter'
+      ]);
+      $output .= '</p>';
+
+      return $output;
+  }
 }
