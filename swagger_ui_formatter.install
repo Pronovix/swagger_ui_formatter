@@ -18,22 +18,21 @@ function swagger_ui_formatter_requirements($phase) {
     $return['swagger_ui_library'] = [
       'title' => t('Swagger UI'),
       'severity' => REQUIREMENT_OK,
-      'value' => t('Swagger UI library version %version installed at %path.',
-        [
-          '%path' => DRUPAL_ROOT . $library_path,
-          '%version' => _swagger_ui_formatter_get_library_version(),
-        ]),
+      'value' => t('Swagger UI library version %version installed at %path.', [
+        '%path' => DRUPAL_ROOT . $library_path,
+        '%version' => _swagger_ui_formatter_get_library_version(),
+      ]),
     ];
   }
   else {
     $return['swagger_ui_library'] = [
       'title' => t('Swagger UI'),
       'severity' => REQUIREMENT_ERROR,
-      'value' => t('Swagger UI library was not found. Download <a href=":link" target="_blank">the latest version of library</a>
-        and place it in the libraries directory (/libraries/swagger_ui).',
-        [
-          ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
-        ]),
+      'value' => t('Swagger UI library was not found. Download
+        <a href=":link" target="_blank">the appropriate version</a> and place it in the
+        [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
+        ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
+      ]),
     ];
   }
 
