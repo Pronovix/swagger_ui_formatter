@@ -45,7 +45,7 @@ function swagger_ui_formatter_library_info_build() {
     $libraries['swagger_ui_formatter.swagger_ui_integration'] = [
       'version' => 'VERSION',
       'js' => [
-        'js/swagger_ui_formatter.js' => [],
+        'js/swagger-ui-formatter.js' => [],
       ],
       'dependencies' => [
         'core/jquery',

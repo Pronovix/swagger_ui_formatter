@@ -2,7 +2,7 @@
 
 /**
  * @file
- * Install, update and uninstall functions for Swagger UI Field Formatter module.
+ * Install, update and uninstall functions for Swagger UI Field Formatter.
  */
 
 /**
@@ -43,5 +43,12 @@ function swagger_ui_formatter_requirements($phase) {
  * Clear cache due to updated library definitions.
  */
 function swagger_ui_formatter_update_8001() {
+  // An empty update forces a call to drupal_flush_all_caches().
+}
+
+/**
+ * Clear cache due to updated library definitions.
+ */
+function swagger_ui_formatter_update_8002() {
   // An empty update forces a call to drupal_flush_all_caches().
 }
