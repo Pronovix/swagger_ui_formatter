@@ -1,5 +1,5 @@
 name: Swagger UI Field Formatter
-description: Provides a Swagger UI field formatter for file fields.
+description: Provides a Swagger UI field formatter for File and Link fields.
 
 dependencies:
   - drupal:file

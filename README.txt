@@ -11,10 +11,11 @@ CONTENTS OF THIS FILE
 INTRODUCTION
 ------------
 
-This module provides a field formatter for file fields with allowed file types
-of JSON (.json) and/or YAML (.yml or .yaml), which renders the uploaded file
-using Swagger UI if the file is a valid Swagger file. This module uses the
-Swagger UI library available at https://github.com/swagger-api/swagger-ui
+This module provides a field formatter for File and Link fields which renders
+the referenced file using Swagger UI if the file is a valid Swagger file.
+Supported file types are JSON (.json) and/or YAML (.yml or .yaml). This module
+uses the Swagger UI library available at
+https://github.com/swagger-api/swagger-ui
 
  * For a full description of the module, visit the project page:
    https://www.drupal.org/project/swagger_ui_formatter
@@ -60,6 +61,8 @@ Alternately,
 CONFIGURATION
 -------------
 
+File fields:
+
     1. Navigate to Structure > Content types > TYPE > Manage fields where
        TYPE is the content type to which you want to add the new field, such as
        a Basic page.
@@ -71,12 +74,28 @@ CONFIGURATION
     6. Click "Save settings".
     7. Click on the "Manage display" tab.
     8. Select "Swagger UI" in the Format drop-down for the new field and
-       optionally configure the formatter settings.
-    9. Click Save.
-    10. Add a new "TYPE" type content and upload a valid Swagger file.
+       optionally configure formatter settings.
+    9. Click "Save".
+    10. Add a new TYPE type content and upload a valid Swagger file.
 
-When viewing the content page the uploaded Swagger file will be rendered by
-Swagger UI.
+Link fields:
+
+    1. Navigate to Structure > Content types > TYPE > Manage fields where
+       TYPE is the content type to which you want to add the new field, such as
+       a Basic page.
+    2. Click on the "Add field" button to add a new field.
+    3. Set the field type to "Link" and enter a label name.
+    4. Click "Save and continue".
+    5. On the "Edit" tab manage your field settings as you wish.
+    6. Click "Save settings".
+    7. Click on the "Manage display" tab.
+    8. Select "Swagger UI" in the Format drop-down for the new field and
+       optionally configure formatter settings.
+    9. Click "Save".
+    10. Add a new TYPE type content and provide a valid Swagger file path.
+
+When viewing the content page the uploaded or the referenced Swagger file will
+be rendered by Swagger UI.
 
 Note: If the content of the Swagger file does not render correctly try clearing
 the cache by navigating to Configuration > Development > Performance and
