@@ -2,23 +2,12 @@
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
- * Plugin implementation of the 'swagger_ui' formatter.
- *
- * @FieldFormatter(
- *   id = "swagger_ui",
- *   label = @Translation("Swagger UI"),
- *   description = @Translation("Formats file fields with Swagger YAML or JSON files with a rendered Swagger UI"),
- *   field_types = {
- *     "file"
- *   }
- * )
+ * Provides common methods for Swagger UI field formatters.
  */
-class SwaggerUIFormatter extends FileFormatterBase {
+trait SwaggerUIFormatterTrait {
 
   /**
    * {@inheritdoc}
@@ -129,46 +118,36 @@ class SwaggerUIFormatter extends FileFormatterBase {
   }
 
   /**
-   * {@inheritdoc}
+   * Helper function to attach library definitions and pass JavaScript settings.
+   *
+   * @param array $element
+   *   A renderable array of the field element.
+   * @param array $swagger_files
+   *   An array of Swagger file paths to pass to Swagger UI.
+   *
+   * @return array
+   *   A renderable array of the field element with attached libraries.
    */
-  public function view(FieldItemListInterface $items, $langcode = NULL) {
-    $elements = parent::view($items, $langcode);
-
-    if (_swagger_ui_formatter_get_library_path()) {
-      $swagger_files = [];
-      /** @var \Drupal\file\Entity\File $file */
-      foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-        $swagger_files[] = file_create_url($file->getFileUri());
-      }
-
-      $elements['#attached'] = ['library' => [
-        'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
-        'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
-      ]];
-      $elements['#attached']['drupalSettings']['swaggerUIFormatter'][$this->fieldDefinition->getName()] = [
-        'swaggerFiles' => $swagger_files,
-        'validator' => $this->getSetting('validator'),
-        'validatorUrl' => $this->getSetting('validator_url'),
-        'docExpansion' => $this->getSetting('doc_expansion'),
-        'showTopBar' => $this->getSetting('show_top_bar'),
-        'sortTagsByName' => $this->getSetting('sort_tags_by_name'),
-        'supportedSubmitMethods' => array_keys(array_filter($this->getSetting('supported_submit_methods'))),
-      ];
-    }
-
-    return $elements;
-  }
-
-  /**
-   * {@inheritdoc}
-   */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = [];
-    foreach ($this->getEntitiesToView($items, $langcode) as $delta => $file) {
-      $element[$delta] = [
-        '#theme' => 'swagger_ui_field_item',
-        '#field_name' => $this->fieldDefinition->getName(),
-        '#delta' => $delta,
+  public function attachLibraries(array $element, array $swagger_files) {
+    if (!empty($swagger_files) && _swagger_ui_formatter_get_library_path()) {
+      $element['#attached'] = [
+        'library' => [
+          'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
+          'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
+        ],
+        'drupalSettings' => [
+          'swaggerUIFormatter' => [
+            $this->fieldDefinition->getName() => [
+              'swaggerFiles' => $swagger_files,
+              'validator' => $this->getSetting('validator'),
+              'validatorUrl' => $this->getSetting('validator_url'),
+              'docExpansion' => $this->getSetting('doc_expansion'),
+              'showTopBar' => $this->getSetting('show_top_bar'),
+              'sortTagsByName' => $this->getSetting('sort_tags_by_name'),
+              'supportedSubmitMethods' => array_keys(array_filter($this->getSetting('supported_submit_methods'))),
+            ]
+          ]
+        ]
       ];
     }
     return $element;
