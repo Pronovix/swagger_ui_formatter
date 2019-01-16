@@ -61,12 +61,6 @@ Alternately,
 CONFIGURATION
 -------------
 
-    1. Navigate to Structure > Content types > TYPE > Manage fields where
-       TYPE is the content type to which you want to add the new field, such as
-       a Basic page.
-    2. Click on the "Add field" button to add a new field and proceed with step
-       3. (described below) according to the field type you want to use.
-
 File fields:
 
     1. Navigate to Structure > Content types > TYPE > Manage fields where
