@@ -30,7 +30,7 @@ function swagger_ui_formatter_library_info_build() {
   if ($library_path = _swagger_ui_formatter_get_library_path()) {
     // Library definition for required Swagger UI files.
     $libraries['swagger_ui_formatter.swagger_ui'] = [
-      'version' => 'VERSION',
+      'version' => _swagger_ui_formatter_get_library_version(),
       'css' => [
         'theme' => [
           $library_path . '/dist/swagger-ui.css' => ['minified' => TRUE],
@@ -43,9 +43,9 @@ function swagger_ui_formatter_library_info_build() {
     ];
     // Library definition for Swagger UI integration.
     $libraries['swagger_ui_formatter.swagger_ui_integration'] = [
-      'version' => 'VERSION',
+      'version' => '1.0',
       'js' => [
-        'js/swagger_ui_formatter.js' => [],
+        'js/swagger-ui-formatter.js' => [],
       ],
       'dependencies' => [
         'core/jquery',
