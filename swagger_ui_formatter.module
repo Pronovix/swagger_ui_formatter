@@ -7,6 +7,7 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Drupal\Core\DrupalKernel;
 
 /**
  * Implements hook_theme().
@@ -69,15 +70,31 @@ function _swagger_ui_formatter_get_library_path() {
   if ($cache = \Drupal::cache()->get($cid)) {
     return $cache->data;
   }
-  else {
-    foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
-      if (_swagger_ui_formatter_is_library_directory($library_dir)) {
-        \Drupal::cache()->set($cid, $library_dir);
-        return $library_dir;
+
+  $directories = [];
+  // Search inside the install profile.
+  if ($profile = \Drupal::installProfile()) {
+    $profile_path = drupal_get_path('profile', $profile);
+    $directories[] = "/$profile_path/libraries";
+  }
+  // Search inside sites/all/libraries for backwards-compatibility.
+  $directories[] = '/sites/all/libraries';
+  // Search inside the root libraries directory.
+  $directories[] = '/libraries';
+  // Finally search inside sites/<domain>/libraries.
+  $site_path = DrupalKernel::findSitePath(\Drupal::request());
+  $directories[] = "/$site_path/libraries";
+
+  foreach ($directories as $directory) {
+    foreach (['swagger-ui', 'swagger_ui'] as $library) {
+      $library_path = $directory . '/' . $library;
+      if (_swagger_ui_formatter_is_library_directory($library_path)) {
+        \Drupal::cache()->set($cid, $library_path);
+        return $library_path;
       }
     }
-    return FALSE;
   }
+  return FALSE;
 }
 
 /**
