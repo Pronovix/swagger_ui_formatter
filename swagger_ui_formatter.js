@@ -17,7 +17,7 @@ window.SwaggerUiList = [];
         if (formatter.swagger_fields.hasOwnProperty(fieldItem)) {
           var field = formatter.swagger_fields[fieldItem];
 
-          window[field.field_name] = SwaggerUIBundle({
+          var swaggerOptions = {
             url: field.file_name,
             dom_id: '#' + field.field_name,
             deepLinking: true,
@@ -32,7 +32,12 @@ window.SwaggerUiList = [];
             docExpansion: formatter.doc_expansion,
             layout: "StandaloneLayout",
             tagsSorter: formatter.sort_tags_by_name ? 'alpha' : ''
-          });
+          };
+
+          // Allow altering the options.
+          $(window).trigger('swaggerUIFormatterOptionsAlter', swaggerOptions);
+
+          window[field.field_name] = SwaggerUIBundle(swaggerOptions);
         }
       }
 
