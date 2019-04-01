@@ -7,15 +7,21 @@
 
   Drupal.behaviors.swaggerUIFormatter = {
     attach: function(context) {
-
-      // Add Swagger UI's SVG definitions to the DOM.
-      $('body').prepend(swaggerUISVGDefinitions());
+      // Add SVG definitions to the DOM (no longer needed since v3.13.4).
+      // @see https://github.com/swagger-api/swagger-ui/releases/tag/v3.13.4
+      $('body', context).once('swagger-ui-svg-definitions').prepend(swaggerUISVGDefinitions());
 
       // Iterate over fields and render each field item with Swagger UI.
       for (var fieldName in drupalSettings.swaggerUIFormatter) {
         if (drupalSettings.swaggerUIFormatter.hasOwnProperty(fieldName)) {
           var field = drupalSettings.swaggerUIFormatter[fieldName];
           for (var fieldDelta = 0; fieldDelta < field.swaggerFiles.length; fieldDelta++) {
+            // Do not instantiate/re-render Swagger UI if it has been done
+            // before (avoid re-rendering on AJAX requests for example).
+            if ('swagger_ui_' + fieldName + '_' + fieldDelta in window) {
+              continue;
+            }
+
             var validatorUrl = undefined;
             switch (field.validator) {
               case 'custom':
@@ -54,13 +60,15 @@
           }
         }
       }
-
     }
   };
 
   /**
    * Gets the SVG definitions required for Swagger UI.
    *
+   * No longer needed since Swagger UI v3.13.4.
+   *
+   * @see https://github.com/swagger-api/swagger-ui/releases/tag/v3.13.4
    * @see assets/vendor/swagger-ui/index.html
    *
    * @returns {string}
