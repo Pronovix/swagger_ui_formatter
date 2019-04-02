@@ -7,6 +7,17 @@
 
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Routing\RouteMatchInterface;
+use Symfony\Component\DomCrawler\Crawler;
+
+/**
+ * Swagger UI library path related cache ID.
+ */
+const SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID = 'swagger_ui_formatter:library_path';
+
+/**
+ * Swagger UI SVG definition related cache ID.
+ */
+const SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID = 'swagger_ui_formatter:svg_definition';
 
 /**
  * Implements hook_theme().
@@ -65,14 +76,13 @@ function swagger_ui_formatter_library_info_build() {
  *   Returns the library path or FALSE if the library is not found.
  */
 function _swagger_ui_formatter_get_library_path() {
-  $cid = 'swagger_ui_formatter:library_path';
-  if ($cache = \Drupal::cache()->get($cid)) {
+  if ($cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID)) {
     return $cache->data;
   }
   else {
     foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
       if (_swagger_ui_formatter_is_library_directory($library_dir)) {
-        \Drupal::cache()->set($cid, $library_dir);
+        \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir);
         return $library_dir;
       }
     }
@@ -117,19 +127,43 @@ function _swagger_ui_formatter_get_library_version() {
     if (!file_exists($file)) {
       return '';
     }
-
     $content = file_get_contents($file);
     if (!$content) {
       return '';
     }
-
     $data = Json::decode($content);
     if (isset($data['version'])) {
       return $data['version'];
     }
   }
-
   return '';
+}
+
+/**
+ * Gets Swagger UI related SVG definition.
+ *
+ * Since Swagger UI v3.13.4 there is no need to include the <svg> tag in HTML.
+ *
+ * @see https://github.com/swagger-api/swagger-ui/releases/tag/v3.13.4
+ *
+ * @return string|NULL
+ *   The required <svg> tag as a HTML string or NULL if it doesn't exist.
+ */
+function _swagger_ui_formatter_get_svg_definition() {
+  if ($cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID)) {
+    return $cache->data;
+  }
+  $library_path = _swagger_ui_formatter_get_library_path();
+  if ($library_path && file_exists(DRUPAL_ROOT . $library_path . '/dist/index.html')) {
+    $dom_crawler = new Crawler(file_get_contents(DRUPAL_ROOT . $library_path . '/dist/index.html'));
+    $dom_crawler = $dom_crawler->filterXPath('descendant-or-self::body/svg');
+    if ($domElement = $dom_crawler->getNode(0)) {
+      $svg = $domElement->ownerDocument->saveHTML($domElement);
+      \Drupal::cache()->set(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID, $svg);
+      return $svg;
+    }
+  }
+  return NULL;
 }
 
 /**
@@ -161,4 +195,12 @@ function swagger_ui_formatter_help($route_name, RouteMatchInterface $route_match
 
       return $output;
   }
+}
+
+/**
+ * Implements hook_cache_flush().
+ */
+function swagger_ui_formatter_cache_flush() {
+  \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
+  \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID);
 }

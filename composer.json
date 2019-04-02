@@ -11,5 +11,8 @@
       "homepage": "https://www.drupal.org/u/balazswmann",
       "role": "Maintainer"
     }
-  ]
+  ],
+  "require": {
+    "symfony/dom-crawler": "~3.4|~4.0"
+  }
 }

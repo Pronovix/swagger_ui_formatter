@@ -128,7 +128,7 @@ trait SwaggerUIFormatterTrait {
    * @return array
    *   A renderable array of the field element with attached libraries.
    */
-  public function attachLibraries(array $element, array $swagger_files) {
+  protected function attachLibraries(array $element, array $swagger_files) {
     if (!empty($swagger_files) && _swagger_ui_formatter_get_library_path()) {
       $element['#attached'] = [
         'library' => [
@@ -138,6 +138,7 @@ trait SwaggerUIFormatterTrait {
         'drupalSettings' => [
           'swaggerUIFormatter' => [
             $this->fieldDefinition->getName() => [
+              'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
               'swaggerFiles' => $swagger_files,
               'validator' => $this->getSetting('validator'),
               'validatorUrl' => $this->getSetting('validator_url'),
