@@ -46,8 +46,29 @@ function swagger_ui_formatter_update_8001() {
 }
 
 /**
- * Clear cache due to updated library and class definitions.
+ * Update old field formatter IDs.
  */
 function swagger_ui_formatter_update_8002() {
-  // An empty update forces a call to drupal_flush_all_caches().
+  // Rebuild cache first due to updated library and class definitions and to
+  // avoid undefined/invalid plugin ID errors.
+  drupal_flush_all_caches();
+  /** @var \Drupal\Core\Config\Entity\ConfigEntityStorage $storage */
+  $storage = \Drupal::entityTypeManager()->getStorage('entity_view_display');
+  /** @var \Drupal\Core\Entity\Entity\EntityViewDisplay $display */
+  foreach ($storage->loadMultiple() as $display) {
+    $display_needs_update = FALSE;
+    // Loop through components (enabled "non-hidden" fields and properties) and
+    // search for the old "swagger_ui" field formatter ID. Once one is found
+    // change it to the new ID and mark the display for update.
+    foreach ($display->getComponents() as $name => $component) {
+      if (isset($component['type']) && $component['type'] === 'swagger_ui') {
+        $component['type'] = 'swagger_ui_file';
+        $display->setComponent($name, $component);
+        $display_needs_update = TRUE;
+      }
+    };
+    if ($display_needs_update) {
+      $display->save();
+    }
+  }
 }
