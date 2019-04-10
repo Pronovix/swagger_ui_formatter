@@ -61,7 +61,7 @@ function swagger_ui_formatter_update_8002() {
     // search for the old "swagger_ui" field formatter ID. Once one is found
     // change it to the new ID and mark the display for update.
     foreach ($display->getComponents() as $name => $component) {
-      if (isset($component['type']) && ($component['type'] == 'swagger_ui')) {
+      if (isset($component['type']) && $component['type'] === 'swagger_ui') {
         $component['type'] = 'swagger_ui_file';
         $display->setComponent($name, $component);
         $display_needs_update = TRUE;
