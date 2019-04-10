@@ -105,9 +105,10 @@ clicking on the "Clear all caches" button.
 MAINTAINERS
 -----------
 
-The 8.x branches:
+The 8.x, 7.x-2.x branches:
 
  * Balazs Wittmann (balazswmann) - https://www.drupal.org/u/balazswmann
+ * Dezső BICZÓ (mxr576) - https://www.drupal.org/u/mxr576
  
 Supporting organizations:
 
@@ -115,11 +116,12 @@ Supporting organizations:
 
 ---
 
-The 7.x branches:
- 
+The 7.x-1.x branch:
+
  * Dezső BICZÓ (mxr576) - https://www.drupal.org/u/mxr576
  * dsudheesh - https://www.drupal.org/u/dsudheesh
 
 Supporting organizations:
 
  * DigitalAPICraft - https://www.drupal.org/digitalapicraft
+ * Pronovix - https://www.drupal.org/pronovix
