@@ -59,13 +59,13 @@ function swagger_ui_formatter_library_info_build() {
         'js/swagger-ui-formatter.js' => [],
       ],
       'dependencies' => [
-        'core/jquery',
         'core/drupal',
+        'core/jquery',
+        'core/jquery.once',
         'core/drupalSettings',
       ],
     ];
   }
-
   return $libraries;
 }
 

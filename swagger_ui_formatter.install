@@ -10,7 +10,6 @@
  */
 function swagger_ui_formatter_requirements($phase) {
   $requirements = [];
-
   if ($phase == 'runtime') {
     if ($library_path = _swagger_ui_formatter_get_library_path()) {
       $requirements['swagger_ui_library'] = [
@@ -34,7 +33,6 @@ function swagger_ui_formatter_requirements($phase) {
       ];
     }
   }
-
   return $requirements;
 }
 
