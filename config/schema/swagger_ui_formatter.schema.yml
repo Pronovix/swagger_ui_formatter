@@ -1,6 +1,5 @@
-field.formatter.settings.swagger_ui:
+field_formatter_settings_swagger_ui_base:
   type: mapping
-  label: 'Swagger UI field formatter settings'
   mapping:
     validator:
       type: string
@@ -22,3 +21,11 @@ field.formatter.settings.swagger_ui:
       sequence:
         type: string
       label: 'Try it out support for HTTP Methods'
+
+field.formatter.settings.swagger_ui_file:
+  type: field_formatter_settings_swagger_ui_base
+  label: 'Swagger UI file field formatter settings'
+
+field.formatter.settings.swagger_ui_link:
+  type: field_formatter_settings_swagger_ui_base
+  label: 'Swagger UI link field formatter settings'
