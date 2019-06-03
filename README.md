@@ -46,7 +46,47 @@ Install the Swagger UI Field Formatter module as you would normally install
 a contributed Drupal module. Visit https://www.drupal.org/node/1897420 for
 further information.
 
-Alternately,
+
+INSTALLATION VIA COMPOSER (RECOMMENDED)
+---------------------------------------
+
+If you would like to install the Swagger UI library with composer, you
+probably used the [Drupal Composer template](https://github.com/drupal-composer/drupal-project)
+to setup your project. It's recommended to use [asset-packagist](https://asset-packagist.org/)
+to install JavaScript libraries. So you will need to add the following to your
+composer.json file into the repositories section:
+
+```json
+    {
+        "type": "composer",
+        "url": "https://asset-packagist.org"
+    }
+```
+
+It's also needed to extend the 'installer-path' section:
+
+```json
+    "web/libraries/{$name}": [
+        "type:drupal-library",
+        "type:bower-asset",
+        "type:npm-asset"
+    ],
+```
+And add a new 'installer-types' section next to the 'installer-path' in the 'extra' section:
+
+```json
+    "installer-types": ["bower-asset", "npm-asset"],
+```
+
+After this you can install the library with:
+
+```shell
+composer require oomphinc/composer-installers-extender npm-asset/swagger-ui
+```
+The library will be downloaded into the libraries folder.
+
+MANUAL INSTALLATION
+-------------------
 
     1. Download the Swagger UI library, extract the file and rename the folder
        to "swagger-ui" or "swagger_ui". Now, place the renamed folder in the
