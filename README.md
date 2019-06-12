@@ -71,6 +71,7 @@ It's also needed to extend the 'installer-path' section:
         "type:bower-asset",
         "type:npm-asset"
     ],
+    "web/libraries/swagger_ui": ["bower-asset/swagger-ui"],
 ```
 And add a new 'installer-types' section next to the 'installer-path' in the 'extra' section:
 
@@ -81,7 +82,7 @@ And add a new 'installer-types' section next to the 'installer-path' in the 'ext
 After this you can install the library with:
 
 ```shell
-composer require oomphinc/composer-installers-extender npm-asset/swagger-ui
+composer require oomphinc/composer-installers-extender bower-asset/swagger-ui
 ```
 The library will be downloaded into the libraries folder.
 
