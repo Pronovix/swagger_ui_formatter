@@ -3,6 +3,7 @@
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\Form\FormStateInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 
 /**
@@ -23,6 +24,33 @@ class SwaggerUIFileFormatter extends FileFormatterBase {
   /**
    * {@inheritdoc}
    */
+  public static function defaultSettings() {
+    $settings = parent::defaultSettings();
+    static::addDefaultSettings($settings);
+    return $settings;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+    $this->addSettingsSummary($summary, $this);
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+    $this->alterSettingsForm($form, $form_state, $this, $this->fieldDefinition);
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
   public function view(FieldItemListInterface $items, $langcode = NULL) {
     $element = parent::view($items, $langcode);
 
@@ -35,7 +63,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase {
       $swagger_files[] = file_create_url($file->getFileUri());
     }
 
-    return $this->attachLibraries($element, $swagger_files);
+    return $this->attachLibraries($element, $swagger_files, $this, $this->fieldDefinition);
   }
 
   /**
