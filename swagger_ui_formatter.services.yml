@@ -1,0 +1,4 @@
+services:
+  logger.channel.swagger_ui_formatter:
+    parent: logger.channel_base
+    arguments: ['swagger_ui_formatter']

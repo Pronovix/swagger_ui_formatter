@@ -7,17 +7,29 @@
 
 /**
  * Implements hook_requirements().
+ *
+ * Drush and Config Installer does not perform requirements check before
+ * enables a module.
+ *
+ * @see https://www.drupal.org/project/config_installer/issues/3061127
+ * @see https://github.com/drush-ops/drush/issues/3669
  */
 function swagger_ui_formatter_requirements($phase) {
   $requirements = [];
-  if ($phase == 'runtime') {
+
+  // Make sure _swagger_ui_formatter_get_library_path() is defined.
+  if ($phase === 'install') {
+    module_load_include('module', 'swagger_ui_formatter');
+  }
+
+  if (in_array($phase, ['runtime', 'install'])) {
     if ($library_path = _swagger_ui_formatter_get_library_path()) {
       $requirements['swagger_ui_library'] = [
         'title' => t('Swagger UI'),
         'severity' => REQUIREMENT_OK,
-        'value' => t('Swagger UI library version %version installed at %path.', [
+        'value' => _swagger_ui_formatter_get_library_version(),
+        'description' => t('Swagger UI library installed at %path.', [
           '%path' => DRUPAL_ROOT . $library_path,
-          '%version' => _swagger_ui_formatter_get_library_version(),
         ]),
       ];
     }
@@ -25,14 +37,13 @@ function swagger_ui_formatter_requirements($phase) {
       $requirements['swagger_ui_library'] = [
         'title' => t('Swagger UI'),
         'severity' => REQUIREMENT_ERROR,
-        'value' => t('Swagger UI library was not found. Download
-          <a href=":link" target="_blank">the appropriate version</a> and place it in the
-          [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
+        'description' => t('Swagger UI library was not found. Download <a href=":link" target="_blank">the appropriate version</a> and place it in the [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
           ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
         ]),
       ];
     }
   }
+
   return $requirements;
 }
 

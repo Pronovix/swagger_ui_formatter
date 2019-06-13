@@ -2,8 +2,14 @@
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterBase;
+use Drupal\Core\Form\FormStateInterface;
+use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
+use Drupal\Core\StringTranslation\TranslationInterface;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Plugin implementation of Swagger UI link field formatter.
@@ -16,41 +22,91 @@ use Drupal\Core\Field\FormatterBase;
  *   }
  * )
  */
-class SwaggerUILinkFormatter extends FormatterBase {
+class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   use SwaggerUIFormatterTrait;
 
   /**
+   * Constructs a SwaggerUILinkFormatter object.
+   *
+   * @param string $plugin_id
+   *   The plugin_id for the formatter.
+   * @param mixed $plugin_definition
+   *   The plugin implementation definition.
+   * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
+   *   The definition of the field to which the formatter is associated.
+   * @param array $settings
+   *   The formatter settings.
+   * @param string $label
+   *   The formatter label display setting.
+   * @param string $view_mode
+   *   The view mode.
+   * @param array $third_party_settings
+   *   Any third party settings.
+   * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
+   *   String translation.
+   */
+  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, TranslationInterface $string_translation) {
+    parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
+    $this->stringTranslation = $string_translation;
+  }
+
+  /**
    * {@inheritdoc}
    */
-  public function view(FieldItemListInterface $items, $langcode = NULL) {
-    $element = parent::view($items, $langcode);
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
+    return new static(
+      $plugin_id,
+      $plugin_definition,
+      $configuration['field_definition'],
+      $configuration['settings'],
+      $configuration['label'],
+      $configuration['view_mode'],
+      $configuration['third_party_settings'],
+      $container->get('string_translation')
+    );
+  }
 
-    $swagger_files = [];
-    foreach ($items as $delta => $item) {
-      /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem $item */
-      // We don't validate URLs or the referenced paths. It's the user's
-      // responsibility to set up field settings correctly and provide valid
-      // URLs with valid file extensions.
-      $swagger_files[] = $item->getUrl()->toString();
-    }
+  /**
+   * {@inheritdoc}
+   */
+  public static function defaultSettings() {
+    $settings = parent::defaultSettings();
+    static::addDefaultSettings($settings);
+    return $settings;
+  }
 
-    return $this->attachLibraries($element, $swagger_files);
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsSummary() {
+    $summary = parent::settingsSummary();
+    $this->addSettingsSummary($summary, $this);
+    return $summary;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  public function settingsForm(array $form, FormStateInterface $form_state) {
+    $form = parent::settingsForm($form, $form_state);
+    $this->alterSettingsForm($form, $form_state, $this, $this->fieldDefinition);
+    return $form;
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []) {
+    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem $field_item */
+    return $field_item->getUrl()->toString();
   }
 
   /**
    * {@inheritdoc}
    */
   public function viewElements(FieldItemListInterface $items, $langcode) {
-    $element = [];
-    foreach ($items as $delta => $item) {
-      $element[$delta] = [
-        '#theme' => 'swagger_ui_field_item',
-        '#field_name' => $this->fieldDefinition->getName(),
-        '#delta' => $delta,
-      ];
-    }
-    return $element;
+    return $this->buildRenderArray($items, $this, $this->fieldDefinition, ['lang_code' => $langcode]);
   }
 
 }
