@@ -108,7 +108,7 @@ function _swagger_ui_formatter_is_library_directory($library_dir) {
     'dist/swagger-ui-standalone-preset.js',
   ];
   foreach ($files_to_check as $file) {
-    if (!file_exists(DRUPAL_ROOT . $library_dir. '/' . $file)) {
+    if (!file_exists(DRUPAL_ROOT . $library_dir . '/' . $file)) {
       return FALSE;
     }
   }
@@ -146,7 +146,7 @@ function _swagger_ui_formatter_get_library_version() {
  *
  * @see https://github.com/swagger-api/swagger-ui/releases/tag/v3.13.4
  *
- * @return string|NULL
+ * @return string|null
  *   The required <svg> tag as a HTML string or NULL if it doesn't exist.
  */
 function _swagger_ui_formatter_get_svg_definition() {
@@ -181,15 +181,16 @@ function swagger_ui_formatter_help($route_name, RouteMatchInterface $route_match
         $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
         $filter = $filter_manager->createInstance('markdown', ['settings' => $settings]);
         $output = $filter->process($readme, 'en');
-      } // Else the Markdown module is not installed output the README as text.
-      else if ($readme) {
+      }
+      // Else the Markdown module is not installed output the README as text.
+      elseif ($readme) {
         $output = '<pre>' . $readme . '</pre>';
       }
 
       // Add a link to the Drupal.org project.
       $output .= '<p>';
       $output .= t('Visit the <a href=":project_link">project page</a> on Drupal.org for more information.', [
-        ':project_link' => 'https://www.drupal.org/project/swagger_ui_formatter'
+        ':project_link' => 'https://www.drupal.org/project/swagger_ui_formatter',
       ]);
       $output .= '</p>';
 
