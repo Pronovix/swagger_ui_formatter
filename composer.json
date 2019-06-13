@@ -2,6 +2,7 @@
     "name": "drupal/swagger_ui_formatter",
     "description": "Provides a Swagger UI field formatter for File and Link fields.",
     "type": "drupal-module",
+    "keywords": ["Drupal", "OpenAPI", "Swagger", "API docs"],
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
