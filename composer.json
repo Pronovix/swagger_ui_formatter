@@ -6,6 +6,11 @@
     "license": "GPL-2.0-or-later",
     "minimum-stability": "dev",
     "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
+    "support": {
+        "issues": "https://github.com/Pronovix/swagger_ui_formatter/issues",
+        "source": "https://github.com/Pronovix/swagger_ui_formatter",
+        "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
+    },
     "require": {
         "symfony/dom-crawler": "~3.4|~4.0"
     }
