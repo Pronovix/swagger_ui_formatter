@@ -2,10 +2,13 @@
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
+use Drupal\Component\Utility\NestedArray;
 use Drupal\Core\Field\FieldDefinitionInterface;
+use Drupal\Core\Field\FieldItemInterface;
+use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
-use Drupal\Core\Messenger\MessengerTrait;
+use Drupal\Core\StringTranslation\StringTranslationTrait;
 
 /**
  * Provides common methods for Swagger UI field formatters.
@@ -14,7 +17,7 @@ use Drupal\Core\Messenger\MessengerTrait;
  */
 trait SwaggerUIFormatterTrait {
 
-  use MessengerTrait;
+  use StringTranslationTrait;
 
   /**
    * Adds Swagger UI field formatter settings to formatter settings.
@@ -22,7 +25,7 @@ trait SwaggerUIFormatterTrait {
    * @param array $settings
    *   Settings inherited from the parent class.
    */
-  protected static function addDefaultSettings(array &$settings) {
+  final protected static function addDefaultSettings(array &$settings) {
     $settings = [
       'validator' => 'default',
       'validator_url' => '',
@@ -53,7 +56,7 @@ trait SwaggerUIFormatterTrait {
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition in the current field formatter.
    */
-  protected function alterSettingsForm(array &$form, FormStateInterface $form_state, FormatterInterface $formatter, FieldDefinitionInterface $field_definition) {
+  final protected function alterSettingsForm(array &$form, FormStateInterface $form_state, FormatterInterface $formatter, FieldDefinitionInterface $field_definition) {
     $form['validator'] = [
       '#type' => 'select',
       '#title' => $this->t('Validator'),
@@ -124,7 +127,7 @@ trait SwaggerUIFormatterTrait {
    * @param \Drupal\Core\Field\FormatterInterface $formatter
    *   The current field formatter instance.
    */
-  protected function addSettingsSummary(array &$summary, FormatterInterface $formatter) {
+  final protected function addSettingsSummary(array &$summary, FormatterInterface $formatter) {
     $supported_submit_methods = array_filter($formatter->getSetting('supported_submit_methods'));
     $summary[] = $this->t('Uses %validator validator, Doc Expansion of %doc_expansion, Shows top bar: %show_top_bar, Tags sorted by name: %sort_tags_by_name, Try it out support for HTTP Methods: %supported_submit_methods.', [
       '%validator' => $formatter->getSetting('validator'),
@@ -136,44 +139,99 @@ trait SwaggerUIFormatterTrait {
   }
 
   /**
-   * Helper function to attach library definitions and pass JavaScript settings.
+   * Builds a render array from a field.
    *
-   * @param array $element
-   *   A renderable array of the field element.
-   * @param array $swagger_files
-   *   An array of Swagger file paths to pass to Swagger UI.
+   * @param \Drupal\Core\Field\FieldItemListInterface $items
+   *   Field items.
    * @param \Drupal\Core\Field\FormatterInterface $formatter
    *   The current field formatter.
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition in the current field formatter.
+   * @param array $context
+   *   Additional context for field rendering.
    *
    * @return array
-   *   A renderable array of the field element with attached libraries.
+   *   Field value as a render array.
    */
-  protected function attachLibraries(array $element, array $swagger_files, FormatterInterface $formatter, FieldDefinitionInterface $field_definition) {
-    if (!empty($swagger_files) && _swagger_ui_formatter_get_library_path()) {
-      $element['#attached'] = [
-        'library' => [
-          'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
-          'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
-        ],
-        'drupalSettings' => [
-          'swaggerUIFormatter' => [
-            $field_definition->getName() => [
-              'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
-              'swaggerFiles' => $swagger_files,
-              'validator' => $formatter->getSetting('validator'),
-              'validatorUrl' => $formatter->getSetting('validator_url'),
-              'docExpansion' => $formatter->getSetting('doc_expansion'),
-              'showTopBar' => $formatter->getSetting('show_top_bar'),
-              'sortTagsByName' => $formatter->getSetting('sort_tags_by_name'),
-              'supportedSubmitMethods' => array_keys(array_filter($formatter->getSetting('supported_submit_methods'))),
-            ],
-          ],
-        ],
+  final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []) {
+    $element = [];
+    if (!_swagger_ui_formatter_get_library_path()) {
+      $element = [
+        '#theme' => 'status_messages',
+        '#message_list' => ['error' => [$this->t('Swagger UI library is missing.')]],
       ];
     }
+    else {
+      foreach ($items as $delta => $item) {
+        $element[$delta] = [
+          '#delta' => $delta,
+          '#field_name' => $field_definition->getName(),
+        ];
+        // It's the user's responsibility to set up field settings correctly
+        // and use this field formatter with valid Swagger files.
+        // Although, it could happen that a URL could not be generated from
+        // a field value.
+        $swagger_file_url = $this->getSwaggerFileUrlFromField($item, $context + ['field_items' => $items]);
+        if ($swagger_file_url === NULL) {
+          $element[$delta] += [
+            '#theme' => 'status_messages',
+            '#message_list' => ['error' => [$this->t('Could not create URL to file.')]],
+          ];
+        }
+        else {
+          $element[$delta] += [
+            '#theme' => 'swagger_ui_field_item',
+            '#attached' => [
+              'library' => [
+                'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
+                'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
+              ],
+              'drupalSettings' => [
+                'swaggerUIFormatter' => [
+                  "{$field_definition->getName()}-{$delta}" => [
+                    'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
+                    // For BC, we pass an array here instead of a single value.
+                    'swaggerFiles' => [$swagger_file_url],
+                    'validator' => $formatter->getSetting('validator'),
+                    'validatorUrl' => $formatter->getSetting('validator_url'),
+                    'docExpansion' => $formatter->getSetting('doc_expansion'),
+                    'showTopBar' => $formatter->getSetting('show_top_bar'),
+                    'sortTagsByName' => $formatter->getSetting('sort_tags_by_name'),
+                    'supportedSubmitMethods' => array_keys(array_filter($formatter->getSetting('supported_submit_methods'))),
+                  ],
+                ],
+              ],
+            ],
+          ];
+        }
+
+      }
+    }
+
+    $element = NestedArray::mergeDeepArray([
+      $element,
+      [
+        '#cache' => [
+          // If Swagger UI library's location changes render this field again.
+          'tags' => [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID],
+        ],
+      ],
+    ]);
+
     return $element;
   }
+
+  /**
+   * Creates a web-accessible URL to a Swagger file from the field item.
+   *
+   * @param \Drupal\Core\Field\FieldItemInterface $field_item
+   *   The field item.
+   * @param array $context
+   *   Additional context for creating the URL to the Swagger file.
+   *
+   * @return string|null
+   *   URL to the Swagger file or null if the URL could not be created.
+   */
+  abstract protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []);
 
 }

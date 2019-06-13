@@ -6,6 +6,7 @@
  */
 
 use Drupal\Component\Serialization\Json;
+use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
 use Symfony\Component\DomCrawler\Crawler;
 
@@ -82,7 +83,7 @@ function _swagger_ui_formatter_get_library_path() {
   else {
     foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
       if (_swagger_ui_formatter_is_library_directory($library_dir)) {
-        \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir);
+        \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir, CacheBackendInterface::CACHE_PERMANENT, [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
         return $library_dir;
       }
     }
