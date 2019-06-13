@@ -5,13 +5,6 @@
   "license": "GPL-2.0",
   "minimum-stability": "dev",
   "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
-  "authors": [
-    {
-      "name": "Balazs Wittmann (balazswmann)",
-      "homepage": "https://www.drupal.org/u/balazswmann",
-      "role": "Maintainer"
-    }
-  ],
   "require": {
     "symfony/dom-crawler": "~3.4|~4.0"
   }
