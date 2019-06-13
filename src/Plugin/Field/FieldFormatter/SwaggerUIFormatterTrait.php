@@ -60,7 +60,7 @@ trait SwaggerUIFormatterTrait {
     $form['validator'] = [
       '#type' => 'select',
       '#title' => $this->t('Validator'),
-      '#description' => $this->t("Default=Swagger.io's online validator, None= No validation, Custom=Provide a custom validator url"),
+      '#description' => $this->t("Default=Swagger.io's online validator, None=No validation, Custom=Provide a custom validator url"),
       '#default_value' => $formatter->getSetting('validator'),
       '#options' => [
         'none' => $this->t('None'),
