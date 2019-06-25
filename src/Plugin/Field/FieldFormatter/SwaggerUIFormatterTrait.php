@@ -155,22 +155,28 @@ trait SwaggerUIFormatterTrait {
    */
   final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []) {
     $element = [];
-    if (!_swagger_ui_formatter_get_library_path()) {
+    $library_path = _swagger_ui_formatter_get_library_path();
+    if (!$library_path) {
       $element = [
         '#theme' => 'status_messages',
         '#message_list' => ['error' => [$this->t('Swagger UI library is missing.')]],
       ];
     }
     else {
+      // Set the right oauth2-redirect.html file path for OAuth2 authentication.
+      $oauth2_redirect_url = NULL;
+      if (file_exists(DRUPAL_ROOT . $library_path . '/dist/oauth2-redirect.html')) {
+        $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . $library_path . '/dist/oauth2-redirect.html';
+      }
+
       foreach ($items as $delta => $item) {
         $element[$delta] = [
           '#delta' => $delta,
           '#field_name' => $field_definition->getName(),
         ];
         // It's the user's responsibility to set up field settings correctly
-        // and use this field formatter with valid Swagger files.
-        // Although, it could happen that a URL could not be generated from
-        // a field value.
+        // and use this field formatter with valid Swagger files. Although, it
+        // could happen that a URL could not be generated from a field value.
         $swagger_file_url = $this->getSwaggerFileUrlFromField($item, $context + ['field_items' => $items]);
         if ($swagger_file_url === NULL) {
           $element[$delta] += [
@@ -190,6 +196,7 @@ trait SwaggerUIFormatterTrait {
                 'swaggerUIFormatter' => [
                   "{$field_definition->getName()}-{$delta}" => [
                     'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
+                    'oauth2RedirectUrl' => $oauth2_redirect_url,
                     // For BC, we pass an array here instead of a single value.
                     'swaggerFiles' => [$swagger_file_url],
                     'validator' => $formatter->getSetting('validator'),
