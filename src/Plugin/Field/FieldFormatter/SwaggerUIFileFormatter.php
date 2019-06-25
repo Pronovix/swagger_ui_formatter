@@ -130,10 +130,10 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
       }, []);
     }
 
-    // This is only set if the file entity exists and the current user
-    // has access to the entity.
+    // This is only set if the file entity exists and the current user has
+    // access to the entity.
     if (isset($this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']])) {
-      /** @var \Drupal\file_entity\Entity\FileEntity $file */
+      /** @var \Drupal\file\Entity\File $file */
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
       $url = file_create_url($file->getFileUri());
       if ($url === FALSE) {

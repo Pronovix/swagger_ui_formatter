@@ -54,6 +54,10 @@
             supportedSubmitMethods: fieldElementInField.supportedSubmitMethods
           };
 
+          if (fieldElementInField.oauth2RedirectUrl) {
+            options.oauth2RedirectUrl = fieldElementInField.oauth2RedirectUrl;
+          }
+
           // Allow altering the options.
           $(window).trigger('swaggerUIFormatterOptionsAlter', options);
 
