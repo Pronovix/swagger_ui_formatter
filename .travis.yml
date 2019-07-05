@@ -1,0 +1,60 @@
+language: bash
+
+sudo: required
+
+services:
+  - docker
+
+addons:
+  apt:
+    packages:
+      - docker-ce
+
+cache:
+  directories:
+    - $HOME/.composer/cache/files
+
+notifications:
+  email:
+    on_success: never
+    on_failure: always
+
+env:
+  global:
+    - DOCKER_COMPOSE_VERSION=1.24.0
+    - THREADS=4
+    - COMPOSER_GLOBAL_OPTIONS="--no-interaction --no-suggest -o"
+  matrix:
+    - CHECK_CS=true
+    - RUN_PHPUNIT_TESTS=true
+    - RUN_PHPUNIT_TESTS=true DEPENDENCIES="--prefer-lowest"
+    - RUN_PHPUNIT_TESTS=true DB_DRIVER=pgsql DB_IMAGE=wodby/postgres:9.6
+    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.1
+    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.3
+    - RUN_PHPUNIT_TESTS=true DB_IMAGE=wodby/mariadb:10.3
+    # Uncomment this line below if you also have Behat tests.
+    # - RUN_BEHAT_TESTS=true
+    # TODO Restore ability to run tests with latest Drupal 8.x dev.
+
+matrix:
+  fast_finish: true
+
+before_install:
+  - |
+    sudo rm /usr/local/bin/docker-compose
+    curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
+    chmod +x docker-compose && sudo mv docker-compose /usr/local/bin
+  # Dummy permission fix for Travis CI because the default "travis" user's user id is not 1000 as you can see from the
+  # the output of the "id" command:
+  # uid=2000(travis) gid=2000(travis) groups=2000(travis),999(docker)
+  # 1000 is usually the default user id of the first user in Linux systems. This is the id of the "wodby" user inside
+  # the containers we use and if we do not fix this difference between the host and containers then we get file
+  # permission issues while the build is running.
+  - sudo chown -R 1000:travis . $HOME/.composer
+  - cd .dev && mv travis.docker-compose.override.yml docker-compose.override.yml && sudo chmod g+x .ci/*.sh
+  - docker-compose pull && docker-compose up -d && docker-compose ps
+
+script:
+  - set -e
+  - .ci/check-cs.sh
+  - .ci/run-phpunit-tests.sh
