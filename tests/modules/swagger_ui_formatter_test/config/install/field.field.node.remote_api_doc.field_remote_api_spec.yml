@@ -1,0 +1,22 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.node.field_remote_api_spec
+    - node.type.remote_api_doc
+  module:
+    - link
+id: node.remote_api_doc.field_remote_api_spec
+field_name: field_remote_api_spec
+entity_type: node
+bundle: remote_api_doc
+label: Specification
+description: ''
+required: true
+translatable: false
+default_value: {  }
+default_value_callback: ''
+settings:
+  link_type: 17
+  title: 0
+field_type: link

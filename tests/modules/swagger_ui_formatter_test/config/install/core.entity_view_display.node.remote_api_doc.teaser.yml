@@ -1,0 +1,19 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - core.entity_view_mode.node.teaser
+    - node.type.remote_api_doc
+  module:
+    - user
+id: node.remote_api_doc.teaser
+targetEntityType: node
+bundle: remote_api_doc
+mode: teaser
+content:
+  links:
+    weight: 100
+    settings: {  }
+    third_party_settings: {  }
+    region: content
+hidden: {  }

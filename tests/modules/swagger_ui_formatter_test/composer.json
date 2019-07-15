@@ -1,0 +1,11 @@
+{
+    "name": "drupal/swagger_ui_formatter_test",
+    "type": "drupal-module",
+    "license": "GPL-2.0-or-later",
+    "description": "Testing helper module for Swagger UI field formatter.",
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "require": {
+        "drupal/swagger_ui_formatter": "*"
+    }
+}
