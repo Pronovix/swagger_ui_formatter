@@ -1,0 +1,40 @@
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.field.node.remote_api_doc.field_remote_api_spec
+    - node.type.remote_api_doc
+  module:
+    - swagger_ui_formatter
+    - user
+id: node.remote_api_doc.default
+targetEntityType: node
+bundle: remote_api_doc
+mode: default
+content:
+  field_remote_api_spec:
+    weight: 101
+    label: visually_hidden
+    settings:
+      validator: default
+      validator_url: ''
+      doc_expansion: list
+      show_top_bar: false
+      sort_tags_by_name: false
+      supported_submit_methods:
+        get: get
+        put: put
+        post: post
+        delete: delete
+        options: options
+        head: head
+        patch: patch
+    third_party_settings: {  }
+    type: swagger_ui_link
+    region: content
+  links:
+    weight: 100
+    region: content
+    settings: {  }
+    third_party_settings: {  }
+hidden: {  }

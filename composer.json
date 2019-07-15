@@ -2,9 +2,10 @@
     "name": "drupal/swagger_ui_formatter",
     "description": "Provides a Swagger UI field formatter for File and Link fields.",
     "type": "drupal-module",
-    "keywords": ["Drupal", "OpenAPI", "Swagger", "API docs"],
     "license": "GPL-2.0-or-later",
+    "keywords": ["Drupal", "OpenAPI", "Swagger", "API docs"],
     "minimum-stability": "dev",
+    "prefer-stable": true,
     "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
     "support": {
         "issues": "https://github.com/Pronovix/swagger_ui_formatter/issues",
@@ -12,6 +13,28 @@
         "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
     "require": {
+        "php": "^7.1",
+        "drupal/core": "^8.7",
         "symfony/dom-crawler": "~3.4|~4.0"
+    },
+    "config": {
+        "sort-packages": true
+    },
+    "require-dev": {
+        "behat/mink": "dev-master#153e4bb",
+        "drupal/drupal-extension": "^3.4.0",
+        "instaclick/php-webdriver": "^1.4.5",
+        "phpunit/phpunit": "^6.5",
+        "webflo/drupal-core-require-dev": "^8.7"
+    },
+    "autoload": {
+        "psr-4": {
+            "Drupal\\swagger_ui_formatter\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\Tests\\swagger_ui_formatter\\": "./tests/"
+        }
     }
 }

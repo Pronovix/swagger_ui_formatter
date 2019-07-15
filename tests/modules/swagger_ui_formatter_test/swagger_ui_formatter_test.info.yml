@@ -1,0 +1,10 @@
+name: 'Swagger UI Field Formatter Testing'
+type: module
+description: 'Testing helper module for Swagger UI field formatter.'
+core: 8.x
+package: 'Testing'
+php: "7.1"
+dependencies:
+  - drupal:link
+  - drupal:node
+  - drupal:swagger_ui_formatter
