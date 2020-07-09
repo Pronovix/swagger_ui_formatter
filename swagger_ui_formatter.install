@@ -5,6 +5,8 @@
  * Install, update and uninstall functions for Swagger UI Field Formatter.
  */
 
+declare(strict_types = 1);
+
 /**
  * Implements hook_requirements().
  *
@@ -14,7 +16,7 @@
  * @see https://www.drupal.org/project/config_installer/issues/3061127
  * @see https://github.com/drush-ops/drush/issues/3669
  */
-function swagger_ui_formatter_requirements($phase) {
+function swagger_ui_formatter_requirements(string $phase): array {
   $requirements = [];
 
   // Make sure _swagger_ui_formatter_get_library_path() is defined.
@@ -23,7 +25,8 @@ function swagger_ui_formatter_requirements($phase) {
   }
 
   if (in_array($phase, ['runtime', 'install'])) {
-    if ($library_path = _swagger_ui_formatter_get_library_path()) {
+    $library_path = _swagger_ui_formatter_get_library_path();
+    if ($library_path) {
       $requirements['swagger_ui_library'] = [
         'title' => t('Swagger UI'),
         'severity' => REQUIREMENT_OK,
@@ -50,14 +53,14 @@ function swagger_ui_formatter_requirements($phase) {
 /**
  * Clear cache due to updated library definitions.
  */
-function swagger_ui_formatter_update_8001() {
+function swagger_ui_formatter_update_8001(): void {
   // An empty update forces a call to drupal_flush_all_caches().
 }
 
 /**
  * Update old field formatter IDs.
  */
-function swagger_ui_formatter_update_8002() {
+function swagger_ui_formatter_update_8002(): void {
   // Rebuild cache first due to updated library and class definitions and to
   // avoid undefined/invalid plugin ID errors.
   drupal_flush_all_caches();
@@ -75,7 +78,7 @@ function swagger_ui_formatter_update_8002() {
         $display->setComponent($name, $component);
         $display_needs_update = TRUE;
       }
-    };
+    }
     if ($display_needs_update) {
       $display->save();
     }

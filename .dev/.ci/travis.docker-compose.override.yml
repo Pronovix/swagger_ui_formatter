@@ -1,5 +1,5 @@
 # Overrides for Travis CI.
-version: "3"
+version: "3.3"
 
 services:
   php:

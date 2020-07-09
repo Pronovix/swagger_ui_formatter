@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\Tests\swagger_ui_formatter\src\FunctionalJavascript;
 
 use Drupal\Core\StreamWrapper\PublicStream;
@@ -105,7 +107,7 @@ final class FieldFormatterTest extends WebDriverTestBase {
    * @param string $filename_prefix
    *   Prefix for created screenshot file, ex.: name of the caller method.
    */
-  private function validateSwaggerUiIsMissingMessage(string $filename_prefix) : void {
+  private function validateSwaggerUiIsMissingMessage(string $filename_prefix): void {
     $assert = $this->assertSession();
     // Clear caches of Drupal that runs in the test browser.
     $cache = \Drupal::cache();

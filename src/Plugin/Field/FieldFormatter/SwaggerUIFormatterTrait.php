@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Component\Utility\NestedArray;
@@ -25,7 +27,7 @@ trait SwaggerUIFormatterTrait {
    * @param array $settings
    *   Settings inherited from the parent class.
    */
-  final protected static function addDefaultSettings(array &$settings) {
+  final protected static function addDefaultSettings(array &$settings): void {
     $settings = [
       'validator' => 'default',
       'validator_url' => '',
@@ -56,7 +58,7 @@ trait SwaggerUIFormatterTrait {
    * @param \Drupal\Core\Field\FieldDefinitionInterface $field_definition
    *   The field definition in the current field formatter.
    */
-  final protected function alterSettingsForm(array &$form, FormStateInterface $form_state, FormatterInterface $formatter, FieldDefinitionInterface $field_definition) {
+  final protected function alterSettingsForm(array &$form, FormStateInterface $form_state, FormatterInterface $formatter, FieldDefinitionInterface $field_definition): void {
     $form['validator'] = [
       '#type' => 'select',
       '#title' => $this->t('Validator'),
@@ -127,7 +129,7 @@ trait SwaggerUIFormatterTrait {
    * @param \Drupal\Core\Field\FormatterInterface $formatter
    *   The current field formatter instance.
    */
-  final protected function addSettingsSummary(array &$summary, FormatterInterface $formatter) {
+  final protected function addSettingsSummary(array &$summary, FormatterInterface $formatter): void {
     $supported_submit_methods = array_filter($formatter->getSetting('supported_submit_methods'));
     $summary[] = $this->t('Uses %validator validator, Doc Expansion of %doc_expansion, Shows top bar: %show_top_bar, Tags sorted by name: %sort_tags_by_name, Try it out support for HTTP Methods: %supported_submit_methods.', [
       '%validator' => $formatter->getSetting('validator'),
@@ -153,7 +155,7 @@ trait SwaggerUIFormatterTrait {
    * @return array
    *   Field value as a render array.
    */
-  final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []) {
+  final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []): array {
     $element = [];
     $library_path = _swagger_ui_formatter_get_library_path();
     if (!$library_path) {
@@ -239,6 +241,6 @@ trait SwaggerUIFormatterTrait {
    * @return string|null
    *   URL to the Swagger file or null if the URL could not be created.
    */
-  abstract protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []);
+  abstract protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []): ?string;
 
 }

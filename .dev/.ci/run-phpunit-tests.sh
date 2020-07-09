@@ -3,9 +3,5 @@
 set -e
 
 if [[ ${RUN_PHPUNIT_TESTS} == true ]]; then
-    .ci/install-dependencies.sh
-    # Be prepared for running tests.
-    docker-compose exec php ./vendor/bin/run phpunit:setup
-    # Run all tests parallel.
-    docker-compose exec php ./phpunit-wrapper.sh
+    docker-compose run --rm php ./vendor/bin/phpunit -c web/core -v --debug --printer '\Drupal\Tests\Listeners\HtmlOutputPrinter' web/modules/drupal_module/tests/
 fi
