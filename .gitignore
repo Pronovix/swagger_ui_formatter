@@ -5,12 +5,13 @@ node_modules
 composer.lock
 yarn.lock
 package-lock.json
+/phpcs.xml.dist
 
 # Project specific files and folders.
-docker-compose.*.yml
-runner.yml
-testrunner
-tests/behat/failures/*
+/Dockerfile
+/.env
+/drupal-dev/
+/docker-compose*.yml
 *.sql
 *.sql.gz
 .idea

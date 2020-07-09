@@ -5,6 +5,8 @@
  * Main module file for Swagger UI Field Formatter.
  */
 
+declare(strict_types = 1);
+
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
@@ -12,18 +14,22 @@ use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Swagger UI library path related cache ID.
+ *
+ * phpcs:disable DrupalPractice.Constants.GlobalConstant.GlobalConstant
  */
 const SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID = 'swagger_ui_formatter:library_path';
 
 /**
  * Swagger UI SVG definition related cache ID.
+ *
+ * phpcs:disable DrupalPractice.Constants.GlobalConstant.GlobalConstant
  */
 const SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID = 'swagger_ui_formatter:svg_definition';
 
 /**
  * Implements hook_theme().
  */
-function swagger_ui_formatter_theme($existing, $type, $theme, $path) {
+function swagger_ui_formatter_theme(): array {
   return [
     'swagger_ui_field_item' => [
       'variables' => [
@@ -37,9 +43,10 @@ function swagger_ui_formatter_theme($existing, $type, $theme, $path) {
 /**
  * Implements hook_library_info_build().
  */
-function swagger_ui_formatter_library_info_build() {
+function swagger_ui_formatter_library_info_build(): array {
   $libraries = [];
-  if ($library_path = _swagger_ui_formatter_get_library_path()) {
+  $library_path = _swagger_ui_formatter_get_library_path();
+  if ($library_path) {
     // Library definition for required Swagger UI files.
     $libraries['swagger_ui_formatter.swagger_ui'] = [
       'version' => _swagger_ui_formatter_get_library_version(),
@@ -77,18 +84,18 @@ function swagger_ui_formatter_library_info_build() {
  *   Returns the library path or FALSE if the library is not found.
  */
 function _swagger_ui_formatter_get_library_path() {
-  if ($cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID)) {
+  $cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
+  if ($cache) {
     return $cache->data;
   }
-  else {
-    foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
-      if (_swagger_ui_formatter_is_library_directory($library_dir)) {
-        \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir, CacheBackendInterface::CACHE_PERMANENT, [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
-        return $library_dir;
-      }
+
+  foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
+    if (_swagger_ui_formatter_is_library_directory($library_dir)) {
+      \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir, CacheBackendInterface::CACHE_PERMANENT, [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
+      return $library_dir;
     }
-    return FALSE;
   }
+  return FALSE;
 }
 
 /**
@@ -101,7 +108,7 @@ function _swagger_ui_formatter_get_library_path() {
  *   Returns TRUE if the Swagger UI library is installed under the given
  *   directory. Returns FALSE otherwise.
  */
-function _swagger_ui_formatter_is_library_directory($library_dir) {
+function _swagger_ui_formatter_is_library_directory(string $library_dir): bool {
   $files_to_check = [
     'package.json',
     'dist/swagger-ui.css',
@@ -122,8 +129,9 @@ function _swagger_ui_formatter_is_library_directory($library_dir) {
  * @return string
  *   The library version or an empty string if the version cannot be determined.
  */
-function _swagger_ui_formatter_get_library_version() {
-  if ($library_path = _swagger_ui_formatter_get_library_path()) {
+function _swagger_ui_formatter_get_library_version(): string {
+  $library_path = _swagger_ui_formatter_get_library_path();
+  if ($library_path) {
     $file = DRUPAL_ROOT . $library_path . '/package.json';
     if (!file_exists($file)) {
       return '';
@@ -150,15 +158,17 @@ function _swagger_ui_formatter_get_library_version() {
  * @return string|null
  *   The required <svg> tag as a HTML string or NULL if it doesn't exist.
  */
-function _swagger_ui_formatter_get_svg_definition() {
-  if ($cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID)) {
+function _swagger_ui_formatter_get_svg_definition(): ?string {
+  $cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID);
+  if ($cache) {
     return $cache->data;
   }
   $library_path = _swagger_ui_formatter_get_library_path();
   if ($library_path && file_exists(DRUPAL_ROOT . $library_path . '/dist/index.html')) {
     $dom_crawler = new Crawler(file_get_contents(DRUPAL_ROOT . $library_path . '/dist/index.html'));
     $dom_crawler = $dom_crawler->filterXPath('descendant-or-self::body/svg');
-    if ($domElement = $dom_crawler->getNode(0)) {
+    $domElement = $dom_crawler->getNode(0);
+    if ($domElement) {
       $svg = $domElement->ownerDocument->saveHTML($domElement);
       \Drupal::cache()->set(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID, $svg);
       return $svg;
@@ -170,7 +180,7 @@ function _swagger_ui_formatter_get_svg_definition() {
 /**
  * Implements hook_help().
  */
-function swagger_ui_formatter_help($route_name, RouteMatchInterface $route_match) {
+function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $route_match): string {
   switch ($route_name) {
     case 'help.page.swagger_ui_formatter':
       $readme = file_get_contents(__DIR__ . '/README.txt');
@@ -202,7 +212,7 @@ function swagger_ui_formatter_help($route_name, RouteMatchInterface $route_match
 /**
  * Implements hook_cache_flush().
  */
-function swagger_ui_formatter_cache_flush() {
+function swagger_ui_formatter_cache_flush(): void {
   \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
   \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID);
 }

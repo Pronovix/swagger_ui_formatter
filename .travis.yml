@@ -21,7 +21,7 @@ notifications:
 
 env:
   global:
-    - DOCKER_COMPOSE_VERSION=1.24.0
+    - DOCKER_COMPOSE_VERSION=1.25.5
     - THREADS=4
     - COMPOSER_GLOBAL_OPTIONS="--no-interaction --no-suggest -o"
   matrix:
@@ -29,12 +29,9 @@ env:
     - RUN_PHPUNIT_TESTS=true
     - RUN_PHPUNIT_TESTS=true DEPENDENCIES="--prefer-lowest"
     - RUN_PHPUNIT_TESTS=true DB_DRIVER=pgsql DB_IMAGE=wodby/postgres:9.6
-    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.1
     - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.3
+    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.4
     - RUN_PHPUNIT_TESTS=true DB_IMAGE=wodby/mariadb:10.3
-    # Uncomment this line below if you also have Behat tests.
-    # - RUN_BEHAT_TESTS=true
-    # TODO Restore ability to run tests with latest Drupal 8.x dev.
 
 matrix:
   fast_finish: true
@@ -44,6 +41,12 @@ before_install:
     sudo rm /usr/local/bin/docker-compose
     curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
     chmod +x docker-compose && sudo mv docker-compose /usr/local/bin
+  - |
+    git clone https://github.com/Pronovix/docker-drupal-dev.git drupal-dev
+    mkdir build;
+    ln -s drupal-dev/docker-compose.yml
+    ln -s drupal-dev/Dockerfile
+    printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n#You can find examples for available customization in the drupal-dev/examples/.env file.\n" > .env && source .env
   # Dummy permission fix for Travis CI because the default "travis" user's user id is not 1000 as you can see from the
   # the output of the "id" command:
   # uid=2000(travis) gid=2000(travis) groups=2000(travis),999(docker)
@@ -51,10 +54,11 @@ before_install:
   # the containers we use and if we do not fix this difference between the host and containers then we get file
   # permission issues while the build is running.
   - sudo chown -R 1000:travis . $HOME/.composer
-  - cd .dev && mv travis.docker-compose.override.yml docker-compose.override.yml && sudo chmod g+x .ci/*.sh
-  - docker-compose pull && docker-compose up -d && docker-compose ps
+  - mv .dev/.ci/travis.docker-compose.override.yml docker-compose.override.yml && sudo chmod g+x .dev/.ci/*.sh
+  - docker-compose pull && docker-compose up -d --build && docker-compose ps
 
 script:
   - set -e
-  - .ci/check-cs.sh
-  - .ci/run-phpunit-tests.sh
+  - .dev/.ci/init-env.sh
+  - .dev/.ci/check-cs.sh
+  - .dev/.ci/run-phpunit-tests.sh

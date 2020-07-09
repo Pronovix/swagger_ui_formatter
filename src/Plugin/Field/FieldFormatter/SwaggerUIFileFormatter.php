@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types = 1);
+
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
 use Drupal\Core\Field\FieldDefinitionInterface;
@@ -35,6 +37,8 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    * values are file entities referenced by the field. File entities also
    * keyed by id.
    *
+   * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification
+   *
    * @var array
    */
   private $fileEntityCache = [];
@@ -68,7 +72,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
    */
-  public function __construct($plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, $label, $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger) {
+  public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->stringTranslation = $string_translation;
     $this->logger = $logger;
@@ -124,7 +128,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []) {
     if (!isset($this->fileEntityCache[$context['field_items']->getEntity()->id()])) {
       // Store file entities keyed by their id.
-      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), function (array $carry, File $entity) {
+      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), static function (array $carry, File $entity) {
         $carry[$entity->id()] = $entity;
         return $carry;
       }, []);
