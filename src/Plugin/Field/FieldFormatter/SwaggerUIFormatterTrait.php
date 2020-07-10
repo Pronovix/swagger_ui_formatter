@@ -191,7 +191,6 @@ trait SwaggerUIFormatterTrait {
             '#theme' => 'swagger_ui_field_item',
             '#attached' => [
               'library' => [
-                'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
                 'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
               ],
               'drupalSettings' => [
