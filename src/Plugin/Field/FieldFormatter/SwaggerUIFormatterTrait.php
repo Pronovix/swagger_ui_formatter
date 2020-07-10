@@ -199,8 +199,7 @@ trait SwaggerUIFormatterTrait {
                   "{$field_definition->getName()}-{$delta}" => [
                     'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
                     'oauth2RedirectUrl' => $oauth2_redirect_url,
-                    // For BC, we pass an array here instead of a single value.
-                    'swaggerFiles' => [$swagger_file_url],
+                    'swaggerFile' => $swagger_file_url,
                     'validator' => $formatter->getSetting('validator'),
                     'validatorUrl' => $formatter->getSetting('validator_url'),
                     'docExpansion' => $formatter->getSetting('doc_expansion'),

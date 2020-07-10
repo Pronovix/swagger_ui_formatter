@@ -34,8 +34,7 @@
           }
 
           var options = {
-            // For BC, we kept the array instead of a single value.
-            url: fieldElementInField.swaggerFiles[0],
+            url: fieldElementInField.swaggerFile,
             dom_id: '#swagger-ui-' + fieldNamePlusDelta,
             deepLinking: true,
             presets: [
