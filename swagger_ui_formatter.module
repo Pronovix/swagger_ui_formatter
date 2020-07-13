@@ -10,7 +10,6 @@ declare(strict_types = 1);
 use Drupal\Component\Serialization\Json;
 use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-use Symfony\Component\DomCrawler\Crawler;
 
 /**
  * Swagger UI library path related cache ID.
@@ -20,11 +19,11 @@ use Symfony\Component\DomCrawler\Crawler;
 const SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID = 'swagger_ui_formatter:library_path';
 
 /**
- * Swagger UI SVG definition related cache ID.
+ * The minimum supported Swagger UI library version.
  *
  * phpcs:disable DrupalPractice.Constants.GlobalConstant.GlobalConstant
  */
-const SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID = 'swagger_ui_formatter:svg_definition';
+const SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION = '3.13.4';
 
 /**
  * Implements hook_theme().
@@ -69,7 +68,6 @@ function swagger_ui_formatter_library_info_build(): array {
       'dependencies' => [
         'core/drupal',
         'core/jquery',
-        'core/jquery.once',
         'core/drupalSettings',
         'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
       ],
@@ -150,35 +148,6 @@ function _swagger_ui_formatter_get_library_version(): string {
 }
 
 /**
- * Gets Swagger UI related SVG definition.
- *
- * Since Swagger UI v3.13.4 there is no need to include the <svg> tag in HTML.
- *
- * @see https://github.com/swagger-api/swagger-ui/releases/tag/v3.13.4
- *
- * @return string|null
- *   The required <svg> tag as a HTML string or NULL if it doesn't exist.
- */
-function _swagger_ui_formatter_get_svg_definition(): ?string {
-  $cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID);
-  if ($cache) {
-    return $cache->data;
-  }
-  $library_path = _swagger_ui_formatter_get_library_path();
-  if ($library_path && file_exists(DRUPAL_ROOT . $library_path . '/dist/index.html')) {
-    $dom_crawler = new Crawler(file_get_contents(DRUPAL_ROOT . $library_path . '/dist/index.html'));
-    $dom_crawler = $dom_crawler->filterXPath('descendant-or-self::body/svg');
-    $domElement = $dom_crawler->getNode(0);
-    if ($domElement) {
-      $svg = $domElement->ownerDocument->saveHTML($domElement);
-      \Drupal::cache()->set(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID, $svg);
-      return $svg;
-    }
-  }
-  return NULL;
-}
-
-/**
  * Implements hook_help().
  */
 function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $route_match): string {
@@ -212,5 +181,4 @@ function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $rout
  */
 function swagger_ui_formatter_cache_flush(): void {
   \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
-  \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_SVG_DEFINITION_CID);
 }

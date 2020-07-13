@@ -196,7 +196,6 @@ trait SwaggerUIFormatterTrait {
               'drupalSettings' => [
                 'swaggerUIFormatter' => [
                   "{$field_definition->getName()}-{$delta}" => [
-                    'svgDefinition' => _swagger_ui_formatter_get_svg_definition(),
                     'oauth2RedirectUrl' => $oauth2_redirect_url,
                     'swaggerFile' => $swagger_file_url,
                     'validator' => $formatter->getSetting('validator'),
