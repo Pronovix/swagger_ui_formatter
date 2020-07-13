@@ -17,11 +17,6 @@
             continue;
           }
 
-          // Add SVG definition to the DOM (old Swagger UI requirement).
-          if (fieldElementInField.svgDefinition) {
-            $('body', context).once('swagger-ui-svg-definition').prepend(fieldElementInField.svgDefinition);
-          }
-
           var validatorUrl = undefined;
           switch (fieldElementInField.validator) {
             case 'custom':

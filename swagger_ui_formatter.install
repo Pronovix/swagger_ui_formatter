@@ -18,7 +18,6 @@ declare(strict_types = 1);
  */
 function swagger_ui_formatter_requirements(string $phase): array {
   $requirements = [];
-
   // Make sure _swagger_ui_formatter_get_library_path() is defined.
   if ($phase === 'install') {
     module_load_include('module', 'swagger_ui_formatter');
@@ -26,25 +25,38 @@ function swagger_ui_formatter_requirements(string $phase): array {
 
   if (in_array($phase, ['runtime', 'install'])) {
     $library_path = _swagger_ui_formatter_get_library_path();
-    if ($library_path) {
+    if (!$library_path) {
       $requirements['swagger_ui_library'] = [
-        'title' => t('Swagger UI'),
-        'severity' => REQUIREMENT_OK,
-        'value' => _swagger_ui_formatter_get_library_version(),
-        'description' => t('Swagger UI library installed at %path.', [
-          '%path' => DRUPAL_ROOT . $library_path,
-        ]),
-      ];
-    }
-    else {
-      $requirements['swagger_ui_library'] = [
-        'title' => t('Swagger UI'),
+        'title' => t('Swagger UI library'),
         'severity' => REQUIREMENT_ERROR,
         'description' => t('Swagger UI library was not found. Download <a href=":link" target="_blank">the appropriate version</a> and place it in the [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
           ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
         ]),
       ];
+      return $requirements;
     }
+
+    $library_version = _swagger_ui_formatter_get_library_version();
+    if (!$library_version || version_compare($library_version, SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION, '<')) {
+      $requirements['swagger_ui_library'] = [
+        'title' => t('Swagger UI library'),
+        'severity' => REQUIREMENT_ERROR,
+        'description' => t('The Swagger UI library version cannot be determined or it\'s older than v@library_version_min. Download <a href=":link" target="_blank">an appropriate version</a> and place it in the [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
+          '@library_version_min' => SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION,
+          ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
+        ]),
+      ];
+      return $requirements;
+    }
+
+    $requirements['swagger_ui_library'] = [
+      'title' => t('Swagger UI library'),
+      'severity' => REQUIREMENT_OK,
+      'value' => $library_version,
+      'description' => t('Swagger UI library installed at %path.', [
+        '%path' => DRUPAL_ROOT . $library_path,
+      ]),
+    ];
   }
 
   return $requirements;

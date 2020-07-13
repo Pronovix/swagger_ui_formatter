@@ -12,8 +12,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2",
-        "drupal/core-recommended": "~8.9.1",
-        "symfony/dom-crawler": "~3.4 || ~4.0"
+        "drupal/core-recommended": "~8.9.1"
     },
     "conflict": {
         "symfony/phpunit-bridge": "<3.4.5"
