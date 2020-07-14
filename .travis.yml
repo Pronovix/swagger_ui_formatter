@@ -24,14 +24,24 @@ env:
     - DOCKER_COMPOSE_VERSION=1.25.5
     - THREADS=4
     - COMPOSER_GLOBAL_OPTIONS="--no-interaction --no-suggest -o"
+    - PHP_IMAGE=wodby/drupal-php:7.3
+    - DB_IMAGE=wodby/mariadb:10.4
   matrix:
     - CHECK_CS=true
-    - RUN_PHPUNIT_TESTS=true
-    - RUN_PHPUNIT_TESTS=true DEPENDENCIES="--prefer-lowest"
-    - RUN_PHPUNIT_TESTS=true DB_DRIVER=pgsql DB_IMAGE=wodby/postgres:9.6
-    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.3
-    - RUN_PHPUNIT_TESTS=true PHP_IMAGE=wodby/drupal-php:7.4
-    - RUN_PHPUNIT_TESTS=true DB_IMAGE=wodby/mariadb:10.3
+    # Drupal 8.9.x highest.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^8.9 PHP_IMAGE=wodby/drupal-php:7.2
+    # Drupal 9.x highest.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^9
+    # Drupal 8.9.x lowest.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^8.9 PHP_IMAGE=wodby/drupal-php:7.2 DEPENDENCIES="--prefer-lowest"
+    # Drupal 9.x lowest.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^9 DEPENDENCIES="--prefer-lowest"
+    # Drupal 8.9.x Postgres.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^8.9 PHP_IMAGE=wodby/drupal-php:7.2 DB_DRIVER=pgsql DB_IMAGE=wodby/postgres:9.6
+    # Drupal 8.9.x older MariaDB.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^8.9 PHP_IMAGE=wodby/drupal-php:7.2 DB_IMAGE=wodby/mariadb:10.3
+    # Drupal 9.x Postgres.
+    - RUN_PHPUNIT_TESTS=true DRUPAL_CORE=^9 DB_DRIVER=pgsql DB_IMAGE=wodby/postgres:10
 
 matrix:
   fast_finish: true

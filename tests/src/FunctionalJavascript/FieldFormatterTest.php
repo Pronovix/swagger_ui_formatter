@@ -24,6 +24,11 @@ final class FieldFormatterTest extends WebDriverTestBase {
   protected static $modules = ['swagger_ui_formatter_test'];
 
   /**
+   * {@inheritdoc}
+   */
+  protected $defaultTheme = 'classy';
+
+  /**
    * File system service.
    *
    * @var \Drupal\Core\File\FileSystemInterface
