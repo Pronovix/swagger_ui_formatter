@@ -2,6 +2,10 @@
 
 set -e
 
+# Lock Drupal core to the expected major version.
+if [[ -n "${DRUPAL_CORE}" ]]; then
+  docker-compose exec php composer require -d .. --no-update drupal/core:${DRUPAL_CORE}
+fi
 # We need to run both "install" and "update" commands because:
 # * `--prefer-lowest` is not supported by "install".
 # * it seems there is an issue with the merge plugin and because of that if we would only run

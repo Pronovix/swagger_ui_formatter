@@ -1,9 +1,9 @@
 name: 'Swagger UI Field Formatter Testing'
 type: module
 description: 'Testing helper module for Swagger UI field formatter.'
-core: 8.x
+core_version_requirement: ~8.9.1 || ~9.0.0
 package: 'Testing'
-php: "7.1"
+php: "7.2"
 dependencies:
   - drupal:link
   - drupal:node

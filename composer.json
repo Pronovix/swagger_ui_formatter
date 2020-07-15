@@ -12,7 +12,7 @@
     "license": "GPL-2.0-or-later",
     "require": {
         "php": "^7.2",
-        "drupal/core-recommended": "~8.9.1"
+        "drupal/core-recommended": "~8.9.1 || ~9.0.0"
     },
     "conflict": {
         "symfony/phpunit-bridge": "<3.4.5"
@@ -20,11 +20,11 @@
     "require-dev": {
         "bower-asset/swagger-ui": "^3.22",
         "composer/installers": "^1.6",
-        "drupal/core-composer-scaffold": "~8.9.1",
-        "drupal/core-dev": "~8.9.1",
+        "drupal/core-composer-scaffold": "~8.9.1 || ~9.0.0",
+        "drupal/core-dev": "~8.9.1 || ~9.0.0",
         "oomphinc/composer-installers-extender": "^1.1",
-        "pronovix/drupal-qa": "^2.8",
-        "pronovix/simple-symlink": "^2.8",
+        "pronovix/drupal-qa": "^2.9",
+        "pronovix/simple-symlink": "^2.9",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "config": {
