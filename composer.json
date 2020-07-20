@@ -93,7 +93,8 @@
     },
     "autoload-dev": {
         "psr-4": {
-            "Drupal\\Tests\\swagger_ui_formatter\\": "./tests/src"
+            "Drupal\\Tests\\swagger_ui_formatter\\": "./tests/src",
+            "Drupal\\swagger_ui_formatter_test\\": "./tests/modules/swagger_ui_formatter_test/src"
         }
     },
     "repositories": [

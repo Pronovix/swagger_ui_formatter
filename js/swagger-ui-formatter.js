@@ -45,12 +45,9 @@
             docExpansion: fieldElementInField.docExpansion,
             layout: "StandaloneLayout",
             tagsSorter: fieldElementInField.sortTagsByName ? 'alpha' : '',
-            supportedSubmitMethods: fieldElementInField.supportedSubmitMethods
+            supportedSubmitMethods: fieldElementInField.supportedSubmitMethods,
+            oauth2RedirectUrl: fieldElementInField.oauth2RedirectUrl
           };
-
-          if (fieldElementInField.oauth2RedirectUrl) {
-            options.oauth2RedirectUrl = fieldElementInField.oauth2RedirectUrl;
-          }
 
           // Allow altering the options.
           $(window).trigger('swaggerUIFormatterOptionsAlter', options);

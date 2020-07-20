@@ -4,13 +4,15 @@ declare(strict_types = 1);
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
-use Drupal\Component\Utility\NestedArray;
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
+use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface;
 
 /**
  * Provides common methods for Swagger UI field formatters.
@@ -157,19 +159,24 @@ trait SwaggerUIFormatterTrait {
    */
   final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []): array {
     $element = [];
-    $library_path = _swagger_ui_formatter_get_library_path();
-    if (!$library_path) {
+    /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+    $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
+
+    try {
+      $library_dir = $swagger_ui_library_discovery->libraryDirectory();
+    }
+    catch (SwaggerUiLibraryDiscoveryExceptionInterface $exception) {
       $element = [
         '#theme' => 'status_messages',
-        '#message_list' => ['error' => [$this->t('Swagger UI library is missing.')]],
+        '#message_list' => [
+          'error' => [$this->t('The Swagger UI library is missing or incorrectly defined.')],
+        ],
       ];
     }
-    else {
-      // Set the right oauth2-redirect.html file path for OAuth2 authentication.
-      $oauth2_redirect_url = NULL;
-      if (file_exists(DRUPAL_ROOT . $library_path . '/dist/oauth2-redirect.html')) {
-        $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . $library_path . '/dist/oauth2-redirect.html';
-      }
+
+    if (isset($library_dir)) {
+      // Set the oauth2-redirect.html file path for OAuth2 authentication.
+      $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . '/' . $library_dir . '/dist/oauth2-redirect.html';
 
       foreach ($items as $delta => $item) {
         $element[$delta] = [
@@ -183,7 +190,9 @@ trait SwaggerUIFormatterTrait {
         if ($swagger_file_url === NULL) {
           $element[$delta] += [
             '#theme' => 'status_messages',
-            '#message_list' => ['error' => [$this->t('Could not create URL to file.')]],
+            '#message_list' => [
+              'error' => [$this->t('Could not create URL to file.')],
+            ],
           ];
         }
         else {
@@ -210,19 +219,13 @@ trait SwaggerUIFormatterTrait {
             ],
           ];
         }
-
       }
     }
 
-    $element = NestedArray::mergeDeepArray([
-      $element,
-      [
-        '#cache' => [
-          // If Swagger UI library's location changes render this field again.
-          'tags' => [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID],
-        ],
-      ],
-    ]);
+    if ($swagger_ui_library_discovery instanceof CacheableDependencyInterface) {
+      $cacheable_metadata = CacheableMetadata::createFromRenderArray($element)->merge(CacheableMetadata::createFromObject($swagger_ui_library_discovery));
+      $cacheable_metadata->applyTo($element);
+    }
 
     return $element;
   }

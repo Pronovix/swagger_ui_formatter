@@ -2,8 +2,9 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\Tests\swagger_ui_formatter\src\FunctionalJavascript;
+namespace Drupal\Tests\swagger_ui_formatter\FunctionalJavascript;
 
+use Drupal\Core\Cache\Cache;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
@@ -26,7 +27,7 @@ final class FieldFormatterTest extends WebDriverTestBase {
   /**
    * {@inheritdoc}
    */
-  protected $defaultTheme = 'classy';
+  protected $defaultTheme = 'stark';
 
   /**
    * File system service.
@@ -103,7 +104,7 @@ final class FieldFormatterTest extends WebDriverTestBase {
    * {@inheritdoc}
    */
   protected function createScreenshot($filename, $set_background_color = TRUE): void {
-    parent::createScreenshot((getenv('BROWSERTEST_OUTPUT_DIRECTORY') ?? 'public://') . '/' . $filename . '.png', $set_background_color);
+    parent::createScreenshot(DRUPAL_ROOT . '/sites/simpletest/' . $filename . '.png', $set_background_color);
   }
 
   /**
@@ -114,27 +115,20 @@ final class FieldFormatterTest extends WebDriverTestBase {
    */
   private function validateSwaggerUiIsMissingMessage(string $filename_prefix): void {
     $assert = $this->assertSession();
-    // Clear caches of Drupal that runs in the test browser.
-    $cache = \Drupal::cache();
-    $cache_tag_invalidator = \Drupal::service('cache_tags.invalidator');
-    // Because cached render arrays that contains a field rendered by
-    // a formatter provided by this module are also tagged with this CID,
-    // this call should invalidate _only those render arrays_ that contains a
-    // field rendered by this module. (This is a much lightweight call then
-    // drupal_flush_all_caches()).
-    $cache_tag_invalidator->invalidateTags([SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
-    // Simple way of faking that Swagger UI library is missing.
-    // (The implementation in _swagger_ui_formatter_get_library_path()
-    // makes this possible.)
-    $cache->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, FALSE);
+    /** @var \Drupal\swagger_ui_formatter_test\Service\SwaggerUiLibraryDiscovery $swagger_ui_library_discovery */
+    $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
+    $swagger_ui_library_discovery->fakeMissingLibrary(TRUE);
     $this->getSession()->reload();
     $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-faking-enabled');
-    $assert->pageTextContainsOnce('Swagger UI library is missing.');
-
-    $cache_tag_invalidator->invalidateTags([SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
-    $cache->delete(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
+    $swagger_ui_library_is_missing = 'The Swagger UI library is missing or incorrectly defined.';
+    $assert->pageTextContainsOnce($swagger_ui_library_is_missing);
+    $swagger_ui_library_discovery->fakeMissingLibrary(FALSE);
+    // DrupalWTF, render cache should be invalidated automatically - just like
+    // it worked when the faking was enabled.
+    Cache::invalidateTags(['rendered']);
     $this->getSession()->reload();
     $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-faking-disabled');
+    $assert->pageTextNotContains($swagger_ui_library_is_missing);
   }
 
 }

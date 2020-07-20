@@ -7,6 +7,11 @@
 
 declare(strict_types = 1);
 
+use Drupal\Core\Cache\CacheableDependencyInterface;
+use Drupal\Core\Cache\CacheableMetadata;
+use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface;
+use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery;
+
 /**
  * Implements hook_requirements().
  *
@@ -18,45 +23,49 @@ declare(strict_types = 1);
  */
 function swagger_ui_formatter_requirements(string $phase): array {
   $requirements = [];
-  // Make sure _swagger_ui_formatter_get_library_path() is defined.
+
+  // Make sure that the Swagger UI library discovery service is available.
   if ($phase === 'install') {
-    module_load_include('module', 'swagger_ui_formatter');
+    /** @var \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver */
+    $class_resolver = \Drupal::service('class_resolver');
+    $swagger_ui_library_discovery = $class_resolver->getInstanceFromDefinition(SwaggerUiLibraryDiscovery::class);
+  }
+  else {
+    /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+    $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
   }
 
   if (in_array($phase, ['runtime', 'install'])) {
-    $library_path = _swagger_ui_formatter_get_library_path();
-    if (!$library_path) {
-      $requirements['swagger_ui_library'] = [
+    try {
+      $library_dir = $swagger_ui_library_discovery->libraryDirectory();
+      $library_version = $swagger_ui_library_discovery->libraryVersion();
+      $requirements['swagger_ui_formatter'] = [
+        'title' => t('Swagger UI library'),
+        'severity' => REQUIREMENT_OK,
+        'value' => $library_version,
+        'description' => [
+          '#markup' => t('Swagger UI library installed at %path.', [
+            '%path' => $library_dir,
+          ]),
+        ],
+      ];
+    }
+    catch (SwaggerUiLibraryDiscoveryExceptionInterface $exception) {
+      $requirements['swagger_ui_formatter'] = [
         'title' => t('Swagger UI library'),
         'severity' => REQUIREMENT_ERROR,
-        'description' => t('Swagger UI library was not found. Download <a href=":link" target="_blank">the appropriate version</a> and place it in the [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
-          ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
-        ]),
+        'description' => [
+          // TODO: Make this translatable.
+          '#markup' => $exception->getMessage(),
+        ],
       ];
-      return $requirements;
     }
-
-    $library_version = _swagger_ui_formatter_get_library_version();
-    if (!$library_version || version_compare($library_version, SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION, '<')) {
-      $requirements['swagger_ui_library'] = [
-        'title' => t('Swagger UI library'),
-        'severity' => REQUIREMENT_ERROR,
-        'description' => t('The Swagger UI library version cannot be determined or it\'s older than v@library_version_min. Download <a href=":link" target="_blank">an appropriate version</a> and place it in the [DRUPAL ROOT]/libraries directory (e.g. [DRUPAL ROOT]/libraries/swagger-ui).', [
-          '@library_version_min' => SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION,
-          ':link' => 'https://github.com/swagger-api/swagger-ui/releases',
-        ]),
-      ];
-      return $requirements;
+    // Make sure that the status info is being refreshed if the theme changes.
+    if ($swagger_ui_library_discovery instanceof CacheableDependencyInterface) {
+      $requirement_description = &$requirements['swagger_ui_formatter']['description'];
+      $cacheable_metadata = CacheableMetadata::createFromRenderArray($requirement_description)->merge(CacheableMetadata::createFromObject($swagger_ui_library_discovery));
+      $cacheable_metadata->applyTo($requirement_description);
     }
-
-    $requirements['swagger_ui_library'] = [
-      'title' => t('Swagger UI library'),
-      'severity' => REQUIREMENT_OK,
-      'value' => $library_version,
-      'description' => t('Swagger UI library installed at %path.', [
-        '%path' => DRUPAL_ROOT . $library_path,
-      ]),
-    ];
   }
 
   return $requirements;

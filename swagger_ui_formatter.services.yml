@@ -1,4 +1,7 @@
 services:
+  swagger_ui_formatter.swagger_ui_library_discovery:
+    class: Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
+    arguments: ['@cache.default', '@theme_handler', '@theme.manager', '@theme.initialization']
   logger.channel.swagger_ui_formatter:
     parent: logger.channel_base
     arguments: ['swagger_ui_formatter']
