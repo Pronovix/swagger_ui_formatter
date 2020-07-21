@@ -6,4 +6,4 @@ dependencies:
 
 type: module
 core_version_requirement: ~8.9.1 || ~9.0.0
-php: "7.2"
+php: 7.2
