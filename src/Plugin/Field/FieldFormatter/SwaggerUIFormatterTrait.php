@@ -12,7 +12,6 @@ use Drupal\Core\Field\FieldItemListInterface;
 use Drupal\Core\Field\FormatterInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\StringTranslation\StringTranslationTrait;
-use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface;
 
 /**
  * Provides common methods for Swagger UI field formatters.
@@ -159,22 +158,24 @@ trait SwaggerUIFormatterTrait {
    */
   final protected function buildRenderArray(FieldItemListInterface $items, FormatterInterface $formatter, FieldDefinitionInterface $field_definition, array $context = []): array {
     $element = [];
+    $library_name = 'swagger_ui_formatter.swagger_ui_integration';
+    /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
+    $library_discovery = \Drupal::service('library.discovery');
     /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
     $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
 
-    try {
-      $library_dir = $swagger_ui_library_discovery->libraryDirectory();
-    }
-    catch (SwaggerUiLibraryDiscoveryExceptionInterface $exception) {
+    // The Swagger UI library integration is only registered if the Swagger UI
+    // library directory and version is correct.
+    if ($library_discovery->getLibraryByName('swagger_ui_formatter', $library_name) === FALSE) {
       $element = [
         '#theme' => 'status_messages',
         '#message_list' => [
-          'error' => [$this->t('The Swagger UI library is missing or incorrectly defined.')],
+          'error' => [$this->t('The Swagger UI library is missing, incorrectly defined or not supported.')],
         ],
       ];
     }
-
-    if (isset($library_dir)) {
+    else {
+      $library_dir = $swagger_ui_library_discovery->libraryDirectory();
       // Set the oauth2-redirect.html file path for OAuth2 authentication.
       $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . '/' . $library_dir . '/dist/oauth2-redirect.html';
 
@@ -200,7 +201,7 @@ trait SwaggerUIFormatterTrait {
             '#theme' => 'swagger_ui_field_item',
             '#attached' => [
               'library' => [
-                'swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration',
+                'swagger_ui_formatter/' . $library_name,
               ],
               'drupalSettings' => [
                 'swaggerUIFormatter' => [

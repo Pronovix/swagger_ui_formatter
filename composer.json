@@ -15,16 +15,18 @@
         "drupal/core-recommended": "~8.9.1 || ~9.0.0"
     },
     "conflict": {
+        "squizlabs/php_codesniffer": ">3.5.6",
         "symfony/phpunit-bridge": "<3.4.5"
     },
     "require-dev": {
-        "bower-asset/swagger-ui": "^3.22",
+        "bower-asset/swagger-ui": "^3.32.2",
         "composer/installers": "^1.6",
         "drupal/core-composer-scaffold": "~8.9.1 || ~9.0.0",
         "drupal/core-dev": "~8.9.1 || ~9.0.0",
+        "drupal/devel": "^4.0",
         "oomphinc/composer-installers-extender": "^1.1",
-        "pronovix/drupal-qa": "^2.9",
-        "pronovix/simple-symlink": "^2.9",
+        "pronovix/drupal-qa": "^2.10",
+        "pronovix/simple-symlink": "^2.10",
         "zaporylie/composer-drupal-optimizations": "^1.0"
     },
     "config": {
@@ -123,6 +125,7 @@
         "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
     "_comment": [
-        "symfony/phpunit-bridge >= 3.4.5 is required because that introduced PHPUnit 7 support: https://github.com/symfony/phpunit-bridge/commit/41759c1ac495aec551ac2036bfe804dc74f61802"
+        "symfony/phpunit-bridge >= 3.4.5 is required because that introduced PHPUnit 7 support: https://github.com/symfony/phpunit-bridge/commit/41759c1ac495aec551ac2036bfe804dc74f61802",
+        "squizlabs/php_codesniffer >3.5.6 conflict can be removed after pronovix/drupal-qa 2.11 is out"
     ]
 }

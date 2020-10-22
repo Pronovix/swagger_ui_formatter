@@ -10,14 +10,14 @@ use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
- * Tests file- and link formatters.
+ * Tests file and link field formatters.
  *
  * Validates that multiple OpenaAPI/Swagger 2.0 and 3.0 files can be rendered
  * on the same (node) entity and these files could be rendered from the private
  * filesystem - which is the most problematic one based on our previous
  * experiences.
  */
-final class FieldFormatterTest extends WebDriverTestBase {
+final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
 
   /**
    * {@inheritdoc}
@@ -73,7 +73,7 @@ final class FieldFormatterTest extends WebDriverTestBase {
     $assert->pageTextContains('Swagger Petstore');
     $assert->waitForField('swagger-ui-field_api_spec-1');
     $assert->pageTextContains('USPTO Data Set API');
-    $this->validateSwaggerUiIsMissingMessage(__FUNCTION__);
+    $this->validateSwaggerUiErrorMessage(__FUNCTION__);
   }
 
   /**
@@ -97,7 +97,7 @@ final class FieldFormatterTest extends WebDriverTestBase {
     $assert->pageTextContains('Swagger Petstore');
     $assert->waitForField('swagger-ui-field_api_spec-1');
     $assert->pageTextContains('USPTO Data Set API');
-    $this->validateSwaggerUiIsMissingMessage(__FUNCTION__);
+    $this->validateSwaggerUiErrorMessage(__FUNCTION__);
   }
 
   /**
@@ -108,27 +108,40 @@ final class FieldFormatterTest extends WebDriverTestBase {
   }
 
   /**
-   * Tests field error message when Swagger UI library is not installed.
+   * Tests Swagger UI library related field error message.
    *
    * @param string $filename_prefix
    *   Prefix for created screenshot file, ex.: name of the caller method.
    */
-  private function validateSwaggerUiIsMissingMessage(string $filename_prefix): void {
+  private function validateSwaggerUiErrorMessage(string $filename_prefix): void {
     $assert = $this->assertSession();
+    $swagger_ui_library_error_msg = 'The Swagger UI library is missing, incorrectly defined or not supported.';
+
     /** @var \Drupal\swagger_ui_formatter_test\Service\SwaggerUiLibraryDiscovery $swagger_ui_library_discovery */
     $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
+
     $swagger_ui_library_discovery->fakeMissingLibrary(TRUE);
     $this->getSession()->reload();
-    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-faking-enabled');
-    $swagger_ui_library_is_missing = 'The Swagger UI library is missing or incorrectly defined.';
-    $assert->pageTextContainsOnce($swagger_ui_library_is_missing);
+    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-fake-missing-library-enabled');
+    $assert->pageTextContainsOnce($swagger_ui_library_error_msg);
     $swagger_ui_library_discovery->fakeMissingLibrary(FALSE);
     // DrupalWTF, render cache should be invalidated automatically - just like
-    // it worked when the faking was enabled.
+    // it worked when the faking was enabled. Static state again?
+    // @see \Drupal\swagger_ui_formatter_test\Service\SwaggerUiLibraryDiscovery::flushCaches()
     Cache::invalidateTags(['rendered']);
     $this->getSession()->reload();
-    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-faking-disabled');
-    $assert->pageTextNotContains($swagger_ui_library_is_missing);
+    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-fake-missing-library-disabled');
+    $assert->pageTextNotContains($swagger_ui_library_error_msg);
+
+    $swagger_ui_library_discovery->fakeUnsupportedLibrary(TRUE);
+    $this->getSession()->reload();
+    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-fake-unsupported-library-enabled');
+    $assert->pageTextContainsOnce($swagger_ui_library_error_msg);
+    $swagger_ui_library_discovery->fakeUnsupportedLibrary(FALSE);
+    Cache::invalidateTags(['rendered']);
+    $this->getSession()->reload();
+    $this->createScreenshot($filename_prefix . '-' . __FUNCTION__ . '-after-fake-unsupported-library-disabled');
+    $assert->pageTextNotContains($swagger_ui_library_error_msg);
   }
 
 }

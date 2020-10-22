@@ -26,8 +26,8 @@ $ docker-compose exec php drush en swagger_ui_formatter -y
 
 ```sh
 $ docker-compose exec php composer normalize --indent-size=4 --indent-style=space --no-update-lock
-$ docker-compose exec php ./vendor/bin/phpcbf -s ../phpcs.xml.dist web/modules
-$ docker-compose exec php ./vendor/bin/phpcs -s ../phpcs.xml.dist web/modules
+$ docker-compose exec php ./vendor/bin/phpcbf -s ../phpcs.xml.dist --ignore="contrib/*" web/modules
+$ docker-compose exec php ./vendor/bin/phpcs -s ../phpcs.xml.dist --ignore="contrib/*" web/modules
 $ docker-compose exec php ./vendor/bin/drupal-check --drupal-root=. -e "*/build/*" ..
 ```
 
