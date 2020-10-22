@@ -22,7 +22,7 @@ function swagger_ui_formatter_post_update_2(): void {
 }
 
 /**
- * Clear cache due to changes in the rendering.
+ * Clear cache due to implementation changes.
  */
 function swagger_ui_formatter_post_update_3(): void {
   // Empty post-update hook.

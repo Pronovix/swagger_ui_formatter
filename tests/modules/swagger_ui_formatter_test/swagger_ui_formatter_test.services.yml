@@ -1,0 +1,10 @@
+services:
+  swagger_ui_formatter_test.swagger_ui_library_discovery:
+    class: Drupal\swagger_ui_formatter_test\Service\SwaggerUiLibraryDiscovery
+    decorates: swagger_ui_formatter.swagger_ui_library_discovery
+    public: false
+    arguments: ['@swagger_ui_formatter_test.swagger_ui_library_discovery.inner', '@state', '@cache_tags.invalidator']
+    properties:
+      # Without this property for decorated services, serialization will fail.
+      # https://www.drupal.org/project/drupal/issues/2531564
+      _serviceId: swagger_ui_formatter_test.swagger_ui_library_discovery

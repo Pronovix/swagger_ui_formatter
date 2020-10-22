@@ -1,4 +1,5 @@
 language: bash
+dist: focal
 
 sudo: required
 
@@ -7,6 +8,8 @@ services:
 
 addons:
   apt:
+    sources:
+      - sourceline: 'deb https://download.docker.com/linux/ubuntu $(lsb_release -cs) stable'
     packages:
       - docker-ce
 
@@ -47,6 +50,7 @@ matrix:
   fast_finish: true
 
 before_install:
+  - pip install travis-wait-improved
   - |
     sudo rm /usr/local/bin/docker-compose
     curl -L https://github.com/docker/compose/releases/download/${DOCKER_COMPOSE_VERSION}/docker-compose-`uname -s`-`uname -m` > docker-compose
@@ -69,6 +73,8 @@ before_install:
 
 script:
   - set -e
-  - .dev/.ci/init-env.sh
+  # Composer 1x can be really slow when it tries to figure out versions for a downgrade...
+  # (travis_wait is only available in build. https://github.com/travis-ci/travis-ci/issues/9336#issuecomment-373149662)
+  - travis-wait-improved --timeout 30m .dev/.ci/init-env.sh
   - .dev/.ci/check-cs.sh
   - .dev/.ci/run-phpunit-tests.sh

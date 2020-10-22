@@ -7,23 +7,8 @@
 
 declare(strict_types = 1);
 
-use Drupal\Component\Serialization\Json;
-use Drupal\Core\Cache\CacheBackendInterface;
 use Drupal\Core\Routing\RouteMatchInterface;
-
-/**
- * Swagger UI library path related cache ID.
- *
- * phpcs:disable DrupalPractice.Constants.GlobalConstant.GlobalConstant
- */
-const SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID = 'swagger_ui_formatter:library_path';
-
-/**
- * The minimum supported Swagger UI library version.
- *
- * phpcs:disable DrupalPractice.Constants.GlobalConstant.GlobalConstant
- */
-const SWAGGER_UI_FORMATTER_MIN_SUPPORTED_LIBRARY_VERSION = '3.13.4';
+use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface;
 
 /**
  * Implements hook_theme().
@@ -44,107 +29,50 @@ function swagger_ui_formatter_theme(): array {
  */
 function swagger_ui_formatter_library_info_build(): array {
   $libraries = [];
-  $library_path = _swagger_ui_formatter_get_library_path();
-  if ($library_path) {
-    // Library definition for required Swagger UI files.
-    $libraries['swagger_ui_formatter.swagger_ui'] = [
-      'version' => _swagger_ui_formatter_get_library_version(),
-      'css' => [
-        'theme' => [
-          $library_path . '/dist/swagger-ui.css' => ['minified' => TRUE],
-        ],
-      ],
-      'js' => [
-        $library_path . '/dist/swagger-ui-bundle.js' => ['minified' => TRUE],
-        $library_path . '/dist/swagger-ui-standalone-preset.js' => ['minified' => TRUE],
-      ],
-    ];
-    // Library definition for Swagger UI integration.
-    $libraries['swagger_ui_formatter.swagger_ui_integration'] = [
-      'version' => '1.0',
-      'js' => [
-        'js/swagger-ui-formatter.js' => [],
-      ],
-      'dependencies' => [
-        'core/drupal',
-        'core/jquery',
-        'core/drupalSettings',
-        'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
-      ],
-    ];
-  }
-  return $libraries;
-}
+  /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+  $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
 
-/**
- * Helper function to determine the Swagger UI library path.
- *
- * @return string|bool
- *   Returns the library path or FALSE if the library is not found.
- */
-function _swagger_ui_formatter_get_library_path() {
-  $cache = \Drupal::cache()->get(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
-  if ($cache) {
-    return $cache->data;
+  try {
+    $library_dir = $swagger_ui_library_discovery->libraryDirectory();
+    $library_version = $swagger_ui_library_discovery->libraryVersion();
+  }
+  catch (SwaggerUiLibraryDiscoveryExceptionInterface $exception) {
+    \Drupal::logger('swagger_ui_formatter')->error('Unable to register Swagger UI library: ' . $exception->getMessage());
+    return $libraries;
   }
 
-  foreach (['/libraries/swagger-ui', '/libraries/swagger_ui'] as $library_dir) {
-    if (_swagger_ui_formatter_is_library_directory($library_dir)) {
-      \Drupal::cache()->set(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID, $library_dir, CacheBackendInterface::CACHE_PERMANENT, [SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID]);
-      return $library_dir;
-    }
-  }
-  return FALSE;
-}
+  // Add a leading slash to the library directory path to indicate in
+  // $libraries[] that it's relative to DRUPAL_ROOT. Otherwise, it's considered
+  // as a relative path from the current module.
+  $library_dir = '/' . $library_dir;
 
-/**
- * Helper function to check where the Swagger UI library is installed.
- *
- * @param string $library_dir
- *   The directory name which contains the Swagger UI library.
- *
- * @return bool
- *   Returns TRUE if the Swagger UI library is installed under the given
- *   directory. Returns FALSE otherwise.
- */
-function _swagger_ui_formatter_is_library_directory(string $library_dir): bool {
-  $files_to_check = [
-    'package.json',
-    'dist/swagger-ui.css',
-    'dist/swagger-ui-bundle.js',
-    'dist/swagger-ui-standalone-preset.js',
+  // Library definition for the required Swagger UI files.
+  $libraries['swagger_ui_formatter.swagger_ui'] = [
+    'version' => $library_version,
+    'css' => [
+      'theme' => [
+        $library_dir . '/dist/swagger-ui.css' => ['minified' => TRUE],
+      ],
+    ],
+    'js' => [
+      $library_dir . '/dist/swagger-ui-bundle.js' => ['minified' => TRUE],
+      $library_dir . '/dist/swagger-ui-standalone-preset.js' => ['minified' => TRUE],
+    ],
   ];
-  foreach ($files_to_check as $file) {
-    if (!file_exists(DRUPAL_ROOT . $library_dir . '/' . $file)) {
-      return FALSE;
-    }
-  }
-  return TRUE;
-}
-
-/**
- * Gets Swagger UI library version information.
- *
- * @return string
- *   The library version or an empty string if the version cannot be determined.
- */
-function _swagger_ui_formatter_get_library_version(): string {
-  $library_path = _swagger_ui_formatter_get_library_path();
-  if ($library_path) {
-    $file = DRUPAL_ROOT . $library_path . '/package.json';
-    if (!file_exists($file)) {
-      return '';
-    }
-    $content = file_get_contents($file);
-    if (!$content) {
-      return '';
-    }
-    $data = Json::decode($content);
-    if (isset($data['version'])) {
-      return $data['version'];
-    }
-  }
-  return '';
+  // Library definition for the Swagger UI integration files.
+  $libraries['swagger_ui_formatter.swagger_ui_integration'] = [
+    'version' => '1.0',
+    'js' => [
+      'js/swagger-ui-formatter.js' => [],
+    ],
+    'dependencies' => [
+      'core/drupal',
+      'core/jquery',
+      'core/drupalSettings',
+      'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
+    ],
+  ];
+  return $libraries;
 }
 
 /**
@@ -180,5 +108,9 @@ function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $rout
  * Implements hook_cache_flush().
  */
 function swagger_ui_formatter_cache_flush(): void {
-  \Drupal::cache()->invalidate(SWAGGER_UI_FORMATTER_LIBRARY_PATH_CID);
+  /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+  $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
+  if (method_exists($swagger_ui_library_discovery, 'reset')) {
+    $swagger_ui_library_discovery->reset();
+  }
 }
