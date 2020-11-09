@@ -1,5 +1,5 @@
 {
-    "name": "testudio/swagger_ui_formatter",
+    "name": "drupal/swagger_ui_formatter",
     "type": "drupal-module",
     "description": "Provides a Swagger UI field formatter for File and Link fields.",
     "keywords": [
