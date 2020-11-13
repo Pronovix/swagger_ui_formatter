@@ -141,7 +141,10 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
       $url = file_create_url($file->getFileUri());
       if ($url === FALSE) {
-        $this->logger->error('URL could not be created for %file file.', ['%file' => $file->label(), 'link' => $context['field_items']->getEntity()->toLink($this->t('view'))->toString()]);
+        $this->logger->error('URL could not be created for %file file.', [
+          '%file' => $file->label(),
+          'link' => $context['field_items']->getEntity()->toLink($this->t('view'))->toString(),
+        ]);
         return NULL;
       }
 
