@@ -55,7 +55,7 @@ function swagger_ui_formatter_requirements(string $phase): array {
         'title' => t('Swagger UI library'),
         'severity' => REQUIREMENT_ERROR,
         'description' => [
-          // TODO: Make this translatable.
+          // @todo Make this translatable.
           '#markup' => $exception->getMessage(),
         ],
       ];

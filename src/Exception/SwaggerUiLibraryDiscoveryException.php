@@ -4,8 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\swagger_ui_formatter\Exception;
 
-use Throwable;
-
 /**
  * Base exception for Swagger UI library discovery.
  */
@@ -28,7 +26,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *
    * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
    */
-  private function __construct($message = '', $code = 0, Throwable $previous = NULL) {
+  private function __construct($message = '', $code = 0, \Throwable $previous = NULL) {
     parent::__construct($message, $code, $previous);
   }
 
