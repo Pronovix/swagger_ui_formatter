@@ -1,0 +1,3 @@
+For list of release changes, visit:
+
+https://www.drupal.org/project/swagger_ui_formatter/releases
