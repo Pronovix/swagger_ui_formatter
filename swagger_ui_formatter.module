@@ -108,9 +108,15 @@ function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $rout
  * Implements hook_cache_flush().
  */
 function swagger_ui_formatter_cache_flush(): void {
-  /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
-  $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
-  if (method_exists($swagger_ui_library_discovery, 'reset')) {
-    $swagger_ui_library_discovery->reset();
+  // The library discovery service might not exist in certain situations (like
+  // when someone upgrades the module from 8.x-2.x) so we check its existence.
+  // @todo The condition can be removed in 4.x.
+  $service_name = 'swagger_ui_formatter.swagger_ui_library_discovery';
+  if (\Drupal::hasService($service_name)) {
+    /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+    $swagger_ui_library_discovery = \Drupal::service($service_name);
+    if (method_exists($swagger_ui_library_discovery, 'reset')) {
+      $swagger_ui_library_discovery->reset();
+    }
   }
 }
