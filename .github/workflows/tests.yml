@@ -1,0 +1,92 @@
+name: Swagger UI Formatter tests
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: true
+      matrix:
+        php_image: ["wodby/drupal-php:7.2-dev", "wodby/drupal-php:7.3-dev", "wodby/drupal-php:7.4-dev"]
+        db_image: ["wodby/mariadb:10.3", "wodby/mariadb:10.4", "wodby/mariadb:10.5"]
+        include:
+          # include MariaDB 10.2 on PHP 7.2
+          - php_image: "wodby/drupal-php:7.2-dev"
+            db_image: "wodby/mariadb:10.2"
+
+    steps:
+    - name: Checkout Swagger UI Formatter
+      uses: actions/checkout@v2
+
+    - name: Checkout Drupal-Dev
+      uses: actions/checkout@v2
+      with:
+        repository: Pronovix/docker-drupal-dev
+        path: ./drupal-dev
+
+    - name: Setup environment
+      run: |
+        mkdir build
+        sudo chown runneradmin build
+        ln -s drupal-dev/docker-compose.yml .
+        ln -s drupal-dev/Dockerfile .
+        printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
+        chmod a+rw .
+
+    - name: Create Docker containers
+      env:
+        PHP_IMAGE: ${{ matrix.php_image }}
+        DB_IMAGE: ${{ matrix.db_image }}
+      run: |
+        docker-compose pull --quiet
+        docker-compose up -d --build
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - uses: rishabhgupta/split-by@v1
+      id: split
+      with:
+        string: ${{ matrix.php_image }}
+        split-by: ':'
+
+    - name: Make sure that the ./files/ folder exists
+      run: mkdir files
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: ./files
+        key: ${{ runner.os }}-php-${{ steps.split.outputs._1 }}-ver-${{ secrets.CACHE_VERSION }}-${{ hashFiles('**/composer.json') }}
+
+    - name: Copy Composer cache to Docker PHP container
+      if: steps.composer-cache.outputs.cache-hit == 'true'
+      run: |
+        sudo chown -R runneradmin files
+        docker cp ./files swagger_ui_formatter_php:/home/wodby/.composer/cache/
+
+    - name: Install dependencies
+      run: docker-compose exec -T php composer install --no-interaction --no-suggest -d ..
+
+    - name: Set up Drupal settings files
+      run: |
+        sudo chown -R runner build/web/sites
+        ln -s ../../../../drupal-dev/drupal/settings.php build/web/sites/default/settings.php
+        ln -s ../../../../drupal-dev/drupal/settings.shared.php build/web/sites/default/settings.shared.php
+        ln -s ../../../../drupal-dev/drupal/settings.testing.php build/web/sites/default/settings.testing.php
+        ln -s ../../../drupal-dev/drupal/development.services.yml.dist build/web/sites/development.services.yml.dist
+        sudo chown -R runneradmin build/web/sites
+
+    - name: Copy cache from Docker PHP Container
+      run: |
+        sudo chown -R runner files
+        docker cp swagger_ui_formatter_php:/home/wodby/.composer/cache/files .
+
+    - name: Run tests
+      run: docker-compose exec -T php ./vendor/bin/phpunit -c web/core -v --debug --printer '\Drupal\Tests\Listeners\HtmlOutputPrinter' web/modules/drupal_module/tests/
