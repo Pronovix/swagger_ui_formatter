@@ -7,8 +7,44 @@ on:
     branches: [ master ]
 
 jobs:
-  build:
-    runs-on: ubuntu-latest
+  code_style:
+    runs-on: ubuntu-20.04
+    steps:
+    - name: Checkout Swagger UI Formatter
+      uses: actions/checkout@v2
+
+    - name: Checkout Drupal-Dev
+      uses: actions/checkout@v2
+      with:
+        repository: Pronovix/docker-drupal-dev
+        path: ./drupal-dev
+
+    - name: Setup environment
+      run: |
+        mkdir build
+        sudo chown runneradmin build
+        ln -s drupal-dev/docker-compose.yml .
+        ln -s drupal-dev/Dockerfile .
+        printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
+
+    - name: Create Docker containers
+      env:
+        PHP_IMAGE: ${{ matrix.php_image }}
+        DB_IMAGE: ${{ matrix.db_image }}
+      run: |
+        docker-compose pull --quiet
+        docker-compose up -d --build
+
+    - name: Install dependencies
+      run: |
+        chmod a+rw .
+        docker-compose exec -T php composer install --no-interaction --no-suggest --no-progress -d ..
+
+    - name: Run code style check
+      run: CHECK_CS="true" ./.dev/.ci/check-cs.sh
+
+  test:
+    runs-on: ubuntu-20.04
     strategy:
       fail-fast: false
       matrix:
@@ -51,8 +87,8 @@ jobs:
         chmod a+rw .
         docker-compose exec -T php composer install --no-interaction --no-suggest --no-progress -d ..
         chmod a+rw composer.json
-        docker-compose exec -T php composer require drupal/core:${{ matrix.drupal_version }} --no-update -d ..
-        docker-compose exec --env COMPOSER_DISCARD_CHANGES=true -T php composer update --with-all-dependencies --no-progress ${{ matrix.lowest_highest }} -d ..
+        docker-compose exec -T php composer require drupal/core:${{ matrix.drupal_version }} drupal/core-dev:${{ matrix.drupal_version }} drupal/core-recommended:${{ matrix.drupal_version }} --no-update -d ..
+        docker-compose exec --env COMPOSER_DISCARD_CHANGES=true -T php composer update --no-progress ${{ matrix.lowest_highest }} -d ..
 
     - name: Set up Drupal settings files
       run: |
@@ -64,4 +100,4 @@ jobs:
         sudo chown -R runneradmin build/web/sites
 
     - name: Run tests
-      run: docker-compose exec -T php ./vendor/bin/phpunit -c web/core -v --debug --printer '\Drupal\Tests\Listeners\HtmlOutputPrinter' web/modules/drupal_module/tests/
+      run: RUN_PHPUNIT_TESTS="true" ./.dev/.ci/run-phpunit-tests.sh
