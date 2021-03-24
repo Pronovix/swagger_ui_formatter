@@ -3,8 +3,10 @@ name: Swagger UI Formatter tests
 on:
   push:
     branches: [ master ]
+    paths: '**.php'
   pull_request:
     branches: [ master ]
+    paths: '**.php'
 
 jobs:
   code_style:
