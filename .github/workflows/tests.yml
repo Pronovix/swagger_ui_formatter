@@ -50,11 +50,11 @@ jobs:
       matrix:
         php_image: ["wodby/drupal-php:7.2-dev", "wodby/drupal-php:7.3-dev", "wodby/drupal-php:7.4-dev"]
         db_image: ["wodby/mariadb:10.5"]
-        drupal_version: ["^8.9", "^9.0"]
+        drupal_version: ["~8.9.1", "^9"]
         lowest_highest: ["--prefer-lowest", ""]
         exclude:
           - php_image: "wodby/drupal-php:7.2-dev"
-            drupal_version: "^9.0"
+            drupal_version: "^9"
 
     steps:
     - name: Checkout Swagger UI Formatter
