@@ -57,6 +57,9 @@ jobs:
         exclude:
           - php_image: "wodby/drupal-php:7.2-dev"
             drupal_version: "^9"
+          - php_image: "wodby/drupal-php:7.4-dev"
+            drupal_version: "~8.9.1"
+            lowest_highest: "--prefer-lowest"
 
     steps:
     - name: Checkout Swagger UI Formatter
