@@ -125,7 +125,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []) {
+  protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []): ?string {
     if (!isset($this->fileEntityCache[$context['field_items']->getEntity()->id()])) {
       // Store file entities keyed by their id.
       $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), static function (array $carry, File $entity) {
