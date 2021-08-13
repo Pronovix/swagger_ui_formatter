@@ -19,12 +19,11 @@
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
-        "composer/installers": "^1.7",
+        "composer/installers": "^v2.0.0",
         "drupal/core-composer-scaffold": "~8.9.1 || ^9",
         "drupal/core-dev": "~8.9.1 || ^9",
         "drupal/core-recommended": "~8.9.1 || ^9",
         "drupal/devel": "^4.0",
-        "oomphinc/composer-installers-extender": "^1.1 || ^2.0",
         "pronovix/drupal-qa": "^2.14",
         "pronovix/simple-symlink": "^2.14",
         "zaporylie/composer-drupal-optimizations": "^1.2"
@@ -45,9 +44,15 @@
         },
         "drupal-scaffold": {
             "file-mapping": {
+                "[libraries]/swagger-ui/dist/oauth2-redirect.html": "build/vendor/bower-asset/swagger-ui/dist/oauth2-redirect.html",
+                "[libraries]/swagger-ui/dist/swagger-ui-bundle.js": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui-bundle.js",
+                "[libraries]/swagger-ui/dist/swagger-ui-standalone-preset.js": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui-standalone-preset.js",
+                "[libraries]/swagger-ui/dist/swagger-ui.css": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui.css",
+                "[libraries]/swagger-ui/package.json": "build/vendor/bower-asset/swagger-ui/package.json",
                 "[project-root]/.gitattributes": false
             },
             "locations": {
+                "libraries": "build/web/libraries",
                 "web-root": "build/web"
             }
         },
@@ -60,9 +65,7 @@
                 "type:drupal-drush"
             ],
             "build/web/libraries/{$name}": [
-                "type:drupal-library",
-                "type:npm-asset",
-                "type:bower-asset"
+                "type:drupal-library"
             ],
             "build/web/modules/contrib/{$name}": [
                 "type:drupal-module"
@@ -80,10 +83,6 @@
                 "type:drupal-custom-theme"
             ]
         },
-        "installer-types": [
-            "npm-asset",
-            "bower-asset"
-        ],
         "patchLevel": {
             "drupal/core": "-p2"
         },
