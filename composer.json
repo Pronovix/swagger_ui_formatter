@@ -19,15 +19,15 @@
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
-        "composer/installers": "^1.6",
+        "composer/installers": "^1.7",
         "drupal/core-composer-scaffold": "~8.9.1 || ^9",
         "drupal/core-dev": "~8.9.1 || ^9",
         "drupal/core-recommended": "~8.9.1 || ^9",
         "drupal/devel": "^4.0",
-        "oomphinc/composer-installers-extender": "^1.1",
-        "pronovix/drupal-qa": "^2.11",
-        "pronovix/simple-symlink": "^2.11",
-        "zaporylie/composer-drupal-optimizations": "^1.0"
+        "oomphinc/composer-installers-extender": "^1.1 || ^2.0",
+        "pronovix/drupal-qa": "^2.14",
+        "pronovix/simple-symlink": "^2.14",
+        "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "config": {
         "optimize-autoloader": true,
