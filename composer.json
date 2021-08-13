@@ -39,6 +39,10 @@
             "dev-master": "3.x-dev"
         },
         "composer-exit-on-patch-failure": true,
+        "composer-normalize": {
+            "indent-size": 4,
+            "indent-style": "space"
+        },
         "drupal-scaffold": {
             "file-mapping": {
                 "[project-root]/.gitattributes": false
@@ -52,8 +56,19 @@
             "build/web/core": [
                 "type:drupal-core"
             ],
+            "build/web/drush/contrib/{$name}": [
+                "type:drupal-drush"
+            ],
+            "build/web/libraries/{$name}": [
+                "type:drupal-library",
+                "type:npm-asset",
+                "type:bower-asset"
+            ],
             "build/web/modules/contrib/{$name}": [
                 "type:drupal-module"
+            ],
+            "build/web/modules/custom/{$name}": [
+                "type:drupal-custom-module"
             ],
             "build/web/profiles/contrib/{$name}": [
                 "type:drupal-profile"
@@ -61,19 +76,8 @@
             "build/web/themes/contrib/{$name}": [
                 "type:drupal-theme"
             ],
-            "build/web/drush/contrib/{$name}": [
-                "type:drupal-drush"
-            ],
-            "build/web/modules/custom/{$name}": [
-                "type:drupal-custom-module"
-            ],
             "build/web/themes/custom/{$name}": [
                 "type:drupal-custom-theme"
-            ],
-            "build/web/libraries/{$name}": [
-                "type:drupal-library",
-                "type:npm-asset",
-                "type:bower-asset"
             ]
         },
         "installer-types": [
