@@ -11,7 +11,7 @@
     "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
     "license": "GPL-2.0-or-later",
     "require": {
-        "php": "^7.2",
+        "php": "^7.2 || ~8.0.0",
         "drupal/core": "~8.9.1 || ^9"
     },
     "conflict": {
