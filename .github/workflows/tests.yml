@@ -48,7 +48,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_image: ["wodby/drupal-php:7.2-dev", "wodby/drupal-php:7.3-dev", "wodby/drupal-php:7.4-dev"]
+        php_image: ["wodby/drupal-php:7.2-dev", "wodby/drupal-php:7.3-dev", "wodby/drupal-php:7.4-dev", "wodby/drupal-php:8.0-dev"]
         db_image: ["wodby/mariadb:10.5"]
         drupal_version: ["~8.9.1", "^9"]
         lowest_highest: ["--prefer-lowest", ""]
