@@ -8,6 +8,7 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
+use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests file and link field formatters.
@@ -42,7 +43,15 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->fileSystem = $this->container->get('file_system');
-    $module_path = drupal_get_path('module', 'swagger_ui_formatter');
+    if (version_compare(\Drupal::VERSION, '9.3', '>=')) {
+      $module_path = $this->container->get('extension.path.resolver')->getPath('module', 'swagger_ui_formatter');
+    }
+    else {
+      // @todo Remove this BC layer when minimum required Drupal core version
+      // gets bumped to Drupal 9.3.0 or above.
+      // @phpstan-ignore-next-line
+      $module_path = drupal_get_path('module', 'swagger_ui_formatter');
+    }
     // Copy fixtures to the public filesystem so they could be access from the
     // browser.
     $this->fileSystem->copy(DRUPAL_ROOT . '/' . $module_path . '/tests/fixtures/openapi20/petstore-expanded.yaml', PublicStream::basePath());
@@ -65,7 +74,7 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
     $page->attachFileToField('files[field_api_spec_1][]', $uspto_path);
     $assert->waitForField('field_api_spec_1_remove_button');
     $this->createScreenshot(__FUNCTION__ . '-after-file-upload');
-    $this->drupalPostForm(NULL, [
+    $this->submitForm([
       'title[0][value]' => 'Testing the file field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');
@@ -80,16 +89,28 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
    * Tests the link field formatter.
    */
   public function testLinkFormatter(): void {
+    $generate_file_path = static function (string $uri, ContainerInterface $container): string {
+      if ($container->has('file_url_generator')) {
+        return $container->get('file_url_generator')->generateAbsoluteString($uri);
+      }
+
+      // @todo Remove this BC layer when minimum required Drupal core version
+      // gets bumped to Drupal 9.3.0 or above.
+      // @phpstan-ignore-next-line
+      return file_create_url($uri);
+    };
+
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'remote_api_doc']));
-    $page->fillField('field_remote_api_spec[0][uri]', file_create_url('public://petstore-expanded.yaml'));
+
+    $page->fillField('field_remote_api_spec[0][uri]', $generate_file_path('public://petstore-expanded.yaml', $this->container));
     $page->pressButton('field_remote_api_spec_add_more');
     $assert->waitForField('field_remote_api_spec[1][uri]');
-    $page->fillField('field_remote_api_spec[1][uri]', file_create_url('public://uspto.yaml'));
-    $this->drupalPostForm(NULL, [
+    $page->fillField('field_remote_api_spec[1][uri]', $generate_file_path('public://uspto.yaml', $this->container));
+    $this->submitForm([
       'title[0][value]' => 'Testing the link field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');

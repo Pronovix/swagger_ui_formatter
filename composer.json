@@ -1,7 +1,8 @@
 {
     "name": "drupal/swagger_ui_formatter",
-    "type": "drupal-module",
     "description": "Provides a Swagger UI field formatter for File and Link fields.",
+    "license": "GPL-2.0-or-later",
+    "type": "drupal-module",
     "keywords": [
         "Drupal",
         "OpenAPI",
@@ -9,27 +10,54 @@
         "API docs"
     ],
     "homepage": "https://www.drupal.org/project/swagger_ui_formatter",
-    "license": "GPL-2.0-or-later",
-    "require": {
-        "php": "^7.2",
-        "drupal/core": "~8.9.1 || ^9"
+    "support": {
+        "issues": "https://github.com/Pronovix/swagger_ui_formatter/issues",
+        "source": "https://github.com/Pronovix/swagger_ui_formatter",
+        "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
-    "conflict": {
-        "symfony/phpunit-bridge": "<3.4.5"
+    "require": {
+        "php": "^7.4",
+        "drupal/core": "^9.2"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
         "composer/installers": "^v2.0.0",
-        "drupal/core-composer-scaffold": "~8.9.1 || ^9",
-        "drupal/core-dev": "~8.9.1 || ^9",
-        "drupal/core-recommended": "~8.9.1 || ^9",
+        "drupal/core-composer-scaffold": "^9.2",
+        "drupal/core-dev": "^9.2",
+        "drupal/core-recommended": "^9.2",
         "drupal/devel": "^4.0",
-        "pronovix/drupal-qa": "^2.14",
-        "pronovix/simple-symlink": "^2.14",
+        "pronovix/drupal-qa": "^3.3",
+        "pronovix/simple-symlink": "^3.1.3",
         "zaporylie/composer-drupal-optimizations": "^1.2"
+    },
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        },
+        {
+            "type": "composer",
+            "url": "https://asset-packagist.org"
+        }
+    ],
+    "minimum-stability": "dev",
+    "prefer-stable": true,
+    "autoload": {
+        "psr-4": {
+            "Drupal\\swagger_ui_formatter\\": "./src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "Drupal\\Tests\\swagger_ui_formatter\\": "./tests/src",
+            "Drupal\\swagger_ui_formatter_test\\": "./tests/modules/swagger_ui_formatter_test/src"
+        }
     },
     "config": {
         "optimize-autoloader": true,
+        "platform": {
+            "php": "7.4.0"
+        },
         "sort-packages": true,
         "vendor-dir": "build/vendor"
     },
@@ -91,29 +119,6 @@
             "phpcs.xml.dist": "build/phpcs.xml.dist"
         }
     },
-    "autoload": {
-        "psr-4": {
-            "Drupal\\swagger_ui_formatter\\": "./src/"
-        }
-    },
-    "autoload-dev": {
-        "psr-4": {
-            "Drupal\\Tests\\swagger_ui_formatter\\": "./tests/src",
-            "Drupal\\swagger_ui_formatter_test\\": "./tests/modules/swagger_ui_formatter_test/src"
-        }
-    },
-    "repositories": [
-        {
-            "type": "composer",
-            "url": "https://packages.drupal.org/8"
-        },
-        {
-            "type": "composer",
-            "url": "https://asset-packagist.org"
-        }
-    ],
-    "minimum-stability": "dev",
-    "prefer-stable": true,
     "scripts": {
         "post-install-cmd": [
             "Pronovix\\SimpleSymlink\\ScriptHandler::createSymlinks"
@@ -121,13 +126,5 @@
         "post-update-cmd": [
             "Pronovix\\SimpleSymlink\\ScriptHandler::createSymlinks"
         ]
-    },
-    "support": {
-        "issues": "https://github.com/Pronovix/swagger_ui_formatter/issues",
-        "source": "https://github.com/Pronovix/swagger_ui_formatter",
-        "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
-    },
-    "_comment": [
-        "symfony/phpunit-bridge >= 3.4.5 is required because that introduced PHPUnit 7 support: https://github.com/symfony/phpunit-bridge/commit/41759c1ac495aec551ac2036bfe804dc74f61802"
-    ]
+    }
 }

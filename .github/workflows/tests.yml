@@ -29,8 +29,7 @@ jobs:
 
     - name: Create Docker containers
       env:
-        PHP_IMAGE: ${{ matrix.php_image }}
-        DB_IMAGE: ${{ matrix.db_image }}
+        PHP_IMAGE: "wodby/drupal-php:7.4-dev"
       run: |
         docker-compose pull --quiet
         docker-compose up -d --build
@@ -48,16 +47,12 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_image: ["wodby/drupal-php:7.2-dev", "wodby/drupal-php:7.3-dev", "wodby/drupal-php:7.4-dev"]
+        # TODO Add PHP 8.0 to the test suit when our dev dependencies get a PHP 8.0 compatible release.
+        php_image: ["wodby/drupal-php:7.4-dev"]
         db_image: ["wodby/mariadb:10.5"]
-        drupal_version: ["~8.9.1", "^9"]
+        # TODO Get version range from composer.json dynamically.
+        drupal_version: ["^9.2"]
         lowest_highest: ["--prefer-lowest", ""]
-        exclude:
-          - php_image: "wodby/drupal-php:7.2-dev"
-            drupal_version: "^9"
-          - php_image: "wodby/drupal-php:7.4-dev"
-            drupal_version: "~8.9.1"
-            lowest_highest: "--prefer-lowest"
 
     steps:
     - name: Checkout Swagger UI Formatter
