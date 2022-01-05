@@ -7,6 +7,7 @@ namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
@@ -51,6 +52,16 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   private $logger;
 
   /**
+   * File URL generator.
+   *
+   * Due to Drupal <9.3.0 support we have to allow NULL, that is the simplest
+   * option.
+   *
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface|null
+   */
+  private ?FileUrlGeneratorInterface $fileUrlGenerator;
+
+  /**
    * Constructs a SwaggerUIFileFormatter object.
    *
    * @param string $plugin_id
@@ -71,11 +82,25 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    *   String translation.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface|null $file_url_generator
+   *   File URL generator.
+   *   Due to Drupal <9.3.0 support we have to allow NULL, that is the simplest
+   *   option.
    */
-  public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger) {
+  public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
+    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+    if (!$file_url_generator && \Drupal::getContainer()->has('file_url_generator')) {
+      // The nicest thing that can be said about the required format by this
+      // sniff is "insufficient".
+      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
+      @trigger_error('Calling SwaggerUIFileFormatter::__construct() without the $file_url_generator argument is deprecated in swagger_ui_formatter:3.4 and will be required before swagger_ui_formatter:4.0.', E_USER_DEPRECATED);
+      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
+      $file_url_generator = \Drupal::service('file_url_generator');
+    }
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->stringTranslation = $string_translation;
     $this->logger = $logger;
+    $this->fileUrlGenerator = $file_url_generator;
   }
 
   /**
@@ -91,7 +116,8 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
       $configuration['view_mode'],
       $configuration['third_party_settings'],
       $container->get('string_translation'),
-      $container->get('logger.channel.swagger_ui_formatter')
+      $container->get('logger.channel.swagger_ui_formatter'),
+      $container->has('file_url_generator') ? $container->get('file_url_generator') : NULL
     );
   }
 
@@ -139,7 +165,15 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
     if (isset($this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']])) {
       /** @var \Drupal\file\Entity\File $file */
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
-      $url = file_create_url($file->getFileUri());
+      if ($this->fileUrlGenerator) {
+        $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
+      }
+      else {
+        // @todo Remove this BC layer when minimum required Drupal core version
+        // gets bumped to Drupal 9.3.0 or above.
+        // @phpstan-ignore-next-line
+        $url = file_create_url($file->getFileUri());
+      }
       if ($url === FALSE) {
         $this->logger->error('URL could not be created for %file file.', [
           '%file' => $file->label(),

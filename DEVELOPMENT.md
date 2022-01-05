@@ -9,7 +9,7 @@ $ git clone https://github.com/Pronovix/docker-drupal-dev.git drupal-dev
 $ mkdir build;
 $ ln -s drupal-dev/docker-compose.yml
 $ ln -s drupal-dev/Dockerfile
-$ printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n#You can find examples for available customization in the drupal-dev/examples/.env file.\n" > .env && source .env
+$ printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\nPHP_IMAGE=wodby/drupal-php:7.4-dev\n#You can find examples for available customization in the drupal-dev/examples/.env file.\n" > .env && source .env
 $ docker-compose up -d --build
 $ docker-compose exec php composer install
 $ ln -s ../../../../drupal-dev/drupal/settings.php build/web/sites/default/settings.php
