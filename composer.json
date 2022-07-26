@@ -17,14 +17,14 @@
     },
     "require": {
         "php": "^7.4 || ^8.0",
-        "drupal/core": "^9.2"
+        "drupal/core": "^9.3"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
         "composer/installers": "^v2.0.0",
-        "drupal/core-composer-scaffold": "^9.2",
-        "drupal/core-dev": "^9.2",
-        "drupal/core-recommended": "^9.2",
+        "drupal/core-composer-scaffold": "^9.3",
+        "drupal/core-dev": "^9.3",
+        "drupal/core-recommended": "^9.3",
         "drupal/devel": "^4.0",
         "pronovix/drupal-qa": "^3.3",
         "pronovix/simple-symlink": "^3.1.3",
