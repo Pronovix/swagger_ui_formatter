@@ -54,12 +54,6 @@
         }
     },
     "config": {
-        "optimize-autoloader": true,
-        "platform": {
-            "php": "7.4.0"
-        },
-        "sort-packages": true,
-        "vendor-dir": "build/vendor",
         "allow-plugins": {
             "composer/installers": true,
             "drupal/core-composer-scaffold": true,
@@ -68,7 +62,13 @@
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true,
             "pronovix/drupal-qa": true
-        }
+        },
+        "optimize-autoloader": true,
+        "platform": {
+            "php": "7.4.0"
+        },
+        "sort-packages": true,
+        "vendor-dir": "build/vendor"
     },
     "extra": {
         "branch-alias": {
