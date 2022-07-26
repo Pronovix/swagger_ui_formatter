@@ -11,6 +11,7 @@ use Drupal\Core\Field\FormatterBase;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\link\Plugin\Field\FieldType\LinkItem;
 use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
@@ -100,7 +101,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
    * {@inheritdoc}
    */
   protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []) {
-    /** @var \Drupal\link\Plugin\Field\FieldType\LinkItem $field_item */
+    assert($field_item instanceof LinkItem);
     return $field_item->getUrl()->toString();
   }
 
