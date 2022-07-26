@@ -59,7 +59,16 @@
             "php": "7.4.0"
         },
         "sort-packages": true,
-        "vendor-dir": "build/vendor"
+        "vendor-dir": "build/vendor",
+        "allow-plugins": {
+            "composer/installers": true,
+            "drupal/core-composer-scaffold": true,
+            "cweagans/composer-patches": true,
+            "zaporylie/composer-drupal-optimizations": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "pronovix/drupal-qa": true
+        }
     },
     "extra": {
         "branch-alias": {
