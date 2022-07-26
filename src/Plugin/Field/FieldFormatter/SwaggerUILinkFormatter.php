@@ -100,7 +100,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []) {
+  protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []): ?string {
     assert($field_item instanceof LinkItem);
     return $field_item->getUrl()->toString();
   }
