@@ -64,9 +64,6 @@
             "pronovix/drupal-qa": true
         },
         "optimize-autoloader": true,
-        "platform": {
-            "php": "7.4.0"
-        },
         "sort-packages": true,
         "vendor-dir": "build/vendor"
     },
