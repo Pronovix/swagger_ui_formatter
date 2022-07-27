@@ -10,6 +10,7 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryException;
+use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery as OriginalSwaggerUiLibraryDiscovery;
 use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface;
 
 /**
@@ -58,7 +59,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   /**
    * Constructs a new object.
    *
-   * @param \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $decorated
+   * @param \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery $decorated
    *   The decorated service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.
@@ -67,7 +68,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
    * @param \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery
    *   The library discovery.
    */
-  public function __construct(SwaggerUiLibraryDiscoveryInterface $decorated, StateInterface $state, CacheTagsInvalidatorInterface $cache_tags_invalidator, LibraryDiscoveryInterface $library_discovery) {
+  public function __construct(OriginalSwaggerUiLibraryDiscovery $decorated, StateInterface $state, CacheTagsInvalidatorInterface $cache_tags_invalidator, LibraryDiscoveryInterface $library_discovery) {
     $this->decorated = $decorated;
     $this->state = $state;
     $this->cacheTagsInvalidator = $cache_tags_invalidator;
