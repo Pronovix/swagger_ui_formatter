@@ -4,14 +4,15 @@ declare(strict_types = 1);
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
+use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
+use Drupal\Core\File\Exception\InvalidStreamWrapperException;
 use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
-use Drupal\file\Entity\File;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -117,7 +118,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
       $configuration['third_party_settings'],
       $container->get('string_translation'),
       $container->get('logger.channel.swagger_ui_formatter'),
-      $container->has('file_url_generator') ? $container->get('file_url_generator') : NULL
+      $container->get('file_url_generator')
     );
   }
 
@@ -154,7 +155,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []): ?string {
     if (!isset($this->fileEntityCache[$context['field_items']->getEntity()->id()])) {
       // Store file entities keyed by their id.
-      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), static function (array $carry, File $entity) {
+      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), static function (array $carry, EntityInterface $entity) {
         $carry[$entity->id()] = $entity;
         return $carry;
       }, []);
@@ -165,16 +166,17 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
     if (isset($this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']])) {
       /** @var \Drupal\file\Entity\File $file */
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
-      $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
-      if ($url === FALSE) {
+      try {
+        return $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
+      }
+      catch (InvalidStreamWrapperException $e) {
+        // @todo In 4.0 we can probably get rid of this additional error
+        //   handling.
         $this->logger->error('URL could not be created for %file file.', [
           '%file' => $file->label(),
           'link' => $context['field_items']->getEntity()->toLink($this->t('view'))->toString(),
         ]);
-        return NULL;
       }
-
-      return $url;
     }
 
     return NULL;

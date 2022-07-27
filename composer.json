@@ -26,6 +26,7 @@
         "drupal/core-dev": "^9.3",
         "drupal/core-recommended": "^9.3",
         "drupal/devel": "^4.0",
+        "phpstan/extension-installer": "^1.1",
         "pronovix/drupal-qa": "^3.3",
         "pronovix/simple-symlink": "^3.1.3",
         "zaporylie/composer-drupal-optimizations": "^1.2"
@@ -61,7 +62,8 @@
             "zaporylie/composer-drupal-optimizations": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
             "ergebnis/composer-normalize": true,
-            "pronovix/drupal-qa": true
+            "pronovix/drupal-qa": true,
+            "phpstan/extension-installer": true
         },
         "optimize-autoloader": true,
         "sort-packages": true,

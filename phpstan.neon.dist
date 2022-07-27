@@ -1,0 +1,20 @@
+includes:
+  - phpstan-baseline.neon
+
+parameters:
+  level: 5
+  treatPhpDocTypesAsCertain: false
+  tipsOfTheDay: false
+  reportUnmatchedIgnoredErrors: false
+  # This hardcoded list is not ideal but it looks like PHPStan full-static analyzer has issues with
+  # symlinks. See: https://github.com/Pronovix/swagger_ui_formatter/pull/84#discussion_r931072893
+  paths:
+    - src
+    - tests
+    - swagger_ui_formatter.api.php
+    - swagger_ui_formatter.install
+    - swagger_ui_formatter.module
+    - swagger_ui_formatter.post_update.php
+  excludePaths:
+    - */node_modules/*
+    - */tests/fixtures/*.php

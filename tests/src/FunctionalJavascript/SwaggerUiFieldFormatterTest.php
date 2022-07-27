@@ -7,8 +7,8 @@ namespace Drupal\Tests\swagger_ui_formatter\FunctionalJavascript;
 use Drupal\Core\Cache\Cache;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
+use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
-use Symfony\Component\DependencyInjection\ContainerInterface;
 
 /**
  * Tests file and link field formatters.
@@ -64,6 +64,7 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
   public function testFileFormatter(): void {
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
+    assert($assert instanceof JSWebAssert);
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'api_doc']));
@@ -89,27 +90,17 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
    * Tests the link field formatter.
    */
   public function testLinkFormatter(): void {
-    $generate_file_path = static function (string $uri, ContainerInterface $container): string {
-      if ($container->has('file_url_generator')) {
-        return $container->get('file_url_generator')->generateAbsoluteString($uri);
-      }
-
-      // @todo Remove this BC layer when minimum required Drupal core version
-      // gets bumped to Drupal 9.3.0 or above.
-      // @phpstan-ignore-next-line
-      return file_create_url($uri);
-    };
-
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
+    assert($assert instanceof JSWebAssert);
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'remote_api_doc']));
 
-    $page->fillField('field_remote_api_spec[0][uri]', $generate_file_path('public://petstore-expanded.yaml', $this->container));
+    $page->fillField('field_remote_api_spec[0][uri]', $this->container->get('file_url_generator')->generateAbsoluteString('public://petstore-expanded.yaml'));
     $page->pressButton('field_remote_api_spec_add_more');
     $assert->waitForField('field_remote_api_spec[1][uri]');
-    $page->fillField('field_remote_api_spec[1][uri]', $generate_file_path('public://uspto.yaml', $this->container));
+    $page->fillField('field_remote_api_spec[1][uri]', $this->container->get('file_url_generator')->generateAbsoluteString('public://uspto.yaml'));
     $this->submitForm([
       'title[0][value]' => 'Testing the link field formatter',
     ], 'Save');
