@@ -16,7 +16,7 @@
         "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
     "require": {
-        "php": "^7.4 || ^8.0",
+        "php": "^7.4 || ~8.0 || ~8.1.6",
         "drupal/core": "^9.3"
     },
     "require-dev": {
