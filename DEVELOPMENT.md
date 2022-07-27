@@ -34,5 +34,5 @@ $ docker-compose exec php ./vendor/bin/drupal-check --drupal-root=. -e "*/build/
 ### Running tests
 
 ```sh
-$ docker-compose run --rm php ./vendor/bin/phpunit -c web/core -v --debug --printer '\Drupal\Tests\Listeners\HtmlOutputPrinter' web/modules/drupal_module/tests/
+$ docker-compose run --rm php ./vendor/bin/phpunit -c web/core -v --debug --printer '\Drupal\Tests\Listeners\HtmlOutputPrinter' --bootstrap=vendor/pronovix/drupal-qa/src/Drupal/PhpUnit/bootstrap.php web/modules/drupal_module/tests/
 ```
