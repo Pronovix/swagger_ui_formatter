@@ -89,7 +89,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    */
   public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    if (!$file_url_generator && \Drupal::getContainer()->has('file_url_generator')) {
+    if (!$file_url_generator) {
       // The nicest thing that can be said about the required format by this
       // sniff is "insufficient".
       // phpcs:ignore Drupal.Semantics.FunctionTriggerError
@@ -165,15 +165,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
     if (isset($this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']])) {
       /** @var \Drupal\file\Entity\File $file */
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
-      if ($this->fileUrlGenerator) {
-        $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
-      }
-      else {
-        // @todo Remove this BC layer when minimum required Drupal core version
-        // gets bumped to Drupal 9.3.0 or above.
-        // @phpstan-ignore-next-line
-        $url = file_create_url($file->getFileUri());
-      }
+      $url = $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
       if ($url === FALSE) {
         $this->logger->error('URL could not be created for %file file.', [
           '%file' => $file->label(),
