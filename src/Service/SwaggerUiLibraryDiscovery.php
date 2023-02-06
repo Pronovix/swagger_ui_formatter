@@ -108,7 +108,16 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
     $library_dir = 'libraries/swagger-ui';
     // Allow the default theme to alter the default library directory.
     $default_theme = $this->themeInitialization->getActiveThemeByName($this->themeHandler->getDefault());
-    $this->themeInitialization->loadActiveTheme($default_theme);
+    // @todo Remove \Throwable cathing when registration the namespaces
+    // of installed themes will be implemented.
+    // https://www.drupal.org/project/drupal/issues/2941757
+    try {
+      $this->themeInitialization->loadActiveTheme($default_theme);
+    }
+    catch (\Throwable $error) {
+      $this->themeHandler->listInfo();
+      $this->themeInitialization->loadActiveTheme($default_theme);
+    }
     // The hook is only invoked for the default theme (and its base themes).
     $this->themeManager->alterForTheme($default_theme, 'swagger_ui_library_directory', $library_dir);
     // Make sure that the directory path is relative (to DRUPAL ROOT).
