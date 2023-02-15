@@ -17,7 +17,7 @@
     },
     "require": {
         "php": "^7.4 || ~8.0 || ~8.1.6",
-        "drupal/core": "^9.3"
+        "drupal/core": "^9.3 || ^10"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
