@@ -3,8 +3,6 @@ includes:
   - phpstan-baseline.neon
 
 parameters:
-  # Our code must compatible with our minimum required PHP version.
-  phpVersion: 80000
   # TODO This hardcoded list is not ideal but it looks like PHPStan full-static analyzer has issues with
   # symlinks. See: https://github.com/Pronovix/swagger_ui_formatter/pull/84#discussion_r931072893
   paths:
