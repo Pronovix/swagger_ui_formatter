@@ -30,8 +30,9 @@ jobs:
 
     - name: Create Docker containers
       env:
-        # We run these checks on the lowest supported PHP version.
-        PHP_IMAGE: "wodby/drupal-php:8.0-dev"
+        # Because DrupalQA requires PHP 8.1 at least, we cannot use our lowest PHP dependency here,
+        # but we have told both PHPCS and PHPStan to run checks for PHP 8.0.
+        PHP_IMAGE: "wodby/drupal-php:8.1-dev"
       run: |
         docker-compose pull --quiet
         docker-compose up -d --build
@@ -49,7 +50,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_image: ["wodby/drupal-php:8.0-dev", "wodby/drupal-php:8.1-dev"]
+        php_image: ["wodby/drupal-php:8.1-dev"]
         db_image: ["wodby/mariadb:10.5"]
         # TODO Get version range from composer.json dynamically.
         drupal_version: ["^9.3"]
@@ -88,6 +89,9 @@ jobs:
         chmod a+rw composer.json
         docker-compose exec -T php composer require drupal/core:${{ matrix.drupal_version }} drupal/core-dev:${{ matrix.drupal_version }} drupal/core-recommended:${{ matrix.drupal_version }} --no-update -d ..
         docker-compose exec --env COMPOSER_DISCARD_CHANGES=true -T php composer update --no-progress ${{ matrix.lowest_highest }} -d ..
+
+    - name: List installed dependencies
+      run: docker-compose exec -T php composer show -d ..
 
     - name: Set up Drupal settings files
       run: |

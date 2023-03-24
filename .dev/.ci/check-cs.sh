@@ -3,7 +3,11 @@
 set -e
 
 if [[ ${CHECK_CS} == true ]]; then
-    docker-compose exec -T php composer normalize -d .. --indent-size=4 --indent-style=space --no-update-lock --dry-run
-    docker-compose exec -T php ./vendor/bin/phpcs -s ../phpcs.xml.dist --ignore="contrib/*" web/modules
-    docker-compose exec -T php ./vendor/bin/phpstan analyze -c ../phpstan.neon.dist --no-progress
+    docker-compose exec -T php composer normalize -d .. --no-update-lock --dry-run
+    # Code style must comply with our minimum required PHP version.
+    docker-compose exec -T php ./vendor/bin/phpcs --config-set php_version 80000
+    # @TODO There is a weird file access issue on GHA.
+    # Drupal QA: Unable to set 511 visibility for file at /mnt/files/local_mount.
+    docker-compose exec -T php ./vendor/bin/phpcs -s ./vendor/pronovix/drupal-qa/config/phpcs.xml.dist --ignore="contrib/*,*/build/*" web/modules
+    docker-compose exec -T php ./vendor/bin/phpstan --no-progress
 fi

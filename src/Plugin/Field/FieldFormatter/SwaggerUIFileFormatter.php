@@ -4,7 +4,6 @@ declare(strict_types = 1);
 
 namespace Drupal\swagger_ui_formatter\Plugin\Field\FieldFormatter;
 
-use Drupal\Core\Entity\EntityInterface;
 use Drupal\Core\Field\FieldDefinitionInterface;
 use Drupal\Core\Field\FieldItemInterface;
 use Drupal\Core\Field\FieldItemListInterface;
@@ -13,6 +12,7 @@ use Drupal\Core\File\FileUrlGeneratorInterface;
 use Drupal\Core\Form\FormStateInterface;
 use Drupal\Core\Plugin\ContainerFactoryPluginInterface;
 use Drupal\Core\StringTranslation\TranslationInterface;
+use Drupal\file\FileInterface;
 use Drupal\file\Plugin\Field\FieldFormatter\FileFormatterBase;
 use Psr\Log\LoggerInterface;
 use Symfony\Component\DependencyInjection\ContainerInterface;
@@ -41,7 +41,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    *
    * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification
    *
-   * @var array
+   * @var \Drupal\file\FileInterface[]
    */
   private $fileEntityCache = [];
 
@@ -88,7 +88,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    *   Due to Drupal <9.3.0 support we have to allow NULL, that is the simplest
    *   option.
    */
-  public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
+  public function __construct(string $plugin_id, mixed $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
     // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
     if (!$file_url_generator) {
       // The nicest thing that can be said about the required format by this
@@ -155,7 +155,9 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   protected function getSwaggerFileUrlFromField(FieldItemInterface $field_item, array $context = []): ?string {
     if (!isset($this->fileEntityCache[$context['field_items']->getEntity()->id()])) {
       // Store file entities keyed by their id.
-      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($this->getEntitiesToView($context['field_items'], $context['lang_code']), static function (array $carry, EntityInterface $entity) {
+      /** @var \Drupal\file\FileInterface[] $available_entities */
+      $available_entities = $this->getEntitiesToView($context['field_items'], $context['lang_code']);
+      $this->fileEntityCache[$context['field_items']->getEntity()->id()] = array_reduce($available_entities, static function (array $carry, FileInterface $entity) {
         $carry[$entity->id()] = $entity;
         return $carry;
       }, []);
@@ -164,7 +166,6 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
     // This is only set if the file entity exists and the current user has
     // access to the entity.
     if (isset($this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']])) {
-      /** @var \Drupal\file\Entity\File $file */
       $file = $this->fileEntityCache[$context['field_items']->getEntity()->id()][$field_item->getValue()['target_id']];
       try {
         return $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());

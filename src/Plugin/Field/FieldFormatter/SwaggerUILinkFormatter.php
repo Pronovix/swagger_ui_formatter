@@ -49,7 +49,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
    * @param \Drupal\Core\StringTranslation\TranslationInterface $string_translation
    *   String translation.
    */
-  public function __construct(string $plugin_id, $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation) {
+  public function __construct(string $plugin_id, mixed $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->stringTranslation = $string_translation;
   }
