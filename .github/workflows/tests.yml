@@ -30,8 +30,6 @@ jobs:
 
     - name: Create Docker containers
       env:
-        # Because DrupalQA requires PHP 8.1 at least, we cannot use our lowest PHP dependency here,
-        # but we have told both PHPCS and PHPStan to run checks for PHP 8.0.
         PHP_IMAGE: "wodby/drupal-php:8.1-dev"
       run: |
         docker-compose pull --quiet
