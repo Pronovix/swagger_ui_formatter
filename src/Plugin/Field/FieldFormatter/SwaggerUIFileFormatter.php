@@ -28,7 +28,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFactoryPluginInterface {
+final class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFactoryPluginInterface {
 
   use SwaggerUIFormatterTrait;
 
@@ -41,26 +41,24 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    *
    * phpcs:disable SlevomatCodingStandard.TypeHints.TypeHintDeclaration.MissingTraversablePropertyTypeHintSpecification
    *
-   * @var \Drupal\file\FileInterface[]
+   * @var array
+   * @phpstan-var array<string|int,array<string|int,\Drupal\file\FileInterface>>
    */
-  private $fileEntityCache = [];
+  private array $fileEntityCache = [];
 
   /**
    * The logger.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  private $logger;
+  private LoggerInterface $logger;
 
   /**
    * File URL generator.
    *
-   * Due to Drupal <9.3.0 support we have to allow NULL, that is the simplest
-   * option.
-   *
-   * @var \Drupal\Core\File\FileUrlGeneratorInterface|null
+   * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  private ?FileUrlGeneratorInterface $fileUrlGenerator;
+  private FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
    * Constructs a SwaggerUIFileFormatter object.
@@ -83,21 +81,10 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
    *   String translation.
    * @param \Psr\Log\LoggerInterface $logger
    *   The logger.
-   * @param \Drupal\Core\File\FileUrlGeneratorInterface|null $file_url_generator
+   * @param \Drupal\Core\File\FileUrlGeneratorInterface $file_url_generator
    *   File URL generator.
-   *   Due to Drupal <9.3.0 support we have to allow NULL, that is the simplest
-   *   option.
    */
-  public function __construct(string $plugin_id, mixed $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, ?FileUrlGeneratorInterface $file_url_generator = NULL) {
-    // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-    if (!$file_url_generator) {
-      // The nicest thing that can be said about the required format by this
-      // sniff is "insufficient".
-      // phpcs:ignore Drupal.Semantics.FunctionTriggerError
-      @trigger_error('Calling SwaggerUIFileFormatter::__construct() without the $file_url_generator argument is deprecated in swagger_ui_formatter:3.4 and will be required before swagger_ui_formatter:4.0.', E_USER_DEPRECATED);
-      // phpcs:ignore DrupalPractice.Objects.GlobalDrupal.GlobalDrupal
-      $file_url_generator = \Drupal::service('file_url_generator');
-    }
+  public function __construct(string $plugin_id, mixed $plugin_definition, FieldDefinitionInterface $field_definition, array $settings, string $label, string $view_mode, array $third_party_settings, TranslationInterface $string_translation, LoggerInterface $logger, FileUrlGeneratorInterface $file_url_generator) {
     parent::__construct($plugin_id, $plugin_definition, $field_definition, $settings, $label, $view_mode, $third_party_settings);
     $this->stringTranslation = $string_translation;
     $this->logger = $logger;
@@ -107,8 +94,8 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
+    return new self(
       $plugin_id,
       $plugin_definition,
       $configuration['field_definition'],
@@ -125,16 +112,16 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     $settings = parent::defaultSettings();
-    static::addDefaultSettings($settings);
+    self::addDefaultSettings($settings);
     return $settings;
   }
 
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = parent::settingsSummary();
     $this->addSettingsSummary($summary, $this);
     return $summary;
@@ -143,7 +130,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
     $this->alterSettingsForm($form, $form_state, $this, $this->fieldDefinition);
     return $form;
@@ -171,8 +158,6 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
         return $this->fileUrlGenerator->generateAbsoluteString($file->getFileUri());
       }
       catch (InvalidStreamWrapperException $e) {
-        // @todo In 4.0 we can probably get rid of this additional error
-        //   handling.
         $this->logger->error('URL could not be created for %file file.', [
           '%file' => $file->label(),
           'link' => $context['field_items']->getEntity()->toLink($this->t('view'))->toString(),
@@ -186,7 +171,7 @@ class SwaggerUIFileFormatter extends FileFormatterBase implements ContainerFacto
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     return $this->buildRenderArray($items, $this, $this->fieldDefinition, ['lang_code' => $langcode]);
   }
 

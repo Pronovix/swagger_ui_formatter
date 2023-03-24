@@ -41,28 +41,28 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
    *
    * @var \Drupal\Core\Cache\CacheBackendInterface
    */
-  private $cache;
+  private CacheBackendInterface $cache;
 
   /**
    * The theme handler service.
    *
    * @var \Drupal\Core\Extension\ThemeHandlerInterface
    */
-  private $themeHandler;
+  private ThemeHandlerInterface $themeHandler;
 
   /**
    * The theme manager service.
    *
    * @var \Drupal\Core\Theme\ThemeManagerInterface
    */
-  private $themeManager;
+  private ThemeManagerInterface $themeManager;
 
   /**
    * The theme initialization service.
    *
    * @var \Drupal\Core\Theme\ThemeInitializationInterface
    */
-  private $themeInitialization;
+  private ThemeInitializationInterface $themeInitialization;
 
   /**
    * Constructs a SwaggerUiLibraryDiscovery instance.
@@ -86,9 +86,9 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container) {
+  public static function create(ContainerInterface $container): self {
     // Make it work in hook_requirements() from the "install" phase.
-    return new static(
+    return new self(
       $container->get('cache.default'),
       $container->get('theme_handler'),
       $container->get('theme.manager'),
@@ -102,6 +102,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   public function libraryDirectory(): string {
     $cache = $this->cache->get(self::LIBRARY_PATH_CID);
     if ($cache) {
+      assert(property_exists($cache, 'data'));
       return $cache->data;
     }
     // The default library directory (relative to DRUPAL_ROOT).

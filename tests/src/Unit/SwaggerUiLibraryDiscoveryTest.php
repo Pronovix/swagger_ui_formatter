@@ -30,6 +30,7 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
   use Drupal\Tests\UnitTestCase;
   use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryException;
   use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery;
+  use PHPUnit\Framework\MockObject\MockObject;
 
   /**
    * Tests the Swagger UI library discovery service.
@@ -46,37 +47,37 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
     /**
      * The mocked default cache bin.
      *
-     * @var \Drupal\Core\Cache\CacheBackendInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Drupal\Core\Cache\CacheBackendInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $cache;
+    private CacheBackendInterface&MockObject $cache;
 
     /**
      * The mocked theme handler service.
      *
-     * @var \Drupal\Core\Extension\ThemeHandlerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Drupal\Core\Extension\ThemeHandlerInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $themeHandler;
+    private ThemeHandlerInterface&MockObject $themeHandler;
 
     /**
      * The mocked theme manager service.
      *
-     * @var \Drupal\Core\Theme\ThemeManagerInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Drupal\Core\Theme\ThemeManagerInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $themeManager;
+    private ThemeManagerInterface&MockObject $themeManager;
 
     /**
      * The mocked theme initialization service.
      *
-     * @var \Drupal\Core\Theme\ThemeInitializationInterface|\PHPUnit\Framework\MockObject\MockObject
+     * @var \Drupal\Core\Theme\ThemeInitializationInterface&\PHPUnit\Framework\MockObject\MockObject
      */
-    private $themeInitialization;
+    private ThemeInitializationInterface&MockObject $themeInitialization;
 
     /**
      * The Swagger UI library discovery service.
      *
      * @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
      */
-    private $swaggerUiLibraryDiscovery;
+    private SwaggerUiLibraryDiscovery $swaggerUiLibraryDiscovery;
 
     /**
      * {@inheritdoc}
@@ -305,7 +306,7 @@ namespace Drupal\swagger_ui_formatter\Service {
   /**
    * {@inheritdoc}
    */
-  function file_get_contents($filename) {
+  function file_get_contents(string $filename): string|false {
     if ($filename === '/' . SWAGGER_UI_FORMATTER_TEST_MISSING_PACKAGE_JSON_DIR . '/package.json') {
       return FALSE;
     }
