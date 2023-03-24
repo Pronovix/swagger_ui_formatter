@@ -15,17 +15,21 @@
         "source": "https://github.com/Pronovix/swagger_ui_formatter",
         "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
+    "_comment": [
+        "league/container version contraint is here to prevent randomy failed highest-lowest tests caused by this missing fix: https://github.com/thephpleague/container/commit/97a0c39bf37d709d3bbc31d0505cea9373d927e7"
+    ],
     "require": {
         "php": "~8.0.0 || ~8.1.0",
-        "drupal/core": "^9.3"
+        "drupal/core": "^9.4 || ^10.0"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^3.32.2",
         "composer/installers": "^v2.0.0",
         "drupal/core-composer-scaffold": "^9.3",
-        "drupal/core-dev": "^9.3",
-        "drupal/core-recommended": "^9.3",
-        "drupal/devel": "^4.0",
+        "drupal/core-dev": "^9.4 || ^10.0",
+        "drupal/core-recommended": "^9.4 || ^10.0",
+        "drupal/devel": "^5.0",
+        "league/container": "<4.0.0 || >=4.1.1",
         "pronovix/drupal-qa": "^3.11.1",
         "pronovix/simple-symlink": "^3.1.3",
         "zaporylie/composer-drupal-optimizations": "^1.2"
