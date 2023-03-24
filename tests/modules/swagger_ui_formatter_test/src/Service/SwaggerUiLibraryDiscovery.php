@@ -33,28 +33,28 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
    *
    * @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
    */
-  private $decorated;
+  private OriginalSwaggerUiLibraryDiscovery $decorated;
 
   /**
    * The state service.
    *
    * @var \Drupal\Core\State\StateInterface
    */
-  private $state;
+  private StateInterface $state;
 
   /**
    * The cache tags invalidator service.
    *
    * @var \Drupal\Core\Cache\CacheTagsInvalidatorInterface
    */
-  private $cacheTagsInvalidator;
+  private CacheTagsInvalidatorInterface $cacheTagsInvalidator;
 
   /**
    * The library discovery.
    *
    * @var \Drupal\Core\Asset\LibraryDiscoveryInterface
    */
-  private $libraryDiscovery;
+  private LibraryDiscoveryInterface $libraryDiscovery;
 
   /**
    * Constructs a new object.

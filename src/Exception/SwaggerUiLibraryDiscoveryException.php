@@ -26,7 +26,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *
    * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
    */
-  private function __construct($message = '', $code = 0, \Throwable $previous = NULL) {
+  private function __construct(string $message = '', int $code = 0, \Throwable $previous = NULL) {
     parent::__construct($message, $code, $previous);
   }
 
@@ -40,7 +40,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becauseLibraryDirectoryIsInvalid(string $library_dir): self {
-    return new static(sprintf('The provided "%s" Swagger UI library directory is invalid.', $library_dir), self::CODE_INVALID_DIR);
+    return new self(sprintf('The provided "%s" Swagger UI library directory is invalid.', $library_dir), self::CODE_INVALID_DIR);
   }
 
   /**
@@ -53,7 +53,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becauseRequiredLibraryFileIsNotFound(string $file_path): self {
-    return new static(sprintf('The Swagger UI library directory is invalid because the required "%s" file is not found.', $file_path), self::CODE_REQUIRED_FILE_IS_NOT_FOUND);
+    return new self(sprintf('The Swagger UI library directory is invalid because the required "%s" file is not found.', $file_path), self::CODE_REQUIRED_FILE_IS_NOT_FOUND);
   }
 
   /**
@@ -66,7 +66,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becauseCannotReadPackageJsonContent(string $package_json_path): self {
-    return new static(sprintf('Cannot read the content of the Swagger UI library\'s package.json file in "%s".', $package_json_path), self::CODE_CANNOT_READ_PACKAGE_JSON_CONTENT);
+    return new self(sprintf('Cannot read the content of the Swagger UI library\'s package.json file in "%s".', $package_json_path), self::CODE_CANNOT_READ_PACKAGE_JSON_CONTENT);
   }
 
   /**
@@ -81,7 +81,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becausePackageJsonCannotBeDecoded(string $package_json_path, string $json_last_error_msg): self {
-    return new static(sprintf('Cannot decode the Swagger UI library\'s package.json file in "%s": "%s".', $package_json_path, $json_last_error_msg), self::CODE_CANNOT_DECODE_PACKAGE_JSON);
+    return new self(sprintf('Cannot decode the Swagger UI library\'s package.json file in "%s": "%s".', $package_json_path, $json_last_error_msg), self::CODE_CANNOT_DECODE_PACKAGE_JSON);
   }
 
   /**
@@ -94,7 +94,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becauseUnableToIdentifyLibraryVersion(string $package_json_path): self {
-    return new static(sprintf('The Swagger UI library version is not found in "%s".', $package_json_path), self::CODE_UNABLE_TO_IDENTIFY_LIBRARY_VERSION);
+    return new self(sprintf('The Swagger UI library version is not found in "%s".', $package_json_path), self::CODE_UNABLE_TO_IDENTIFY_LIBRARY_VERSION);
   }
 
   /**
@@ -109,7 +109,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *   The exception.
    */
   public static function becauseLibraryVersionIsNotSupported(string $library_version, string $library_version_min): self {
-    return new static(sprintf('The Swagger UI library version v%s is lower than the minimally supported v%s. Please download <a href="https://github.com/swagger-api/swagger-ui/releases" target="_blank">a newer version</a>.', $library_version, $library_version_min), self::CODE_LIBRARY_VERSION_IS_NOT_SUPPORTED);
+    return new self(sprintf('The Swagger UI library version v%s is lower than the minimally supported v%s. Please download <a href="https://github.com/swagger-api/swagger-ui/releases" target="_blank">a newer version</a>.', $library_version, $library_version_min), self::CODE_LIBRARY_VERSION_IS_NOT_SUPPORTED);
   }
 
 }

@@ -5,6 +5,7 @@ declare(strict_types = 1);
 namespace Drupal\Tests\swagger_ui_formatter\FunctionalJavascript;
 
 use Drupal\Core\Cache\Cache;
+use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
 use Drupal\FunctionalJavascriptTests\JSWebAssert;
@@ -35,7 +36,7 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
    *
    * @var \Drupal\Core\File\FileSystemInterface
    */
-  private $fileSystem;
+  private FileSystemInterface $fileSystem;
 
   /**
    * {@inheritdoc}
@@ -43,15 +44,7 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
   protected function setUp(): void {
     parent::setUp();
     $this->fileSystem = $this->container->get('file_system');
-    if (version_compare(\Drupal::VERSION, '9.3', '>=')) {
-      $module_path = $this->container->get('extension.path.resolver')->getPath('module', 'swagger_ui_formatter');
-    }
-    else {
-      // @todo Remove this BC layer when minimum required Drupal core version
-      // gets bumped to Drupal 9.3.0 or above.
-      // @phpstan-ignore-next-line
-      $module_path = drupal_get_path('module', 'swagger_ui_formatter');
-    }
+    $module_path = $this->container->get('extension.path.resolver')->getPath('module', 'swagger_ui_formatter');
     // Copy fixtures to the public filesystem so they could be access from the
     // browser.
     $this->fileSystem->copy(DRUPAL_ROOT . '/' . $module_path . '/tests/fixtures/openapi20/petstore-expanded.yaml', PublicStream::basePath());
@@ -69,7 +62,9 @@ final class SwaggerUiFieldFormatterTest extends WebDriverTestBase {
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'api_doc']));
     $petstore_path = $this->fileSystem->realpath('public://petstore-expanded.yaml');
+    assert(is_string($petstore_path));
     $uspto_path = $this->fileSystem->realpath('public://uspto.yaml');
+    assert(is_string($uspto_path));
     $page->attachFileToField('files[field_api_spec_0][]', $petstore_path);
     $assert->waitForField('field_api_spec_0_remove_button');
     $page->attachFileToField('files[field_api_spec_1][]', $uspto_path);

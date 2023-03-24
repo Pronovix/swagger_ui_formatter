@@ -87,6 +87,7 @@ function swagger_ui_formatter_help(string $route_name, RouteMatchInterface $rout
       if ($readme && (\Drupal::moduleHandler()->moduleExists('markdown') === TRUE)) {
         $filter_manager = \Drupal::service('plugin.manager.filter');
         $settings = \Drupal::configFactory()->get('markdown.settings')->getRawData();
+        /** @var \Drupal\filter\Plugin\FilterInterface $filter */
         $filter = $filter_manager->createInstance('markdown', ['settings' => $settings]);
         $output = $filter->process($readme, 'en');
       }

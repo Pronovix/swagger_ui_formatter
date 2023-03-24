@@ -25,7 +25,7 @@ use Symfony\Component\DependencyInjection\ContainerInterface;
  *   }
  * )
  */
-class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
+final class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPluginInterface {
 
   use SwaggerUIFormatterTrait;
 
@@ -57,8 +57,8 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition) {
-    return new static(
+  public static function create(ContainerInterface $container, array $configuration, $plugin_id, $plugin_definition): self {
+    return new self(
       $plugin_id,
       $plugin_definition,
       $configuration['field_definition'],
@@ -73,7 +73,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public static function defaultSettings() {
+  public static function defaultSettings(): array {
     $settings = parent::defaultSettings();
     static::addDefaultSettings($settings);
     return $settings;
@@ -82,7 +82,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function settingsSummary() {
+  public function settingsSummary(): array {
     $summary = parent::settingsSummary();
     $this->addSettingsSummary($summary, $this);
     return $summary;
@@ -91,7 +91,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function settingsForm(array $form, FormStateInterface $form_state) {
+  public function settingsForm(array $form, FormStateInterface $form_state): array {
     $form = parent::settingsForm($form, $form_state);
     $this->alterSettingsForm($form, $form_state, $this, $this->fieldDefinition);
     return $form;
@@ -108,7 +108,7 @@ class SwaggerUILinkFormatter extends FormatterBase implements ContainerFactoryPl
   /**
    * {@inheritdoc}
    */
-  public function viewElements(FieldItemListInterface $items, $langcode) {
+  public function viewElements(FieldItemListInterface $items, $langcode): array {
     return $this->buildRenderArray($items, $this, $this->fieldDefinition, ['lang_code' => $langcode]);
   }
 
