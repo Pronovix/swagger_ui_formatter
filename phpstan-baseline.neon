@@ -3,14 +3,14 @@ parameters:
 		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
-			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+			path: ../src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
 			message: "#^\\\\Drupal calls should be avoided in classes, use dependency injection instead$#"
 			count: 1
-			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+			path: ../src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
 			message: "#^Unsafe usage of new static\\(\\)\\.$#"
 			count: 1
-			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+			path: ../src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
