@@ -34,7 +34,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   /**
    * The minimum supported Swagger UI library version.
    */
-  public const MIN_SUPPORTED_LIBRARY_VERSION = '3.32.2';
+  public const MIN_SUPPORTED_LIBRARY_VERSION = '4.15.0';
 
   /**
    * The default cache bin.
