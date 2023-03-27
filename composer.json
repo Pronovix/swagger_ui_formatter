@@ -23,7 +23,7 @@
         "drupal/core": "^9.4 || ^10.0"
     },
     "require-dev": {
-        "bower-asset/swagger-ui": "^3.32.2",
+        "bower-asset/swagger-ui": "^4.15.0",
         "composer/installers": "^v2.2.0",
         "drupal/core-composer-scaffold": "^9.4 || ^10.0.0",
         "drupal/core-dev": "^9.4 || ^10.0.0",

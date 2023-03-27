@@ -90,7 +90,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
    */
   public function libraryVersion(): string {
     if ($this->state->get(self::STATE_FAKE_UNSUPPORTED_LIBRARY)) {
-      throw SwaggerUiLibraryDiscoveryException::becauseLibraryVersionIsNotSupported('3.32.1', $this->decorated::MIN_SUPPORTED_LIBRARY_VERSION);
+      throw SwaggerUiLibraryDiscoveryException::becauseLibraryVersionIsNotSupported('4.14.0', $this->decorated::MIN_SUPPORTED_LIBRARY_VERSION);
     }
     return $this->decorated->libraryVersion();
   }

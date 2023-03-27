@@ -7,7 +7,7 @@ namespace {
   // Global variables to be able to use them in different (test) namespaces.
   const SWAGGER_UI_FORMATTER_TEST_INVALID_LIBRARY_DIR = 'libraries/invalid';
   const SWAGGER_UI_FORMATTER_TEST_VALID_LIBRARY_DIR_WITH_MISSING_FILES = 'libraries/valid-with-missing-files';
-  const SWAGGER_UI_FORMATTER_TEST_VALID_LIBRARY_VERSION = '3.35.2';
+  const SWAGGER_UI_FORMATTER_TEST_VALID_LIBRARY_VERSION = '4.15.0';
   const SWAGGER_UI_FORMATTER_TEST_MISSING_PACKAGE_JSON_DIR = 'libraries/missing-package-json';
   const SWAGGER_UI_FORMATTER_TEST_INVALID_PACKAGE_JSON_DIR = 'libraries/invalid-package-json';
   const SWAGGER_UI_FORMATTER_TEST_VERSION_NOT_FOUND_IN_PACKAGE_JSON_DIR = 'libraries/version-not-found-in-package-json';
