@@ -51,7 +51,7 @@ jobs:
         php_image: ["wodby/drupal-php:8.1-dev"]
         db_image: ["wodby/mariadb:10.5"]
         # TODO Get version range from composer.json dynamically.
-        drupal_version: ["~9.4.0", "~9.5.0", "^10.0"]
+        drupal_version: ["^10.1"]
         lowest_highest: ["--prefer-lowest", ""]
 
     steps:
