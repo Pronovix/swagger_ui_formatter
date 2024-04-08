@@ -20,18 +20,17 @@
     ],
     "require": {
         "php": "~8.1.0",
-        "drupal/core": "^9.4 || ^10.0"
+        "drupal/core": "^10.1"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^4.15.0",
-        "composer/installers": "^v2.2.0",
-        "drupal/core-composer-scaffold": "^9.4 || ^10.0.0",
-        "drupal/core-dev": "^9.4 || ^10.0.0",
-        "drupal/core-recommended": "^9.4 || ^10.0.0",
+        "composer/installers": "^2.2.0",
+        "drupal/core-composer-scaffold": "^10.1",
+        "drupal/core-dev": "^10.1",
+        "drupal/core-recommended": "^10.1",
         "drupal/devel": "^5.1.1",
         "league/container": "<4.0.0 || >=4.1.1",
-        "pronovix/drupal-qa": "^3.11.1",
-        "pronovix/simple-symlink": "^3.11.1",
+        "pronovix/drupal-qa": "^4.2.0",
         "zaporylie/composer-drupal-optimizations": "^1.2"
     },
     "repositories": [
@@ -60,13 +59,14 @@
     "config": {
         "allow-plugins": {
             "composer/installers": true,
-            "drupal/core-composer-scaffold": true,
             "cweagans/composer-patches": true,
-            "zaporylie/composer-drupal-optimizations": true,
             "dealerdirect/phpcodesniffer-composer-installer": true,
+            "drupal/core-composer-scaffold": true,
             "ergebnis/composer-normalize": true,
+            "php-http/discovery": false,
+            "phpstan/extension-installer": false,
             "pronovix/drupal-qa": true,
-            "phpstan/extension-installer": false
+            "zaporylie/composer-drupal-optimizations": true
         },
         "optimize-autoloader": true,
         "sort-packages": true,
@@ -139,10 +139,16 @@
     },
     "scripts": {
         "post-install-cmd": [
-            "Pronovix\\SimpleSymlink\\ScriptHandler::createSymlinks"
+            "@symlink-for-local-dev-env"
         ],
         "post-update-cmd": [
-            "Pronovix\\SimpleSymlink\\ScriptHandler::createSymlinks"
+            "@symlink-for-local-dev-env"
+        ],
+        "symlink-for-local-dev-env": [
+            "@php -r \"@symlink('../../..', 'build/web/modules/drupal_module');\"",
+            "@php -r \"@symlink('../phpcs.xml.dist', 'build/phpcs.xml.dist');\"",
+            "@php -r \"@symlink('../phpstan-baseline.neon', 'build/phpstan-baseline.neon');\"",
+            "@php -r \"@symlink('../phpstan.neon.dist', 'build/phpstan.neon.dist');\""
         ]
     }
 }

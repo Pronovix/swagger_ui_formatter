@@ -1,2 +1,24 @@
 parameters:
-	ignoreErrors: []
+	ignoreErrors:
+		-
+			message: """
+				#^Call to method __construct\\(\\) of deprecated class Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  \\\\Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterCallback instead\\.$#
+			"""
+			count: 1
+			path: ../tests/src/DrupalExtensionFilterIterator.php
+
+		-
+			message: """
+				#^Class Drupal\\\\Tests\\\\swagger_ui_formatter\\\\DrupalExtensionFilterIterator extends deprecated class Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:
+				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
+				  \\\\Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterCallback instead\\.$#
+			"""
+			count: 1
+			path: ../tests/src/DrupalExtensionFilterIterator.php
+
+		-
+			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(string\\|false\\)\\: bool\\)\\|null, 'file_exists' given\\.$#"
+			count: 1
+			path: ../tests/src/bootstrap.php
