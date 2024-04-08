@@ -19,7 +19,7 @@
         "league/container version contraint is here to prevent randomy failed highest-lowest tests caused by this missing fix: https://github.com/thephpleague/container/commit/97a0c39bf37d709d3bbc31d0505cea9373d927e7"
     ],
     "require": {
-        "php": "~8.1.0",
+        "php": "~8.1.0 || ~8.2.0",
         "drupal/core": "^10.1"
     },
     "require-dev": {
@@ -69,6 +69,9 @@
             "zaporylie/composer-drupal-optimizations": true
         },
         "optimize-autoloader": true,
+        "platform": {
+            "php": "8.1.6"
+        },
         "sort-packages": true,
         "vendor-dir": "build/vendor"
     },
