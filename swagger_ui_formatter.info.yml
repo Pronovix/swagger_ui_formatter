@@ -5,4 +5,4 @@ dependencies:
   - drupal:file
 
 type: module
-core_version_requirement: ^10.1
+core_version_requirement: ^10.3

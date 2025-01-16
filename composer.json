@@ -19,15 +19,15 @@
         "league/container version contraint is here to prevent randomy failed highest-lowest tests caused by this missing fix: https://github.com/thephpleague/container/commit/97a0c39bf37d709d3bbc31d0505cea9373d927e7"
     ],
     "require": {
-        "php": "~8.1.0 || ~8.2.0",
-        "drupal/core": "^10.1"
+        "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
+        "drupal/core": "^10.3"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^4.17.0",
         "composer/installers": "^2.2.0",
-        "drupal/core-composer-scaffold": "^10.1",
-        "drupal/core-dev": "^10.1",
-        "drupal/core-recommended": "^10.1",
+        "drupal/core-composer-scaffold": "^10.3",
+        "drupal/core-dev": "^10.3",
+        "drupal/core-recommended": "^10.3",
         "drupal/devel": "^5.2.1",
         "league/container": "<4.0.0 || >=4.2.2",
         "pronovix/drupal-qa": "^4",
@@ -66,6 +66,7 @@
             "php-http/discovery": false,
             "phpstan/extension-installer": false,
             "pronovix/drupal-qa": true,
+            "tbachert/spi": false,
             "zaporylie/composer-drupal-optimizations": true
         },
         "optimize-autoloader": true,
@@ -131,6 +132,13 @@
         "patches": {
             "mglaman/phpstan-drupal": {
                 "Exclude build directory from extension discovery [#85]:": "https://github.com/mglaman/phpstan-drupal/pull/85.diff"
+            }
+        },
+        "patches-ignore": {
+            "pronovix/drupal-qa": {
+                "drupal/core": {
+                    "copy() can fail in FunctionalTestSetupTrait::prepareSettings() because of a race condition  [#3191369]": "https://git.drupalcode.org/project/drupal/-/merge_requests/218.diff"
+                }
             }
         },
         "simple-symlinks": {

@@ -48,10 +48,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_image: ["wodby/drupal-php:8.1-dev", "wodby/drupal-php:8.2-dev"]
+        php_image: ["wodby/drupal-php:8.1-dev", "wodby/drupal-php:8.2-dev", "wodby/drupal-php:8.3-dev"]
         db_image: ["wodby/mariadb:10.5"]
         # TODO Get version range from composer.json dynamically.
-        drupal_version: ["^10.1"]
+        drupal_version: ["^10.3"]
         lowest_highest: ["--prefer-lowest", ""]
 
     steps:
@@ -63,12 +63,6 @@ jobs:
       with:
         repository: Pronovix/docker-drupal-dev
         path: ./drupal-dev
-
-    # TODO Remove this after Drupal QA got a PHP 8.2 compatible release.
-    - name: Drupal QA workaround
-      if: matrix.php_image == 'wodby/drupal-php:8.2-dev'
-      run: |
-        export COMPOSER_IGNORE_PLATFORM_REQ=php+
 
     - name: Setup environment
       run: |
