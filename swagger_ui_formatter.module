@@ -69,6 +69,7 @@ function swagger_ui_formatter_library_info_build(): array {
       'core/drupal',
       'core/jquery',
       'core/drupalSettings',
+      'core/once',
       'swagger_ui_formatter/swagger_ui_formatter.swagger_ui',
     ],
   ];
