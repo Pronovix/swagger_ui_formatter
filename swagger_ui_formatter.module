@@ -61,7 +61,6 @@ function swagger_ui_formatter_library_info_build(): array {
   ];
   // Library definition for the Swagger UI integration files.
   $libraries['swagger_ui_formatter.swagger_ui_integration'] = [
-    'version' => '1.0',
     'js' => [
       'js/swagger-ui-formatter.js' => [],
     ],
