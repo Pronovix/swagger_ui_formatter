@@ -9,7 +9,7 @@ on:
 
 jobs:
   code_style:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     steps:
     - name: Checkout Swagger UI Formatter
       uses: actions/checkout@v2
@@ -23,7 +23,8 @@ jobs:
     - name: Setup environment
       run: |
         mkdir build
-        sudo chown runneradmin build
+        sudo chown runner build
+        chmod a+w . build
         ln -s drupal-dev/docker-compose.yml .
         ln -s drupal-dev/Dockerfile .
         printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
@@ -37,14 +38,13 @@ jobs:
 
     - name: Install dependencies
       run: |
-        chmod a+rw .
-        docker compose exec -T php composer install --no-interaction --no-suggest --no-progress -d ..
+        docker compose exec -T php composer install --no-interaction --no-progress -d ..
 
     - name: Run code style check
       run: CHECK_CS="true" ./.dev/.ci/check-cs.sh
 
   test:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
@@ -67,7 +67,8 @@ jobs:
     - name: Setup environment
       run: |
         mkdir build
-        sudo chown runneradmin build
+        sudo chown runner build
+        chmod a+w . build
         ln -s drupal-dev/docker-compose.yml .
         ln -s drupal-dev/Dockerfile .
         printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
@@ -82,9 +83,8 @@ jobs:
 
     - name: Install dependencies
       run: |
-        chmod a+rw .
-        docker compose exec -T php composer install --no-interaction --no-suggest --no-progress -d ..
-        chmod a+rw composer.json
+        docker compose exec -T php composer install --no-interaction --no-progress -d ..
+        chmod a+w composer.json
         docker compose exec -T php composer require drupal/core:${{ matrix.drupal_version }} drupal/core-dev:${{ matrix.drupal_version }} drupal/core-recommended:${{ matrix.drupal_version }} drupal/core-composer-scaffold:${{ matrix.drupal_version }} --no-update -d ..
         docker compose exec --env COMPOSER_DISCARD_CHANGES=true -T php composer update --no-progress ${{ matrix.lowest_highest }} -d ..
 
@@ -94,11 +94,12 @@ jobs:
     - name: Set up Drupal settings files
       run: |
         sudo chown -R runner build/web/sites
+        mkdir -p build/web/sites/simpletest
+        sudo chmod a+w build/web/sites/default build/web/sites/simpletest
         ln -s ../../../../drupal-dev/drupal/settings.php build/web/sites/default/settings.php
         ln -s ../../../../drupal-dev/drupal/settings.shared.php build/web/sites/default/settings.shared.php
         ln -s ../../../../drupal-dev/drupal/settings.testing.php build/web/sites/default/settings.testing.php
         ln -s ../../../drupal-dev/drupal/development.services.yml.dist build/web/sites/development.services.yml.dist
-        sudo chown -R runneradmin build/web/sites
 
     - name: Run tests
       run: RUN_PHPUNIT_TESTS="true" ./.dev/.ci/run-phpunit-tests.sh
