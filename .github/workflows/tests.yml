@@ -63,6 +63,7 @@ jobs:
         ddev config --database ${{ matrix.db_version }}
         ddev dotenv set .ddev/.env --drupal-core "${{ matrix.drupal_core_version }}"
         ddev start
+        ddev describe
 
     - name: Run tests
       run: ddev phpunit --debug
