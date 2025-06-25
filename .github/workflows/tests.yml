@@ -65,5 +65,8 @@ jobs:
         ddev start
         ddev describe
 
+    - name: Run static code analyses
+      run: ddev phpstan
+
     - name: Run tests
       run: ddev phpunit --debug

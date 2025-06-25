@@ -1,24 +1,100 @@
 parameters:
 	ignoreErrors:
 		-
-			message: """
-				#^Call to method __construct\\(\\) of deprecated class Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				  \\\\Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterCallback instead\\.$#
-			"""
+			message: "#^Cannot access offset 'target_id' on mixed\\.$#"
 			count: 1
-			path: ../tests/src/DrupalExtensionFilterIterator.php
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:addSettingsSummary\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:alterSettingsForm\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_filter expects array, mixed given\\.$#"
+			count: 2
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: "#^Class Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter extends generic class Drupal\\\\Core\\\\Field\\\\FormatterBase but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:addSettingsSummary\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:alterSettingsForm\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:viewElements\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Parameter \\#1 \\$array of function array_filter expects array, mixed given\\.$#"
+			count: 2
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: "#^Cannot access offset 'version' on mixed\\.$#"
+			count: 1
+			path: src/Service/SwaggerUiLibraryDiscovery.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Service\\\\SwaggerUiLibraryDiscovery\\:\\:libraryDirectory\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Service/SwaggerUiLibraryDiscovery.php
+
+		-
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Service\\\\SwaggerUiLibraryDiscovery\\:\\:libraryVersion\\(\\) should return string but returns mixed\\.$#"
+			count: 1
+			path: src/Service/SwaggerUiLibraryDiscovery.php
+
+		-
+			message: "#^Parameter \\#1 \\$library_version of static method Drupal\\\\swagger_ui_formatter\\\\Exception\\\\SwaggerUiLibraryDiscoveryException\\:\\:becauseLibraryVersionIsNotSupported\\(\\) expects string, mixed given\\.$#"
+			count: 1
+			path: src/Service/SwaggerUiLibraryDiscovery.php
+
+		-
+			message: "#^Parameter \\#1 \\$version1 of function version_compare expects string, mixed given\\.$#"
+			count: 1
+			path: src/Service/SwaggerUiLibraryDiscovery.php
 
 		-
 			message: """
-				#^Class Drupal\\\\Tests\\\\swagger_ui_formatter\\\\DrupalExtensionFilterIterator extends deprecated class Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterIterator\\:
-				in drupal\\:10\\.2\\.0 and is removed from drupal\\:11\\.0\\.0\\. Use
-				  \\\\Drupal\\\\Core\\\\Extension\\\\Discovery\\\\RecursiveExtensionFilterCallback instead\\.$#
+				#^Call to deprecated method clearCachedDefinitions\\(\\) of interface Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryInterface\\:
+				in drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use
+				LibraryDiscoveryCollector\\:\\:clear\\(\\) instead\\.$#
 			"""
 			count: 1
-			path: ../tests/src/DrupalExtensionFilterIterator.php
-
-		-
-			message: "#^Parameter \\#2 \\$callback of function array_filter expects \\(callable\\(string\\|false\\)\\: bool\\)\\|null, 'file_exists' given\\.$#"
-			count: 1
-			path: ../tests/src/bootstrap.php
+			path: tests/modules/swagger_ui_formatter_test/src/Service/SwaggerUiLibraryDiscovery.php

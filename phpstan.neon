@@ -1,0 +1,24 @@
+includes:
+  - %rootDir%/../../pronovix/drupal-qa/config/phpstan.drupal-qa.neon
+  - phpstan-baseline.neon
+
+parameters:
+  # Below level 6 we can miss important warnings about incorrect usage of Generics.
+  level: max
+  paths:
+    - web/modules/custom
+
+  ignoreErrors:
+    # Drupal codes have arrays all over the therefore it is more productive and
+    # sensible if we disable this check.
+    # See https://phpstan.org/blog/solving-phpstan-no-value-type-specified-in-iterable-type
+    - identifier: missingType.iterableValue
+
+  drupal:
+    bleedingEdge:
+      checkCoreDeprecatedHooksInApiFiles: true
+      checkContribDeprecatedHooksInApiFiles: true
+    rules:
+      testClassSuffixNameRule: true
+      dependencySerializationTraitPropertyRule: true
+      accessResultConditionRule: true

@@ -44,21 +44,21 @@ final class SwaggerUIFileFormatter extends FileFormatterBase implements Containe
    * @var array
    * @phpstan-var array<string|int,array<string|int,\Drupal\file\FileInterface>>
    */
-  private array $fileEntityCache = [];
+  protected array $fileEntityCache = [];
 
   /**
    * The logger.
    *
    * @var \Psr\Log\LoggerInterface
    */
-  private LoggerInterface $logger;
+  protected LoggerInterface $logger;
 
   /**
    * File URL generator.
    *
    * @var \Drupal\Core\File\FileUrlGeneratorInterface
    */
-  private FileUrlGeneratorInterface $fileUrlGenerator;
+  protected FileUrlGeneratorInterface $fileUrlGenerator;
 
   /**
    * Constructs a SwaggerUIFileFormatter object.
