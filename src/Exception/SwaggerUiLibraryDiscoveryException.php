@@ -26,7 +26,7 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    *
    * phpcs:disable Generic.CodeAnalysis.UselessOverridingMethod.Found
    */
-  private function __construct(string $message = '', int $code = 0, \Throwable $previous = NULL) {
+  private function __construct(string $message = '', int $code = 0, ?\Throwable $previous = NULL) {
     parent::__construct($message, $code, $previous);
   }
 
