@@ -25,9 +25,6 @@
     "require-dev": {
         "bower-asset/swagger-ui": "^4.17.0",
         "composer/installers": "^2.2.0",
-        "drupal/core-composer-scaffold": "^10.3",
-        "drupal/core-dev": "^10.3",
-        "drupal/core-recommended": "^10.3",
         "drupal/devel": "^5.2.1",
         "league/container": "<4.0.0 || >=4.2.2",
         "pronovix/drupal-qa": "^4",
