@@ -40,8 +40,13 @@ jobs:
         php_version: ["8.1", "8.2", "8.3"]
         db_version: ["mariadb:10.6"]
         # TODO Get version range from composer.json dynamically.
-        drupal_core_version: ["^10.3"]
+        drupal_core_version: ["^10.3", "^11.1"]
         lowest_highest: ["--prefer-lowest", ""]
+        exclude:
+          - php_version: "8.1"
+            drupal_core_version: "^11.1"
+          - php_version: "8.2"
+            drupal_core_version: "^11.1"
 
     steps:
     - name: Checkout Swagger UI Formatter
