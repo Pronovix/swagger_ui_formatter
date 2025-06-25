@@ -4,9 +4,14 @@ on:
   workflow_dispatch:
   push:
     branches: [ master ]
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
   pull_request:
     branches: [ master ]
-
+    paths-ignore:
+      - '**.md'
+      - 'docs/**'
 jobs:
   code_style:
     runs-on: ubuntu-24.04
@@ -14,92 +19,45 @@ jobs:
     - name: Checkout Swagger UI Formatter
       uses: actions/checkout@v2
 
-    - name: Checkout Drupal-Dev
-      uses: actions/checkout@v2
+    - name: Setup DDEV
+      uses: ddev/github-action-setup-ddev@v1
       with:
-        repository: Pronovix/docker-drupal-dev
-        path: ./drupal-dev
+        autostart: false
 
-    - name: Setup environment
+    - name: Setup env
       run: |
-        mkdir build
-        sudo chown runner build
-        chmod a+w . build
-        ln -s drupal-dev/docker-compose.yml .
-        ln -s drupal-dev/Dockerfile .
-        printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
-
-    - name: Create Docker containers
-      env:
-        PHP_IMAGE: "wodby/drupal-php:8.1-dev"
-      run: |
-        docker compose pull --quiet
-        docker compose up -d --build
-
-    - name: Install dependencies
-      run: |
-        docker compose exec -T php composer install --no-interaction --no-progress -d ..
+        ddev config --php-version 8.1
+        ddev start
 
     - name: Run code style check
-      run: CHECK_CS="true" ./.dev/.ci/check-cs.sh
+      run: ddev phpcs
 
   test:
     runs-on: ubuntu-24.04
     strategy:
       fail-fast: false
       matrix:
-        php_image: ["wodby/drupal-php:8.1-dev", "wodby/drupal-php:8.2-dev", "wodby/drupal-php:8.3-dev"]
-        db_image: ["wodby/mariadb:10.5"]
+        php_version: ["8.1", "8.2", "8.3"]
+        db_version: ["mariadb:10.6"]
         # TODO Get version range from composer.json dynamically.
-        drupal_version: ["^10.3"]
+        drupal_core_version: ["^10.3"]
         lowest_highest: ["--prefer-lowest", ""]
 
     steps:
     - name: Checkout Swagger UI Formatter
       uses: actions/checkout@v2
 
-    - name: Checkout Drupal-Dev
-      uses: actions/checkout@v2
+    - name: Install DDEV
+      uses: ddev/github-action-setup-ddev@v1
       with:
-        repository: Pronovix/docker-drupal-dev
-        path: ./drupal-dev
+        autostart: false
 
-    - name: Setup environment
+    - name: Configure env
       run: |
-        mkdir build
-        sudo chown runner build
-        chmod a+w . build
-        ln -s drupal-dev/docker-compose.yml .
-        ln -s drupal-dev/Dockerfile .
-        printf "COMPOSE_PROJECT_NAME=swagger_ui_formatter\n" > .env
-
-    - name: Create Docker containers
-      env:
-        PHP_IMAGE: ${{ matrix.php_image }}
-        DB_IMAGE: ${{ matrix.db_image }}
-      run: |
-        docker compose pull --quiet
-        docker compose up -d --build
-
-    - name: Install dependencies
-      run: |
-        docker compose exec -T php composer install --no-interaction --no-progress -d ..
-        chmod a+w composer.json
-        docker compose exec -T php composer require drupal/core:${{ matrix.drupal_version }} drupal/core-dev:${{ matrix.drupal_version }} drupal/core-recommended:${{ matrix.drupal_version }} drupal/core-composer-scaffold:${{ matrix.drupal_version }} --no-update -d ..
-        docker compose exec --env COMPOSER_DISCARD_CHANGES=true -T php composer update --no-progress ${{ matrix.lowest_highest }} -d ..
-
-    - name: List installed dependencies
-      run: docker compose exec -T php composer show -d ..
-
-    - name: Set up Drupal settings files
-      run: |
-        sudo chown -R runner build/web/sites
-        mkdir -p build/web/sites/simpletest
-        sudo chmod a+w build/web/sites/default build/web/sites/simpletest
-        ln -s ../../../../drupal-dev/drupal/settings.php build/web/sites/default/settings.php
-        ln -s ../../../../drupal-dev/drupal/settings.shared.php build/web/sites/default/settings.shared.php
-        ln -s ../../../../drupal-dev/drupal/settings.testing.php build/web/sites/default/settings.testing.php
-        ln -s ../../../drupal-dev/drupal/development.services.yml.dist build/web/sites/development.services.yml.dist
+        ddev config --php-version ${{ matrix.php_version }}
+        ddev config --database ${{ matrix.db_version }}
+        ddev dotenv set .ddev/.env --drupal-core "${{ matrix.drupal_core_version }}"
+        ddev start
 
     - name: Run tests
-      run: RUN_PHPUNIT_TESTS="true" ./.dev/.ci/run-phpunit-tests.sh
+      run: ddev phpunit --debug

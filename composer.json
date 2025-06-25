@@ -70,11 +70,7 @@
             "zaporylie/composer-drupal-optimizations": true
         },
         "optimize-autoloader": true,
-        "platform": {
-            "php": "8.1.6"
-        },
-        "sort-packages": true,
-        "vendor-dir": "build/vendor"
+        "sort-packages": true
     },
     "extra": {
         "branch-alias": {
@@ -87,79 +83,17 @@
         },
         "drupal-scaffold": {
             "file-mapping": {
-                "[libraries]/swagger-ui/dist/oauth2-redirect.html": "build/vendor/bower-asset/swagger-ui/dist/oauth2-redirect.html",
-                "[libraries]/swagger-ui/dist/swagger-ui-bundle.js": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui-bundle.js",
-                "[libraries]/swagger-ui/dist/swagger-ui-standalone-preset.js": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui-standalone-preset.js",
-                "[libraries]/swagger-ui/dist/swagger-ui.css": "build/vendor/bower-asset/swagger-ui/dist/swagger-ui.css",
-                "[libraries]/swagger-ui/package.json": "build/vendor/bower-asset/swagger-ui/package.json",
+                "[web-root]/libraries/swagger-ui/dist/oauth2-redirect.html": "vendor/bower-asset/swagger-ui/dist/oauth2-redirect.html",
+                "[web-root]/libraries/swagger-ui/dist/swagger-ui-bundle.js": "vendor/bower-asset/swagger-ui/dist/swagger-ui-bundle.js",
+                "[web-root]/libraries/swagger-ui/dist/swagger-ui-standalone-preset.js": "vendor/bower-asset/swagger-ui/dist/swagger-ui-standalone-preset.js",
+                "[web-root]/libraries/swagger-ui/dist/swagger-ui.css": "vendor/bower-asset/swagger-ui/dist/swagger-ui.css",
+                "[web-root]/libraries/swagger-ui/package.json": "vendor/bower-asset/swagger-ui/package.json",
                 "[project-root]/.gitattributes": false
-            },
-            "locations": {
-                "libraries": "build/web/libraries",
-                "web-root": "build/web"
             }
         },
         "enable-patching": true,
-        "installer-paths": {
-            "build/web/core": [
-                "type:drupal-core"
-            ],
-            "build/web/drush/contrib/{$name}": [
-                "type:drupal-drush"
-            ],
-            "build/web/libraries/{$name}": [
-                "type:drupal-library"
-            ],
-            "build/web/modules/contrib/{$name}": [
-                "type:drupal-module"
-            ],
-            "build/web/modules/custom/{$name}": [
-                "type:drupal-custom-module"
-            ],
-            "build/web/profiles/contrib/{$name}": [
-                "type:drupal-profile"
-            ],
-            "build/web/themes/contrib/{$name}": [
-                "type:drupal-theme"
-            ],
-            "build/web/themes/custom/{$name}": [
-                "type:drupal-custom-theme"
-            ]
-        },
         "patchLevel": {
             "drupal/core": "-p2"
-        },
-        "patches": {
-            "mglaman/phpstan-drupal": {
-                "Exclude build directory from extension discovery [#85]:": "https://github.com/mglaman/phpstan-drupal/pull/85.diff"
-            }
-        },
-        "patches-ignore": {
-            "pronovix/drupal-qa": {
-                "drupal/core": {
-                    "copy() can fail in FunctionalTestSetupTrait::prepareSettings() because of a race condition  [#3191369]": "https://git.drupalcode.org/project/drupal/-/merge_requests/218.diff"
-                }
-            }
-        },
-        "simple-symlinks": {
-            ".": "build/web/modules/drupal_module",
-            "phpcs.xml.dist": "build/phpcs.xml.dist",
-            "phpstan-baseline.neon": "build/phpstan-baseline.neon",
-            "phpstan.neon.dist": "build/phpstan.neon.dist"
         }
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "@symlink-for-local-dev-env"
-        ],
-        "post-update-cmd": [
-            "@symlink-for-local-dev-env"
-        ],
-        "symlink-for-local-dev-env": [
-            "@php -r \"@symlink('../../..', 'build/web/modules/drupal_module');\"",
-            "@php -r \"@symlink('../phpcs.xml.dist', 'build/phpcs.xml.dist');\"",
-            "@php -r \"@symlink('../phpstan-baseline.neon', 'build/phpstan-baseline.neon');\"",
-            "@php -r \"@symlink('../phpstan.neon.dist', 'build/phpstan.neon.dist');\""
-        ]
     }
 }

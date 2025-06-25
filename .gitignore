@@ -1,5 +1,6 @@
 # Files and folders related to builds.
-build
+web
+recipes
 vendor
 node_modules
 composer.lock

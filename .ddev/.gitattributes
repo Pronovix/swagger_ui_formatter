@@ -1,0 +1,2 @@
+# Exclude .ddev/* from Composer package manager builds.
+* export-ignore
