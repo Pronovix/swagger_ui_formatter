@@ -1,4 +1,4 @@
-name: Swagger UI Formatter tests
+name: Swagger UI Formatter QA
 
 on:
   workflow_dispatch:
