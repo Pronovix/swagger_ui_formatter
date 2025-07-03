@@ -20,7 +20,7 @@
     ],
     "require": {
         "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-        "drupal/core": "^10.3 || ^11.1"
+        "drupal/core": "^10.4.5 || ^11.1.7"
     },
     "require-dev": {
         "bower-asset/swagger-ui": "^4.17.0",
@@ -92,6 +92,13 @@
         "enable-patching": true,
         "patchLevel": {
             "drupal/core": "-p2"
+        },
+        "patches-ignore": {
+            "pronovix/drupal-qa": {
+                "drupal/core": {
+                    "copy() can fail in FunctionalTestSetupTrait::prepareSettings() because of a race condition  [#3191369]": "https://git.drupalcode.org/project/drupal/-/merge_requests/218.diff"
+                }
+            }
         }
     }
 }

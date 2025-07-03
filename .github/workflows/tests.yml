@@ -27,7 +27,12 @@ jobs:
     - name: Setup env
       run: |
         ddev config --php-version 8.1
-        ddev start
+        ddev dotenv set .ddev/.env --drupal-core "10.4.5"
+        # Skip hooks and run commands directly to ensure when they fail
+        # the step also fails immediately.
+        ddev start --skip-hooks
+        ddev poser
+        ddev symlink-project
 
     - name: Run code style check
       run: ddev phpcs
@@ -40,13 +45,19 @@ jobs:
         php_version: ["8.1", "8.2", "8.3"]
         db_version: ["mariadb:10.6"]
         # TODO Get version range from composer.json dynamically.
-        drupal_core_version: ["^10.3", "^11.1"]
-        lowest_highest: ["--prefer-lowest", ""]
+        # Hint: --prefer-lowest or COMPOSER_PREFER_LOWEST=1 does not work
+        # with ddev poser because it runs `composer install` not
+        # `composer update`.
+        drupal_core_version: ["10.4.5", "^10.4.5", "11.1.7", "^11.1.7"]
         exclude:
           - php_version: "8.1"
-            drupal_core_version: "^11.1"
+            drupal_core_version: "11.1.7"
           - php_version: "8.2"
-            drupal_core_version: "^11.1"
+            drupal_core_version: "11.1.7"
+          - php_version: "8.1"
+            drupal_core_version: "^11.1.7"
+          - php_version: "8.2"
+            drupal_core_version: "^11.1.7"
 
     steps:
     - name: Checkout Swagger UI Formatter
@@ -62,7 +73,11 @@ jobs:
         ddev config --php-version ${{ matrix.php_version }}
         ddev config --database ${{ matrix.db_version }}
         ddev dotenv set .ddev/.env --drupal-core "${{ matrix.drupal_core_version }}"
-        ddev start
+        # Skip hooks and run commands directly to ensure when they fail
+        # the step also fails immediatelly.
+        ddev start --skip-hooks
+        ddev poser
+        ddev symlink-project
         ddev describe
 
     - name: Run static code analyses

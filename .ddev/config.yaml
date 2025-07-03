@@ -14,7 +14,10 @@ hooks:
         - exec-host: if [ ! -d "web/modules/custom" ] || [ -z "$(ls -A web/modules/custom 2>/dev/null)" ]; then ddev poser && ddev symlink-project; fi
 use_dns_when_possible: true
 composer_version: "2"
-web_environment: []
+web_environment:
+    # TODO: Remove and update extension after the upstream issue is resolved.
+    # https://github.com/ddev/ddev-drupal-contrib/issues/120
+    - IGNORE_PROJECT_DRUPAL_CORE_VERSION=1
 corepack_enable: true
 
 # Key features of DDEV's config.yaml:

@@ -7,6 +7,10 @@
 ## Example: "ddev poser" or "ddev poser --prefer-source"
 ## ExecRaw: true
 
+# TODO Remove and update ddev addon after the upstream issue is resolved.
+# https://github.com/ddev/ddev-drupal-contrib/issues/122
+set -e -o pipefail
+
 export COMPOSER=composer.contrib.json
 .ddev/commands/web/expand-composer-json "$DDEV_PROJECT_NAME"
 composer install "$@"
