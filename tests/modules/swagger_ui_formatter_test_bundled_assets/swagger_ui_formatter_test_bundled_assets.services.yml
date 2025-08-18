@@ -1,0 +1,3 @@
+services:
+  swagger_ui_formatter.swagger_ui_library_discovery:
+    alias: swagger_ui_formatter.swagger_ui_library_discovery.bundled

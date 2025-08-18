@@ -21,6 +21,10 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
 
   public const CODE_LIBRARY_VERSION_IS_NOT_SUPPORTED = 6;
 
+  public const CODE_CANNOT_READ_VERSION_INFO_CONTENT = 7;
+
+  public const CODE_CANNOT_DECODE_VERSION_INFO = 8;
+
   /**
    * {@inheritdoc}
    *
@@ -110,6 +114,34 @@ final class SwaggerUiLibraryDiscoveryException extends \RuntimeException impleme
    */
   public static function becauseLibraryVersionIsNotSupported(string $library_version, string $library_version_min): self {
     return new self(sprintf('The Swagger UI library version v%s is lower than the minimally supported v%s. Please download <a href="https://github.com/swagger-api/swagger-ui/releases" target="_blank">a newer version</a>.', $library_version, $library_version_min), self::CODE_LIBRARY_VERSION_IS_NOT_SUPPORTED);
+  }
+
+  /**
+   * Thrown when cannot read the Swagger UI library's version information file.
+   *
+   * @param string $version_info_path
+   *   The Swagger UI library's version information file path.
+   *
+   * @return self
+   *   The exception.
+   */
+  public static function becauseCannotReadVersionInfoContent(string $version_info_path): self {
+    return new self(sprintf('Cannot read the content of the Swagger UI library\'s version information file in "%s".', $version_info_path), self::CODE_CANNOT_READ_VERSION_INFO_CONTENT);
+  }
+
+  /**
+   * Thrown when the Swagger UI library's version info file cannot be decoded.
+   *
+   * @param string $version_info_path
+   *   The Swagger UI library's version information file path.
+   * @param string $json_last_error_msg
+   *   The error message of the last json_decode() call.
+   *
+   * @return self
+   *   The exception.
+   */
+  public static function becauseVersionInfoCannotBeDecoded(string $version_info_path, string $json_last_error_msg): self {
+    return new self(sprintf('Cannot decode the Swagger UI library\'s version information file in "%s": "%s".', $version_info_path, $json_last_error_msg), self::CODE_CANNOT_DECODE_VERSION_INFO);
   }
 
 }

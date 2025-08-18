@@ -1,6 +1,6 @@
 name: 'Swagger UI Field Formatter Testing'
 type: module
-description: 'Testing helper module for Swagger UI field formatter.'
+description: 'Testing helper module for Swagger UI field formatter which provides the content architecture for testing.'
 core_version_requirement: ^10.4.5 || ^11.1
 package: 'Testing'
 dependencies:

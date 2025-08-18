@@ -1,7 +1,23 @@
 services:
+  _defaults:
+    autowire: true
+
+  Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryBase:
+    abstract: true
+    arguments:
+      $cache: '@cache.default'
+
+  swagger_ui_formatter.swagger_ui_library_discovery.downloaded:
+    parent: Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryBase
+    class: Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact
+
+  swagger_ui_formatter.swagger_ui_library_discovery.bundled:
+    parent: Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryBase
+    class: Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets
+
   swagger_ui_formatter.swagger_ui_library_discovery:
-    class: Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
-    arguments: ['@cache.default', '@theme_handler', '@theme.manager', '@theme.initialization']
+    alias: swagger_ui_formatter.swagger_ui_library_discovery.downloaded
+
   logger.channel.swagger_ui_formatter:
     parent: logger.channel_base
     arguments: ['swagger_ui_formatter']

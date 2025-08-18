@@ -10,7 +10,7 @@ declare(strict_types = 1);
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\Cache\CacheableMetadata;
 use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface;
-use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery;
+use Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact;
 
 /**
  * Implements hook_requirements().
@@ -28,10 +28,12 @@ function swagger_ui_formatter_requirements(string $phase): array {
   if ($phase === 'install') {
     /** @var \Drupal\Core\DependencyInjection\ClassResolverInterface $class_resolver */
     $class_resolver = \Drupal::service('class_resolver');
-    $swagger_ui_library_discovery = $class_resolver->getInstanceFromDefinition(SwaggerUiLibraryDiscovery::class);
+    // Potential unhandled edge case: Bundled discovery could be already
+    // enforced on the project, but this fallback solution ignores that.
+    $swagger_ui_library_discovery = $class_resolver->getInstanceFromDefinition(SwaggerUiLibraryDiscoveryFromDownloadedArtifact::class);
   }
   else {
-    /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+    /** @var \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
     $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
   }
 

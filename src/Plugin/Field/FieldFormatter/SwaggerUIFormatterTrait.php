@@ -161,7 +161,7 @@ trait SwaggerUIFormatterTrait {
     $library_name = 'swagger_ui_formatter.swagger_ui_integration';
     /** @var \Drupal\Core\Asset\LibraryDiscoveryInterface $library_discovery */
     $library_discovery = \Drupal::service('library.discovery');
-    /** @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
+    /** @var \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface $swagger_ui_library_discovery */
     $swagger_ui_library_discovery = \Drupal::service('swagger_ui_formatter.swagger_ui_library_discovery');
 
     // The Swagger UI library integration is only registered if the Swagger UI
@@ -177,7 +177,8 @@ trait SwaggerUIFormatterTrait {
     else {
       $library_dir = $swagger_ui_library_discovery->libraryDirectory();
       // Set the oauth2-redirect.html file path for OAuth2 authentication.
-      $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . '/' . $library_dir . '/dist/oauth2-redirect.html';
+      $oauth2_redirect_file_path = '/oauth2-redirect.html';
+      $oauth2_redirect_url = \Drupal::request()->getSchemeAndHttpHost() . '/' . $library_dir . '/dist' . $oauth2_redirect_file_path;
 
       foreach ($items as $delta => $item) {
         $element[$delta] = [

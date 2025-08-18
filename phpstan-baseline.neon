@@ -66,29 +66,19 @@ parameters:
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Cannot access offset 'version' on mixed\\.$#"
+			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\SwaggerUiLibraryDiscovery\\\\SwaggerUiLibraryDiscoveryBase\\:\\:libraryDirectory\\(\\) should return string but returns mixed\\.$#"
 			count: 1
-			path: src/Service/SwaggerUiLibraryDiscovery.php
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryBase.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Service\\\\SwaggerUiLibraryDiscovery\\:\\:libraryDirectory\\(\\) should return string but returns mixed\\.$#"
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
 			count: 1
-			path: src/Service/SwaggerUiLibraryDiscovery.php
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Service\\\\SwaggerUiLibraryDiscovery\\:\\:libraryVersion\\(\\) should return string but returns mixed\\.$#"
+			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
 			count: 1
-			path: src/Service/SwaggerUiLibraryDiscovery.php
-
-		-
-			message: "#^Parameter \\#1 \\$library_version of static method Drupal\\\\swagger_ui_formatter\\\\Exception\\\\SwaggerUiLibraryDiscoveryException\\:\\:becauseLibraryVersionIsNotSupported\\(\\) expects string, mixed given\\.$#"
-			count: 1
-			path: src/Service/SwaggerUiLibraryDiscovery.php
-
-		-
-			message: "#^Parameter \\#1 \\$version1 of function version_compare expects string, mixed given\\.$#"
-			count: 1
-			path: src/Service/SwaggerUiLibraryDiscovery.php
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets.php
 
 		-
 			message: """
@@ -97,4 +87,4 @@ parameters:
 				LibraryDiscoveryCollector\\:\\:clear\\(\\) instead\\.$#
 			"""
 			count: 1
-			path: tests/modules/swagger_ui_formatter_test/src/Service/SwaggerUiLibraryDiscovery.php
+			path: tests/modules/swagger_ui_formatter_test_fake_discovery/src/Service/SwaggerUiLibraryDiscovery.php

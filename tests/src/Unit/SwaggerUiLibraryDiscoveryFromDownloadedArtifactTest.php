@@ -29,15 +29,15 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
   use Drupal\Core\Theme\ThemeManagerInterface;
   use Drupal\Tests\UnitTestCase;
   use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryException;
-  use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery;
+  use Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact;
   use PHPUnit\Framework\MockObject\MockObject;
 
   /**
-   * Tests the Swagger UI library discovery service.
+   * Tests the Swagger UI library discovery from downloaded artifact.
    *
-   * @covers \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
+   * @covers \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact
    */
-  final class SwaggerUiLibraryDiscoveryTest extends UnitTestCase {
+  final class SwaggerUiLibraryDiscoveryFromDownloadedArtifactTest extends UnitTestCase {
 
     /**
      * The default Swagger UI library directory path.
@@ -75,9 +75,9 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
     /**
      * The Swagger UI library discovery service.
      *
-     * @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
+     * @var \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact
      */
-    private SwaggerUiLibraryDiscovery $swaggerUiLibraryDiscovery;
+    private SwaggerUiLibraryDiscoveryFromDownloadedArtifact $swaggerUiLibraryDiscovery;
 
     /**
      * {@inheritdoc}
@@ -88,7 +88,7 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
       $this->themeHandler = $this->createMock(ThemeHandlerInterface::class);
       $this->themeManager = $this->createMock(ThemeManagerInterface::class);
       $this->themeInitialization = $this->createMock(ThemeInitializationInterface::class);
-      $this->swaggerUiLibraryDiscovery = new SwaggerUiLibraryDiscovery($this->cache, $this->themeHandler, $this->themeManager, $this->themeInitialization);
+      $this->swaggerUiLibraryDiscovery = new SwaggerUiLibraryDiscoveryFromDownloadedArtifact($this->cache, $this->themeHandler, $this->themeManager, $this->themeInitialization);
     }
 
     /**
@@ -172,8 +172,8 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
      */
     public function testWithValidLibraryVersion(): void {
       $this->setUpLibraryVersionTest();
-      // Imitate that SwaggerUiLibraryDiscovery::libraryDirectory() responds
-      // from cache to avoid mocking or different services.
+      // Imitate that libraryDirectory() responds from cache to avoid mocking
+      // or different services.
       $this->cache
         ->method('get')
         ->willReturn((object) ['data' => self::DEFAULT_LIBRARY_DIR]);
@@ -248,7 +248,7 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
     }
 
     /**
-     * Setup method for SwaggerUiLibraryDiscovery::libraryDirectory() tests.
+     * Setup method for libraryDirectory() tests.
      */
     private function setUpLibraryDirectoryTest(): void {
       $this->cache
@@ -269,7 +269,7 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
     }
 
     /**
-     * Setup method for SwaggerUiLibraryDiscovery::libraryVersion() tests.
+     * Setup method for libraryVersion() tests.
      */
     private function setUpLibraryVersionTest(): void {
       $this->themeHandler
@@ -286,7 +286,7 @@ namespace Drupal\Tests\swagger_ui_formatter\Unit {
  *
  * phpcs:disable SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile.MoreNamespacesInFile
  */
-namespace Drupal\swagger_ui_formatter\Service {
+namespace Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery {
 
   const DRUPAL_ROOT = '';
 
@@ -301,6 +301,13 @@ namespace Drupal\swagger_ui_formatter\Service {
       return TRUE;
     }
     return !preg_match('#^/' . SWAGGER_UI_FORMATTER_TEST_VALID_LIBRARY_DIR_WITH_MISSING_FILES . '#', $filename);
+  }
+
+  /**
+   * {@inheritdoc}
+   */
+  function is_dir(string $filename): bool {
+    return in_array($filename, ['/libraries/swagger-ui', '/libraries/valid-with-missing-files'], TRUE);
   }
 
   /**

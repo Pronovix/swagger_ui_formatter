@@ -2,7 +2,7 @@
 
 declare(strict_types = 1);
 
-namespace Drupal\swagger_ui_formatter_test\Service;
+namespace Drupal\swagger_ui_formatter_test_fake_discovery\Service;
 
 use Drupal\Core\Asset\LibraryDiscoveryInterface;
 use Drupal\Core\Cache\CacheTagsInvalidator;
@@ -10,8 +10,8 @@ use Drupal\Core\Cache\CacheTagsInvalidatorInterface;
 use Drupal\Core\Cache\CacheableDependencyInterface;
 use Drupal\Core\State\StateInterface;
 use Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryException;
-use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery as OriginalSwaggerUiLibraryDiscovery;
-use Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscoveryInterface;
+use Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact as OriginalSwaggerUiLibraryDiscovery;
+use Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface;
 
 /**
  * Decorator service for testing.
@@ -31,7 +31,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   /**
    * The decorated service.
    *
-   * @var \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
+   * @var \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact
    */
   private OriginalSwaggerUiLibraryDiscovery $decorated;
 
@@ -59,7 +59,7 @@ final class SwaggerUiLibraryDiscovery implements SwaggerUiLibraryDiscoveryInterf
   /**
    * Constructs a new object.
    *
-   * @param \Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery $decorated
+   * @param \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact $decorated
    *   The decorated service.
    * @param \Drupal\Core\State\StateInterface $state
    *   The state service.

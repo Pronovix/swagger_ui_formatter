@@ -4,32 +4,21 @@ declare(strict_types = 1);
 
 namespace Drupal\swagger_ui_formatter\Service;
 
+// @phpcs:disable Drupal.Semantics.FunctionTriggerError.TriggerErrorTextLayoutStrict
+@trigger_error('The ' . __NAMESPACE__ . '\SwaggerUiLibraryDiscoveryInterface is deprecated in swagger_ui_formatter:4.4.0 and is removed from swagger_ui_formatter:5.0.0. \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface is the replacement', E_USER_DEPRECATED);
+// @phpcs:enable
+
+use Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface as OriginalSwaggerUiLibraryDiscoveryInterface;
+
 /**
  * Generic definition of a Swagger UI library discovery service.
+ *
+ * @phpcs:disable Drupal.Commenting.Deprecated.DeprecatedMissingSeeTag
+ * @deprecated in swagger_ui_formatter:4.4.0 and is removed from swagger_ui_formatter:5.0.0.
+ * \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryInterface
+ * is the replacement.
+ * @phpcs:enable
  */
-interface SwaggerUiLibraryDiscoveryInterface {
-
-  /**
-   * Gets the Swagger UI library directory.
-   *
-   * This is a relative path from the DRUPAL_ROOT. No leading slash should be
-   * included in the returned path.
-   *
-   * @return string
-   *   The path of the Swagger UI library directory relative to DRUPAL_ROOT.
-   *
-   * @throws \Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface
-   */
-  public function libraryDirectory(): string;
-
-  /**
-   * Gets the Swagger UI library version.
-   *
-   * @return string
-   *   The Swagger UI library version.
-   *
-   * @throws \Drupal\swagger_ui_formatter\Exception\SwaggerUiLibraryDiscoveryExceptionInterface
-   */
-  public function libraryVersion(): string;
+interface SwaggerUiLibraryDiscoveryInterface extends OriginalSwaggerUiLibraryDiscoveryInterface {
 
 }

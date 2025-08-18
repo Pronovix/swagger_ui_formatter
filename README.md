@@ -31,7 +31,24 @@ further information.
 
 ## Swagger UI library installation
 
-### Manual installation
+You can provide the frontend assets of the Swagger UI library in a number of ways, as the
+module provides two switchable asset discovery mechanisms to locate them:
+
+* Discovering downloaded prebuilt Swagger UI library files, by default in the root libraries folder.
+* Discovering the module bundled Swagger UI library from Node.js package manager installations.
+
+Downloaded Swagger UI distribution discovery is active by default. To activate the usage of the bundled
+npm package you need to enable it in your `services.yml`:
+
+```yml
+services:
+  swagger_ui_formatter.swagger_ui_library_discovery:
+    alias: swagger_ui_formatter.swagger_ui_library_discovery.bundled
+```
+
+### Precompiled Swagger UI assets
+
+#### Manual installation
 
 Download the
 [appropriate Swagger UI library version](https://github.com/swagger-api/swagger-ui/releases),
@@ -39,7 +56,7 @@ extract the archive and rename the folder to "swagger-ui". Place the renamed fol
 the `[DRUPAL ROOT]/libraries` directory so its path will be
 `[DRUPAL ROOT]/libraries/swagger-ui`.
 
-### Installation via Composer
+#### Installation via Composer
 
 If you would like to install the Swagger UI library with
 [Composer](https://getcomposer.org/), you probably used the
@@ -79,6 +96,53 @@ composer require oomphinc/composer-installers-extender bower-asset/swagger-ui
 ```
 
 The library will be downloaded into the `[DRUPAL ROOT]/libraries` directory.
+
+### Bundled npm package
+
+If you want to build your own Swagger UI library assets, it is possible with a Webpack build of the bundled npm package.
+You need to install the dependencies and build the assets using a Javascript package manager
+in the `./frontend` folder of the module.
+
+
+npm:
+
+```shell
+npm install
+
+npm run build
+```
+
+Yarn:
+
+```shell
+yarn install
+
+yarn build
+```
+
+Yarn workspaces:
+
+* Add module installation folder to `workspaces` in your root `package.json`:
+
+```
+  "workspaces": [
+    "packages/*",
+    "[DRUPAL_ROOT]/modules/contrib/swagger_ui_formatter/frontend"
+  ]
+```
+* Install dependencies and build assets:
+```shell
+yarn install
+
+yarn workspace swagger_ui_formatter run build
+```
+
+* Note for Yarn 2+ users:
+If installation issues occur under Plug’n’Play, consider enabling the node_modules linker.
+Add to your `.yarnrc.yml`:
+```yaml
+nodeLinker: node-modules
+```
 
 ## Configuration
 

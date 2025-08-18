@@ -1,0 +1,7 @@
+name: 'Swagger UI Field Formatter Testing: Bundled Assets as default discovery'
+type: module
+description: 'Testing helper module for Swagger UI field formatter that sets the bundled assets discovery as default.'
+core_version_requirement: ^10.4.5 || ^11.1
+package: 'Testing'
+dependencies:
+  - drupal:swagger_ui_formatter

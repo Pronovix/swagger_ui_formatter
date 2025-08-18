@@ -10,14 +10,17 @@ declare(strict_types = 1);
 /**
  * Alters the Swagger UI library directory path.
  *
- * This hook is only invoked for the default theme (and its base themes).
- * Modules can override the directory path by decorating the
- * SwaggerUiLibraryDiscovery service.
+ * This hook is only invoked for the default theme (and its base themes)
+ * and only applicable when SwaggerUiLibraryDiscoveryFromDownloadedArtifact
+ * handles discovery.
+ *
+ * Modules can override the directory path by swapping the
+ * SwaggerUiLibraryDiscoveryFromDownloadedArtifact service.
  *
  * @param string $library_dir
  *   The Swagger UI library directory path.
  *
- * @see Drupal\swagger_ui_formatter\Service\SwaggerUiLibraryDiscovery
+ * @see \Drupal\swagger_ui_formatter\SwaggerUiLibraryDiscovery\SwaggerUiLibraryDiscoveryFromDownloadedArtifact
  */
 function hook_swagger_ui_library_directory_alter(string &$library_dir): void {
   $library_dir = '/my/custom/path/to/swagger-ui/';

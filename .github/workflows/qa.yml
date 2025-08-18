@@ -78,6 +78,8 @@ jobs:
         ddev start --skip-hooks
         ddev poser
         ddev symlink-project
+        ddev yarn --cwd frontend
+        ddev yarn --cwd frontend run build
         ddev describe
 
     - name: Run static code analyses

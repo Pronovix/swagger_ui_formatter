@@ -1,0 +1,6 @@
+services:
+  swagger_ui_formatter_test_fake_discovery.swagger_ui_library_discovery:
+    class: Drupal\swagger_ui_formatter_test_fake_discovery\Service\SwaggerUiLibraryDiscovery
+    decorates: swagger_ui_formatter.swagger_ui_library_discovery
+    public: false
+    arguments: ['@swagger_ui_formatter_test_fake_discovery.swagger_ui_library_discovery.inner', '@state', '@cache_tags.invalidator', '@library.discovery']
