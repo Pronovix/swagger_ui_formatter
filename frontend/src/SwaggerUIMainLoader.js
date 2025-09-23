@@ -3,7 +3,7 @@
  * @internal
  */
 
-import 'swagger-ui/dist/swagger-ui.css';
-import SwaggerUI from 'swagger-ui';
+import 'swagger-ui-dist/swagger-ui.css';
+import { SwaggerUIBundle } from 'swagger-ui-dist';
 
-window.SwaggerUIBundle = SwaggerUI;
+window.SwaggerUIBundle = SwaggerUIBundle;

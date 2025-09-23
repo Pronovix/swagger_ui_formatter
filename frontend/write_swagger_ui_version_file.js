@@ -11,7 +11,7 @@ const path = require('path');
  * The name of the npm package to find the version for.
  * @const {string}
  */
-const packageName = 'swagger-ui';
+const packageName = 'swagger-ui-dist';
 
 /**
  * The absolute path to the output file where the version will be stored.
@@ -22,7 +22,7 @@ const outputFilePath = path.join(__dirname, 'swagger_ui_version.json');
 try {
   // Get the directory containing the package from its main file path.
   const packageMain = require.resolve(packageName);
-  const packageJsonPath = path.join(path.dirname(packageMain), '../package.json');
+  const packageJsonPath = path.join(path.dirname(packageMain), './package.json');
 
   // Read the package.json file and parse it.
   const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'));

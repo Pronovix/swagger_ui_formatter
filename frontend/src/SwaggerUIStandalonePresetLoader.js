@@ -3,6 +3,6 @@
  * @internal
  */
 
-import SwaggerUIStandalonePreset from 'swagger-ui/dist/swagger-ui-standalone-preset';
+import { SwaggerUIStandalonePreset } from 'swagger-ui-dist';
 
 window.SwaggerUIStandalonePreset = SwaggerUIStandalonePreset;

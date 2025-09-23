@@ -28,7 +28,7 @@ module.exports = (env, argv) => {
       new CopyWebpackPlugin({
         patterns: [
           {
-            from: require.resolve('swagger-ui/dist/oauth2-redirect.html'),
+            from: require.resolve('swagger-ui-dist/oauth2-redirect.html'),
             to: path.resolve(__dirname, 'dist/oauth2-redirect.html')
           }
         ]
@@ -47,6 +47,11 @@ module.exports = (env, argv) => {
           terserOptions: { ecma: 2020 }
         })
       ],
+    },
+    resolve: {
+      fallback: {
+        "path": require.resolve("path-browserify")
+      }
     },
     devtool: isProduction ? false : 'source-map'
   }
