@@ -82,6 +82,7 @@
         "drupal-scaffold": {
             "file-mapping": {
                 "[web-root]/libraries/swagger-ui/dist/oauth2-redirect.html": "vendor/bower-asset/swagger-ui/dist/oauth2-redirect.html",
+                "[web-root]/libraries/swagger-ui/dist/oauth2-redirect.js": "vendor/bower-asset/swagger-ui/dist/oauth2-redirect.js",
                 "[web-root]/libraries/swagger-ui/dist/swagger-ui-bundle.js": "vendor/bower-asset/swagger-ui/dist/swagger-ui-bundle.js",
                 "[web-root]/libraries/swagger-ui/dist/swagger-ui-standalone-preset.js": "vendor/bower-asset/swagger-ui/dist/swagger-ui-standalone-preset.js",
                 "[web-root]/libraries/swagger-ui/dist/swagger-ui.css": "vendor/bower-asset/swagger-ui/dist/swagger-ui.css",

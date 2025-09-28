@@ -102,6 +102,7 @@ abstract class SwaggerUiLibraryDiscoveryBase implements SwaggerUiLibraryDiscover
       'dist/swagger-ui-bundle.js',
       'dist/swagger-ui-standalone-preset.js',
       'dist/oauth2-redirect.html',
+      'dist/oauth2-redirect.js',
     ];
     foreach ($files_to_check as $file) {
       $file_path = $library_dir . '/' . $file;

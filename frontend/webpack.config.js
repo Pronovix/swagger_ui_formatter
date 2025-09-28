@@ -30,6 +30,10 @@ module.exports = (env, argv) => {
           {
             from: require.resolve('swagger-ui-dist/oauth2-redirect.html'),
             to: path.resolve(__dirname, 'dist/oauth2-redirect.html')
+          },
+          {
+            from: require.resolve('swagger-ui-dist/oauth2-redirect.js'),
+            to: path.resolve(__dirname, 'dist/oauth2-redirect.js')
           }
         ]
       })
