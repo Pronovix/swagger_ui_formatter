@@ -6,7 +6,10 @@
   "scripts": {
     "write:version:swagger-ui": "node write_swagger_ui_version_file.js",
     "build": "webpack --mode production && npm run write:version:swagger-ui",
-    "develop": "webpack --mode development --devtool source-map --watch --progress"
+    "develop": "webpack --mode development --devtool source-map --watch --progress",
+    "test": "echo \"No tests implemented.\"",
+    "eslint": "echo \"No JavaScript files to lint.\"",
+    "stylelint": "echo \"No stylesheets to lint.\""
   },
   "dependencies": {
     "swagger-ui-dist": "^5.29.2"
