@@ -1,0 +1,29 @@
+{% set absolute_url = file_url(spec_url)  %}
+
+{% set methods = [] %}
+{% if submit_method_get %}{% set methods = methods|merge(['get']) %}{% endif %}
+{% if submit_method_put %}{% set methods = methods|merge(['put']) %}{% endif %}
+{% if submit_method_post %}{% set methods = methods|merge(['post']) %}{% endif %}
+{% if submit_method_delete %}{% set methods = methods|merge(['delete']) %}{% endif %}
+{% if submit_method_options %}{% set methods = methods|merge(['options']) %}{% endif %}
+{% if submit_method_head %}{% set methods = methods|merge(['head']) %}{% endif %}
+{% if submit_method_patch %}{% set methods = methods|merge(['patch']) %}{% endif %}
+
+{% set component_settings = {
+  swaggerFile: absolute_url,
+  validator: validator,
+  validatorUrl: validator_url,
+  docExpansion: doc_expansion,
+  showTopBar: show_top_bar,
+  sortTagsByName: sort_tags_by_name,
+  supportedSubmitMethods: methods,
+  oauth2RedirectUrl: oauth2_redirect_url
+} %}
+
+<div class="swagger-ui-formatter-container">
+  <div
+    id="{{ 'swagger-api-app'|clean_unique_id }}"
+    class="swagger-ui-formatter-element"
+    data-swagger-settings="{{ component_settings|json_encode }}"
+  ></div>
+</div>
