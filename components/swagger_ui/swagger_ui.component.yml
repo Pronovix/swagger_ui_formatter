@@ -1,0 +1,120 @@
+$schema: https://git.drupalcode.org/project/drupal/-/raw/10.1.x/core/assets/schemas/v1/metadata-full.schema.json
+name: Swagger UI
+status: stable
+group: API Specification Rendering
+description: 'Renders a Swagger UI instance for a given OpenAPI specification.'
+props:
+  type: object
+  required:
+    - spec_url
+  properties:
+    spec_url:
+      type: string
+      title: 'Specification URL'
+      format: uri-reference
+      description: 'The URL to the OpenAPI specification file.'
+      examples:
+        - 'https://example.com/api-spec.yaml'
+    oauth2_redirect_url:
+      type: string
+      title: 'OAuth2 Redirect URL'
+      description: 'The URL used for OAuth2 authentication redirects.'
+      examples:
+        - 'https://example.com/libraries/swagger-ui/dist/oauth2-redirect.html'
+    validator:
+      type: string
+      title: 'Validator'
+      description: "Default=Swagger.io's online validator, None=No validation, Custom=Provide a custom validator url."
+      enum:
+        - none
+        - default
+        - custom
+      default: default
+      examples:
+        - default
+    validator_url:
+      type: string
+      title: 'Validator URL'
+      description: 'The custom validator URL to be used to validate the swagger files.'
+      default: ''
+    doc_expansion:
+      type: string
+      title: 'Doc Expansion'
+      description: 'Controls how the API listing is displayed.'
+      enum:
+        - none
+        - list
+        - full
+      meta:enum:
+        none: 'None - Expands nothing'
+        list: 'List - Expands only tags'
+        full: 'Full - Expands tags and operations'
+      default: list
+      examples:
+        - list
+    show_top_bar:
+      type: boolean
+      title: 'Show Top Bar'
+      description: 'Controls whether the Swagger UI top bar should be displayed or not.'
+      default: false
+      examples:
+        - false
+    sort_tags_by_name:
+      type: boolean
+      title: 'Sort tags by name'
+      description: 'Controls whether the tag groups should be ordered alphabetically or not.'
+      default: false
+      examples:
+        - false
+    submit_method_get:
+      type: boolean
+      title: 'Try it out: GET'
+      description: 'Controls if operations with GET methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_post:
+      type: boolean
+      title: 'Try it out: POST'
+      description: 'Controls if operations with POST methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_put:
+      type: boolean
+      title: 'Try it out: PUT'
+      description: 'Controls if operations with PUT methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_delete:
+      type: boolean
+      title: 'Try it out: DELETE'
+      description: 'Controls if operations with DELETE methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_options:
+      type: boolean
+      title: 'Try it out: OPTIONS'
+      description: 'Controls if operations with OPTIONS methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_head:
+      type: boolean
+      title: 'Try it out: HEAD'
+      description: 'Controls if operations with HEAD methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+    submit_method_patch:
+      type: boolean
+      title: 'Try it out: PATCH'
+      description: 'Controls if operations with PATCH methods have the Try it out feature enabled.'
+      default: true
+      examples:
+        - true
+libraryOverrides:
+  dependencies:
+    - swagger_ui_formatter/swagger_ui_formatter.swagger_ui_integration

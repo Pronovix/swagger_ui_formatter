@@ -198,26 +198,26 @@ trait SwaggerUIFormatterTrait {
           ];
         }
         else {
+          $supported_submit_methods = $formatter->getSetting('supported_submit_methods');
+          assert(is_array($supported_submit_methods));
           $element[$delta] += [
-            '#theme' => 'swagger_ui_field_item',
-            '#attached' => [
-              'library' => [
-                'swagger_ui_formatter/' . $library_name,
-              ],
-              'drupalSettings' => [
-                'swaggerUIFormatter' => [
-                  "{$field_definition->getName()}-{$delta}" => [
-                    'oauth2RedirectUrl' => $oauth2_redirect_url,
-                    'swaggerFile' => $swagger_file_url,
-                    'validator' => $formatter->getSetting('validator'),
-                    'validatorUrl' => $formatter->getSetting('validator_url'),
-                    'docExpansion' => $formatter->getSetting('doc_expansion'),
-                    'showTopBar' => $formatter->getSetting('show_top_bar'),
-                    'sortTagsByName' => $formatter->getSetting('sort_tags_by_name'),
-                    'supportedSubmitMethods' => array_keys(array_filter($formatter->getSetting('supported_submit_methods'))),
-                  ],
-                ],
-              ],
+            '#type' => 'component',
+            '#component' => 'swagger_ui_formatter:swagger_ui',
+            '#props' => [
+              'spec_url' => $swagger_file_url,
+              'oauth2_redirect_url' => $oauth2_redirect_url,
+              'validator' => $formatter->getSetting('validator'),
+              'validator_url' => $formatter->getSetting('validator_url'),
+              'doc_expansion' => $formatter->getSetting('doc_expansion'),
+              'show_top_bar' => $formatter->getSetting('show_top_bar'),
+              'sort_tags_by_name' => $formatter->getSetting('sort_tags_by_name'),
+              'submit_method_get' => !empty($supported_submit_methods['get']),
+              'submit_method_put' => !empty($supported_submit_methods['put']),
+              'submit_method_post' => !empty($supported_submit_methods['post']),
+              'submit_method_delete' => !empty($supported_submit_methods['delete']),
+              'submit_method_options' => !empty($supported_submit_methods['options']),
+              'submit_method_head' => !empty($supported_submit_methods['head']),
+              'submit_method_patch' => !empty($supported_submit_methods['patch']),
             ],
           ];
         }
