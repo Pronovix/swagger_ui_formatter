@@ -28,6 +28,7 @@ jobs:
       run: |
         ddev config --php-version 8.1
         ddev dotenv set .ddev/.env --drupal-core "10.4.5"
+        ddev dotenv set .ddev/.env --composer-no-security-blocking 1
         # Skip hooks and run commands directly to ensure when they fail
         # the step also fails immediately.
         ddev start --skip-hooks
@@ -73,8 +74,9 @@ jobs:
         ddev config --php-version ${{ matrix.php_version }}
         ddev config --database ${{ matrix.db_version }}
         ddev dotenv set .ddev/.env --drupal-core "${{ matrix.drupal_core_version }}"
+        ddev dotenv set .ddev/.env --composer-no-security-blocking 1
         # Skip hooks and run commands directly to ensure when they fail
-        # the step also fails immediatelly.
+        # the step also fails immediately.
         ddev start --skip-hooks
         ddev poser
         ddev symlink-project
