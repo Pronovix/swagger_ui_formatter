@@ -43,7 +43,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        php_version: ["8.1", "8.2", "8.3"]
+        php_version: ["8.1", "8.2", "8.3", "8.4"]
         db_version: ["mariadb:10.11"]
         # TODO Get version range from composer.json dynamically.
         # Hint: --prefer-lowest or COMPOSER_PREFER_LOWEST=1 does not work
