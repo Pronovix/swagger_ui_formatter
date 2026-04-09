@@ -27,7 +27,7 @@ jobs:
     - name: Setup env
       run: |
         ddev config --php-version 8.1
-        ddev dotenv set .ddev/.env --drupal-core "10.4.5"
+        ddev dotenv set .ddev/.env --drupal-core "10.5.6"
         ddev dotenv set .ddev/.env --composer-no-security-blocking 1
         # Skip hooks and run commands directly to ensure when they fail
         # the step also fails immediately.
@@ -44,21 +44,21 @@ jobs:
       fail-fast: false
       matrix:
         php_version: ["8.1", "8.2", "8.3"]
-        db_version: ["mariadb:10.6"]
+        db_version: ["mariadb:10.11"]
         # TODO Get version range from composer.json dynamically.
         # Hint: --prefer-lowest or COMPOSER_PREFER_LOWEST=1 does not work
         # with ddev poser because it runs `composer install` not
         # `composer update`.
-        drupal_core_version: ["10.4.5", "^10.4.5", "11.1.7", "^11.1.7"]
+        drupal_core_version: ["10.5.6", "^10.5.6", "11.2.10", "^11.2.10"]
         exclude:
           - php_version: "8.1"
-            drupal_core_version: "11.1.7"
+            drupal_core_version: "11.2.10"
           - php_version: "8.2"
-            drupal_core_version: "11.1.7"
+            drupal_core_version: "11.2.10"
           - php_version: "8.1"
-            drupal_core_version: "^11.1.7"
+            drupal_core_version: "^11.2.10"
           - php_version: "8.2"
-            drupal_core_version: "^11.1.7"
+            drupal_core_version: "^11.2.10"
 
     steps:
     - name: Checkout Swagger UI Formatter

@@ -16,11 +16,11 @@
         "docs": "https://www.drupal.org/docs/8/modules/swagger-ui-field-formatter"
     },
     "_comment": [
-        "league/container version contraint is here to prevent randomy failed highest-lowest tests caused by this missing fix: https://github.com/thephpleague/container/commit/97a0c39bf37d709d3bbc31d0505cea9373d927e7"
+        "league/container version constraint is here to prevent randomly failed highest-lowest tests caused by this missing fix: https://github.com/thephpleague/container/commit/97a0c39bf37d709d3bbc31d0505cea9373d927e7"
     ],
     "require": {
         "php": "~8.1.0 || ~8.2.0 || ~8.3.0",
-        "drupal/core": "^10.4.5 || ^11.1.7"
+        "drupal/core": "^10.5.6 || ^11.2.10"
     },
     "require-dev": {
         "npm-asset/swagger-ui-dist": "^5.29.2",
