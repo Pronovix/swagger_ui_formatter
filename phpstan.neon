@@ -1,5 +1,4 @@
 includes:
-  - %rootDir%/../../pronovix/drupal-qa/config/phpstan.drupal-qa.neon
   - phpstan-baseline.neon
 
 parameters:

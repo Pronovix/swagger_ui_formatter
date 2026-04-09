@@ -1,0 +1,136 @@
+<?xml version="1.0"?>
+<ruleset xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" name="PronovixDrupalQa"
+         xsi:noNamespaceSchemaLocation="https://raw.githubusercontent.com/squizlabs/PHP_CodeSniffer/3.4.1/phpcs.xsd">
+    <!--  Prevent infinite recursion if PHPCS is running inside the container where the current folder is also symlinked
+    to build/modules/drupal_module -->
+    <arg name="extensions" value="inc,install,module,php,profile,test,theme"/>
+    <exclude-pattern>*/modules/*/build/*</exclude-pattern>
+    <exclude-pattern>*/profiles/*/build/*</exclude-pattern>
+    <exclude-pattern>*/themes/*/build/*</exclude-pattern>
+    <!-- BC: Also always exclude files in the drupal-dev folder. -->
+    <exclude-pattern>*/drupal-dev/*</exclude-pattern>
+    <!-- Ignore directories with 3rd party libraries -->
+    <exclude-pattern>*/node_modules/*</exclude-pattern>
+    <exclude-pattern>*/vendor/*</exclude-pattern>
+    <!-- Do not check CSS/JS files, it is done by Eslint instead.  -->
+    <exclude-pattern>\.css</exclude-pattern>
+    <exclude-pattern>\.js</exclude-pattern>
+    <!-- Exclude Markdown files because Drupal.Files.TxtFileLineLength.TooLong should not be applied on them. -->
+    <exclude-pattern>\.md</exclude-pattern>
+    <exclude-pattern>.ddev/*</exclude-pattern>
+
+    <rule ref="Drupal"/>
+
+    <rule ref="DrupalPractice"/>
+
+    <!-- SlevomatCodingStandard.Variables.UnusedVariable.UnusedVariable is better than this rule. -->
+    <rule ref="DrupalPractice.CodeAnalysis.VariableAnalysis.UnusedVariable">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Authored list of SlevomatCodingStandard rules based on https://github.com/slevomat/coding-standard/tree/5.0.0 -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.IncorrectWhitespaceBeforeDeclare">
+        <severity>0</severity>
+    </rule>
+
+    <!-- Keep spaces around equal sign version of strict type enforcement. -->
+    <rule ref="SlevomatCodingStandard.TypeHints.DeclareStrictTypes">
+     <exclude name="SlevomatCodingStandard.TypeHints.DeclareStrictTypes.DeclareStrictTypesMissing"/>
+     <properties>
+      <property name="spacesCountAroundEqualsSign" value="1"/>
+     </properties>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHint">
+        <!-- Defining the type of an array parameter in a hook implementation's doc block should not be required. -->
+        <exclude name="SlevomatCodingStandard.TypeHints.ParameterTypeHint.MissingTraversableTypeHintSpecification"/>
+    </rule>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHint">
+        <!-- Defining the type of a return type in a hook implementation's doc block should not be required. -->
+        <exclude name="SlevomatCodingStandard.TypeHints.ReturnTypeHint.MissingTraversableTypeHintSpecification"/>
+    </rule>
+
+    <rule ref="SlevomatCodingStandard.Arrays.DisallowImplicitArrayCreation"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.AssignmentInCondition"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireNullCoalesceOperator"/>
+
+    <rule ref="SlevomatCodingStandard.Functions.StaticClosure"/>
+    <rule ref="SlevomatCodingStandard.Operators.RequireOnlyStandaloneIncrementAndDecrementOperators"/>
+    <rule ref="SlevomatCodingStandard.Operators.RequireCombinedAssignmentOperator"/>
+
+    <rule ref="SlevomatCodingStandard.Functions.UnusedInheritedVariablePassedToClosure"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <property name="searchAnnotations" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseFromSameNamespace"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UselessAlias"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessParentheses">
+        <properties>
+            <property name="ignoreComplexTernaryConditions" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.PHP.OptimizedFunctionsWithoutUnpacking"/>
+    <rule ref="SlevomatCodingStandard.PHP.UselessSemicolon"/>
+    <rule ref="SlevomatCodingStandard.Variables.UnusedVariable">
+        <properties>
+            <property name="ignoreUnusedValuesWhenOnlyKeysAreUsedInForeach" value="true"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Variables.UselessVariable"/>
+    <rule ref="SlevomatCodingStandard.Exceptions.DeadCatch"/>
+    <!-- Suppress this sniff locally if it would report a false-positive issue. -->
+    <rule ref="SlevomatCodingStandard.Classes.ModernClassNameReference"/>
+    <rule ref="SlevomatCodingStandard.Classes.TraitUseDeclaration"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.NewWithParentheses"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireMultiLineTernaryOperator">
+        <properties>
+            <property name="lineLengthLimit" value="120"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.ControlStructures.RequireShortTernaryOperator.RequiredShortTernaryOperator"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.AlphabeticallySortedUses">
+        <properties>
+            <property name="caseSensitive" value="1"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Namespaces.RequireOneNamespaceInFile"/>
+    <rule ref="SlevomatCodingStandard.Classes.ClassConstantVisibility"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ReturnTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.TypeHints.ParameterTypeHintSpacing"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.DisallowGroupUse"/>
+    <!-- They make diffs more complicated to read. -->
+    <rule ref="SlevomatCodingStandard.Namespaces.MultipleUsesPerLine"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UseDoesNotStartWithBackslash"/>
+    <!-- See: https://github.com/slevomat/coding-standard/issues/1676 -->
+    <rule ref="SlevomatCodingStandard.Namespaces.FullyQualifiedClassNameInAnnotation">
+        <properties>
+            <property name="ignoredAnnotationNames" type="array" value="@phpstan-param,@phpstan-return,@phpstan-var"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenAnnotations">
+        <properties>
+            <property name="forbiddenAnnotations" type="array" value="@author,@package,@created"/>
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.ForbiddenComments">
+        <properties>
+            <!-- This unifies usage of {@inheritdoc} -->
+            <property name="forbiddenCommentPatterns" type="array" value="/^\{@inheritDoc\}$/" />
+        </properties>
+    </rule>
+    <rule ref="SlevomatCodingStandard.Commenting.EmptyComment"/>
+    <rule ref="SlevomatCodingStandard.Commenting.InlineDocCommentDeclaration"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.UselessIfConditionWithReturn"/>
+    <rule ref="SlevomatCodingStandard.ControlStructures.UselessTernaryOperator"/>
+    <rule ref="SlevomatCodingStandard.Namespaces.UnusedUses">
+        <properties>
+            <!-- This unifies usage of {@inheritdoc} -->
+            <property name="ignoredAnnotationNames" type="array" value="@file,@group" />
+        </properties>
+    </rule>
+    <rule ref="Squiz.Strings.DoubleQuoteUsage.NotRequired" />
+
+</ruleset>
