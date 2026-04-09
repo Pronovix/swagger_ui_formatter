@@ -74,6 +74,10 @@ jobs:
         ddev config --php-version ${{ matrix.php_version }}
         ddev config --database ${{ matrix.db_version }}
         ddev dotenv set .ddev/.env --drupal-core "${{ matrix.drupal_core_version }}"
+        # Mitigation for https://github.com/ddev/ddev-selenium-standalone-chrome/issues/76.
+        if [[ "${{ matrix.drupal_core_version }}" == 10* ]] || [[ "${{ matrix.drupal_core_version }}" == ^10* ]]; then
+            ddev dotenv set .ddev/.env --drupal-test-webdriver-w3c false
+        fi
         ddev dotenv set .ddev/.env --composer-no-security-blocking 1
         # Skip hooks and run commands directly to ensure when they fail
         # the step also fails immediately.
