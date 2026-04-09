@@ -92,13 +92,6 @@
         "enable-patching": true,
         "patchLevel": {
             "drupal/core": "-p2"
-        },
-        "patches-ignore": {
-            "pronovix/drupal-qa": {
-                "drupal/core": {
-                    "copy() can fail in FunctionalTestSetupTrait::prepareSettings() because of a race condition  [#3191369]": "https://git.drupalcode.org/project/drupal/-/merge_requests/218.diff"
-                }
-            }
         }
     }
 }
