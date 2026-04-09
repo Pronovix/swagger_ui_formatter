@@ -1,32 +1,25 @@
 const path = require('path');
-const MiniCssExtractPlugin = require('mini-css-extract-plugin');
-const TerserPlugin = require('terser-webpack-plugin');
 const CopyWebpackPlugin = require('copy-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
 
 module.exports = (env, argv) => {
-  const isProduction = argv.mode === 'production';
   return {
-    entry: {
-      'swagger-ui-bundle': './src/SwaggerUIMainLoader.js',
-      'swagger-ui-standalone-preset': './src/SwaggerUIStandalonePresetLoader.js'
-    },
-    module: {
-      rules: [
-        {
-          test: /\.css$/i,
-          use: [
-            MiniCssExtractPlugin.loader,
-            'css-loader'
-          ]
-        }
-      ]
-    },
+    entry: './src/index.js',
     plugins: [
-      new MiniCssExtractPlugin({
-        filename: 'swagger-ui.css'
-      }),
       new CopyWebpackPlugin({
         patterns: [
+          {
+            from: require.resolve('swagger-ui-dist/swagger-ui-bundle.js'),
+            to: path.resolve(__dirname, 'dist/swagger-ui-bundle.js')
+          },
+          {
+            from: require.resolve('swagger-ui-dist/swagger-ui-standalone-preset.js'),
+            to: path.resolve(__dirname, 'dist/swagger-ui-standalone-preset.js')
+          },
+          {
+            from: require.resolve('swagger-ui-dist/swagger-ui.css'),
+            to: path.resolve(__dirname, 'dist/swagger-ui.css')
+          },
           {
             from: require.resolve('swagger-ui-dist/oauth2-redirect.html'),
             to: path.resolve(__dirname, 'dist/oauth2-redirect.html')
@@ -39,24 +32,15 @@ module.exports = (env, argv) => {
       })
     ],
     output: {
-      filename: '[name].js',
       path: path.resolve(__dirname, 'dist'),
       clean: true
     },
     optimization: {
-      minimize: isProduction,
       minimizer: [
         new TerserPlugin({
-          parallel: true,
-          terserOptions: { ecma: 2020 }
-        })
+          extractComments: false,
+        }),
       ],
     },
-    resolve: {
-      fallback: {
-        "path": require.resolve("path-browserify")
-      }
-    },
-    devtool: isProduction ? false : 'source-map'
   }
 };
