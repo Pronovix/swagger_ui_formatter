@@ -1,5 +1,10 @@
 includes:
-  - phpstan-baseline.neon
+  - %rootDir%/../../mglaman/phpstan-drupal/extension.neon
+  - %rootDir%/../../mglaman/phpstan-drupal/rules.neon
+  - %rootDir%/../phpstan-deprecation-rules/rules.neon
+  - %rootDir%/../phpstan-phpunit/extension.neon
+  - %rootDir%/../phpstan-phpunit/rules.neon
+  - ignore-by-phpstan-version.php
 
 parameters:
   # Below level 6 we can miss important warnings about incorrect usage of Generics.

@@ -8,7 +8,6 @@ use Drupal\Core\Cache\Cache;
 use Drupal\Core\File\FileSystemInterface;
 use Drupal\Core\StreamWrapper\PublicStream;
 use Drupal\Core\Url;
-use Drupal\FunctionalJavascriptTests\JSWebAssert;
 use Drupal\FunctionalJavascriptTests\WebDriverTestBase;
 
 /**
@@ -53,7 +52,6 @@ final class SwaggerUiFieldFormatterUnsupportedVersionTest extends WebDriverTestB
   public function testFileFormatter(): void {
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
-    assert($assert instanceof JSWebAssert);
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'api_doc']));
@@ -77,7 +75,6 @@ final class SwaggerUiFieldFormatterUnsupportedVersionTest extends WebDriverTestB
   public function testLinkFormatter(): void {
     $page = $this->getSession()->getPage();
     $assert = $this->assertSession();
-    assert($assert instanceof JSWebAssert);
 
     $this->drupalLogin($this->rootUser);
     $this->drupalGet(Url::fromRoute('node.add', ['node_type' => 'remote_api_doc']));

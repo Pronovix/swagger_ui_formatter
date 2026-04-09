@@ -1,90 +1,329 @@
 parameters:
 	ignoreErrors:
 		-
-			message: "#^Cannot access offset 'target_id' on mixed\\.$#"
+			message: '#^Cannot access offset ''target_id'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:addSettingsSummary\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Cannot call method getEntity\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 5
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Cannot call method getFileUri\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:alterSettingsForm\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Cannot call method id\(\) on mixed\.$#'
+			identifier: method.nonObject
+			count: 4
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Cannot call method label\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Cannot call method toLink\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUIFileFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			message: '#^Cannot call method toString\(\) on mixed\.$#'
+			identifier: method.nonObject
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_filter expects array, mixed given\\.$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:addSettingsSummary\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:alterSettingsForm\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:buildRenderArray\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:buildRenderArray\(\) has parameter \$items with generic interface Drupal\\Core\\Field\\FieldItemListInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:settingsSummary\(\) should return array\<string\|Stringable\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:viewElements\(\) should return array\<int, array\<int\|string, mixed\>\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_filter expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 2
 			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
 
 		-
-			message: "#^Class Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter extends generic class Drupal\\\\Core\\\\Field\\\\FormatterBase but does not specify its types\\: T$#"
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, ''strtoupper'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#1 \$items of method Drupal\\Core\\Field\\Plugin\\Field\\FieldFormatter\\EntityReferenceFormatterBase\<Drupal\\Core\\Entity\\EntityInterface\>\:\:getEntitiesToView\(\) expects Drupal\\Core\\Field\\EntityReferenceFieldItemListInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#1 \$uri of method Drupal\\Core\\File\\FileUrlGeneratorInterface\:\:generateAbsoluteString\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#2 \$langcode of method Drupal\\Core\\Field\\Plugin\\Field\\FieldFormatter\\EntityReferenceFormatterBase\<Drupal\\Core\\Entity\\EntityInterface\>\:\:getEntitiesToView\(\) expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#3 \$field_definition of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter constructor expects Drupal\\Core\\Field\\FieldDefinitionInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#4 \$settings of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#5 \$label of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#6 \$view_mode of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Parameter \#7 \$third_party_settings of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Possibly invalid array key type mixed\.$#'
+			identifier: offsetAccess.invalidOffset
+			count: 6
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Property Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUIFileFormatter\:\:\$fileEntityCache \(array\<int\|string, array\<int\|string, Drupal\\file\\FileInterface\>\>\) does not accept array\<array\>\.$#'
+			identifier: assign.propertyType
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUIFileFormatter.php
+
+		-
+			message: '#^Class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter extends generic class Drupal\\Core\\Field\\FormatterBase but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:addSettingsSummary\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:addSettingsSummary\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:alterSettingsForm\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:alterSettingsForm\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$formatter with generic interface Drupal\\\\Core\\\\Field\\\\FormatterInterface but does not specify its types\\: T$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:buildRenderArray\(\) has parameter \$formatter with generic interface Drupal\\Core\\Field\\FormatterInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:buildRenderArray\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:buildRenderArray\(\) has parameter \$items with generic interface Drupal\\Core\\Field\\FieldItemListInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\Plugin\\\\Field\\\\FieldFormatter\\\\SwaggerUILinkFormatter\\:\\:viewElements\\(\\) has parameter \\$items with generic interface Drupal\\\\Core\\\\Field\\\\FieldItemListInterface but does not specify its types\\: T$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:getSwaggerFileUrlFromField\(\) never returns null so it can be removed from the return type\.$#'
+			identifier: return.unusedType
 			count: 1
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Parameter \\#1 \\$array of function array_filter expects array, mixed given\\.$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:settingsSummary\(\) should return array\<string\|Stringable\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:viewElements\(\) has parameter \$items with generic interface Drupal\\Core\\Field\\FieldItemListInterface but does not specify its types\: T$#'
+			identifier: missingType.generics
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter\:\:viewElements\(\) should return array\<int, array\<int\|string, mixed\>\> but returns array\.$#'
+			identifier: return.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#1 \$array of function array_filter expects array, mixed given\.$#'
+			identifier: argument.type
 			count: 2
 			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
 
 		-
-			message: "#^Method Drupal\\\\swagger_ui_formatter\\\\SwaggerUiLibraryDiscovery\\\\SwaggerUiLibraryDiscoveryBase\\:\\:libraryDirectory\\(\\) should return string but returns mixed\\.$#"
+			message: '#^Parameter \#1 \$callback of function array_map expects \(callable\(mixed\)\: mixed\)\|null, ''strtoupper'' given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#3 \$field_definition of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter constructor expects Drupal\\Core\\Field\\FieldDefinitionInterface, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#4 \$settings of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#5 \$label of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#6 \$view_mode of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter constructor expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Parameter \#7 \$third_party_settings of class Drupal\\swagger_ui_formatter\\Plugin\\Field\\FieldFormatter\\SwaggerUILinkFormatter constructor expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/Plugin/Field/FieldFormatter/SwaggerUILinkFormatter.php
+
+		-
+			message: '#^Method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryBase\:\:libraryDirectory\(\) should return string but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryBase.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			message: '#^Method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryFromDownloadedArtifact\:\:identifyLibraryVersion\(\) should return string but returns mixed\.$#'
+			identifier: return.type
 			count: 1
 			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
 
 		-
-			message: "#^Parameter \\#2 \\$array of function array_key_exists expects array, mixed given\\.$#"
+			message: '#^Parameter \#1 \$string of function ltrim expects string, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
+
+		-
+			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
+
+		-
+			message: '#^Parameter \#2 \$theme_handler of method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryFromDownloadedArtifact\:\:__construct\(\) is not optional\.$#'
+			identifier: parameter.notOptional
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
+
+		-
+			message: '#^Parameter \#3 \$theme_manager of method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryFromDownloadedArtifact\:\:__construct\(\) is not optional\.$#'
+			identifier: parameter.notOptional
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
+
+		-
+			message: '#^Parameter \#4 \$theme_initialization of method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryFromDownloadedArtifact\:\:__construct\(\) is not optional\.$#'
+			identifier: parameter.notOptional
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromDownloadedArtifact.php
+
+		-
+			message: '#^Cannot cast mixed to string\.$#'
+			identifier: cast.string
 			count: 1
 			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets.php
 
 		-
-			message: """
-				#^Call to deprecated method clearCachedDefinitions\\(\\) of interface Drupal\\\\Core\\\\Asset\\\\LibraryDiscoveryInterface\\:
-				in drupal\\:11\\.1\\.0 and is removed from drupal\\:12\\.0\\.0\\. Use
-				LibraryDiscoveryCollector\\:\\:clear\\(\\) instead\\.$#
-			"""
+			message: '#^Parameter \#2 \$array of function array_key_exists expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets.php
+
+		-
+			message: '#^Parameter \#2 \$extension_path_resolver of method Drupal\\swagger_ui_formatter\\SwaggerUiLibraryDiscovery\\SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets\:\:__construct\(\) is not optional\.$#'
+			identifier: parameter.notOptional
+			count: 1
+			path: src/SwaggerUiLibraryDiscovery/SwaggerUiLibraryDiscoveryFromNodeManagedBundledAssets.php
+
+		-
+			message: '#^Cannot access offset ''type'' on mixed\.$#'
+			identifier: offsetAccess.nonOffsetAccessible
+			count: 1
+			path: swagger_ui_formatter.install
+
+		-
+			message: '#^Parameter \#2 \$options of method Drupal\\Core\\Entity\\EntityDisplayBase\:\:setComponent\(\) expects array, mixed given\.$#'
+			identifier: argument.type
+			count: 1
+			path: swagger_ui_formatter.install
+
+		-
+			message: '''
+				#^Call to deprecated method clearCachedDefinitions\(\) of interface Drupal\\Core\\Asset\\LibraryDiscoveryInterface\:
+				in drupal\:11\.1\.0 and is removed from drupal\:12\.0\.0\. Use
+				LibraryDiscoveryCollector\:\:clear\(\) instead\.$#
+			'''
+			identifier: method.deprecated
 			count: 1
 			path: tests/modules/swagger_ui_formatter_test_fake_discovery/src/Service/SwaggerUiLibraryDiscovery.php

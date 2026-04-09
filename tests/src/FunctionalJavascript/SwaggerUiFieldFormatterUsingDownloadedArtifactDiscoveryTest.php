@@ -18,6 +18,7 @@ final class SwaggerUiFieldFormatterUsingDownloadedArtifactDiscoveryTest extends 
    */
   protected function setUp(): void {
     parent::setUp();
+    // @phpstan-ignore staticMethod.impossibleType
     self::assertInstanceOf(SwaggerUiLibraryDiscoveryFromDownloadedArtifact::class, $this->container->get('swagger_ui_formatter.swagger_ui_library_discovery'));
   }
 
