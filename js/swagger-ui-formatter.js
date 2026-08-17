@@ -3,56 +3,49 @@
  * Custom scripts to render file fields with Swagger UI.
  */
 
-(function ($, window, Drupal, drupalSettings, once) {
+(function ($, window, Drupal, once) {
 
   Drupal.behaviors.swaggerUIFormatter = {
     attach: function (context) {
-      once('swaggerUIFormatter', '[id^="swagger-ui-"]', context).forEach(() => {
-        // Iterate over field values and render each field value with Swagger UI.
-        for (const fieldNamePlusDelta of Object.keys(drupalSettings.swaggerUIFormatter)) {
-          const fieldElementInField = drupalSettings.swaggerUIFormatter[fieldNamePlusDelta];
-          // Do not instantiate/re-render Swagger UI if it has been done
-          // before (avoid re-rendering on AJAX requests for example).
-          if ('swagger_ui_' + fieldNamePlusDelta in window) {
-            continue;
-          }
+      once('swaggerUIFormatter', '.swagger-ui-formatter-element', context).forEach((element) => {
+        const domId = element.id;
+        const fieldElementInField = JSON.parse(element.getAttribute('data-swagger-settings'));
+        let validatorUrl = undefined;
+        switch (fieldElementInField.validator) {
+          case 'custom':
+            validatorUrl = fieldElementInField.validatorUrl;
+            break;
 
-          let validatorUrl = undefined;
-          switch (fieldElementInField.validator) {
-            case 'custom':
-              validatorUrl = fieldElementInField.validatorUrl;
-              break;
-
-            case 'none':
-              validatorUrl = null;
-              break;
-          }
-          const options = {
-            url: fieldElementInField.swaggerFile,
-            dom_id: '#swagger-ui-' + fieldNamePlusDelta,
-            deepLinking: true,
-            plugins: [
-              SwaggerUIBundle.plugins.DownloadUrl
-            ],
-            presets: [
-              SwaggerUIBundle.presets.apis,
-              fieldElementInField.showTopBar ? SwaggerUIStandalonePreset : SwaggerUIStandalonePreset.slice(1)
-            ],
-            layout: "StandaloneLayout",
-            validatorUrl: validatorUrl,
-            docExpansion: fieldElementInField.docExpansion,
-            tagsSorter: fieldElementInField.sortTagsByName ? 'alpha' : null,
-            supportedSubmitMethods: fieldElementInField.supportedSubmitMethods,
-            oauth2RedirectUrl: fieldElementInField.oauth2RedirectUrl
-          };
-
-          // Allow altering the options.
-          $(window).trigger('swaggerUIFormatterOptionsAlter', options);
-
-          window['swagger_ui_' + fieldNamePlusDelta] = SwaggerUIBundle(options);
+          case 'none':
+            validatorUrl = null;
+            break;
         }
+
+        const options = {
+          url: fieldElementInField.swaggerFile,
+          dom_id: '#' + domId,
+          deepLinking: true,
+          plugins: [
+            SwaggerUIBundle.plugins.DownloadUrl
+          ],
+          presets: [
+            SwaggerUIBundle.presets.apis,
+            fieldElementInField.showTopBar ? SwaggerUIStandalonePreset : SwaggerUIStandalonePreset.slice(1)
+          ],
+          layout: "StandaloneLayout",
+          validatorUrl: validatorUrl,
+          docExpansion: fieldElementInField.docExpansion,
+          tagsSorter: fieldElementInField.sortTagsByName ? 'alpha' : null,
+          supportedSubmitMethods: fieldElementInField.supportedSubmitMethods,
+          oauth2RedirectUrl: fieldElementInField.oauth2RedirectUrl
+        };
+
+        // Allow altering the options.
+        $(window).trigger('swaggerUIFormatterOptionsAlter', options);
+
+        window['swagger_ui_' + domId] = SwaggerUIBundle(options);
       });
     }
   };
 
-}(jQuery, window, Drupal, drupalSettings, once));
+}(jQuery, window, Drupal, once));

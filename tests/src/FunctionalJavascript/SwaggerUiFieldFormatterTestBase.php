@@ -73,9 +73,8 @@ abstract class SwaggerUiFieldFormatterTestBase extends WebDriverTestBase {
       'title[0][value]' => 'Testing the file field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');
-    $assert->waitForField('swagger-ui-field_api_spec-0');
+    $assert->waitForElement('css', '.swagger-ui-formatter-element');
     $assert->pageTextContains('Swagger Petstore');
-    $assert->waitForField('swagger-ui-field_api_spec-1');
     $assert->pageTextContains('USPTO Data Set API');
   }
 
@@ -97,9 +96,8 @@ abstract class SwaggerUiFieldFormatterTestBase extends WebDriverTestBase {
       'title[0][value]' => 'Testing the link field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');
-    $assert->waitForField('swagger-ui-field_api_spec-0');
+    $assert->waitForElement('css', '.swagger-ui-formatter-element');
     $assert->pageTextContains('Swagger Petstore');
-    $assert->waitForField('swagger-ui-field_api_spec-1');
     $assert->pageTextContains('USPTO Data Set API');
   }
 

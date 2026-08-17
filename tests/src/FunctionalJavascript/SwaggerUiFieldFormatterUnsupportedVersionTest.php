@@ -64,7 +64,7 @@ final class SwaggerUiFieldFormatterUnsupportedVersionTest extends WebDriverTestB
       'title[0][value]' => 'Testing the file field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');
-    $assert->waitForField('swagger-ui-field_api_spec-0');
+    $assert->waitForElement('css', '.swagger-ui-formatter-element');
     $assert->pageTextContains('Swagger Petstore');
     $this->validateSwaggerUiErrorMessage(__FUNCTION__);
   }
@@ -86,7 +86,7 @@ final class SwaggerUiFieldFormatterUnsupportedVersionTest extends WebDriverTestB
       'title[0][value]' => 'Testing the link field formatter',
     ], 'Save');
     $this->createScreenshot(__FUNCTION__ . '-after-save');
-    $assert->waitForField('swagger-ui-field_api_spec-0');
+    $assert->waitForElement('css', '.swagger-ui-formatter-element');
     $assert->pageTextContains('Swagger Petstore');
     $this->validateSwaggerUiErrorMessage(__FUNCTION__);
   }
